@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_application.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_camera.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_color.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_data.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_engine.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_glyph.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_image.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_keyboard.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_matrix.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mesh.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mouse.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pixel.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_plot.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_shader_handler.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_tileset.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_vector2.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_vector3.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_vector4.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_viewport.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_button.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_check_box.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_check_entry.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_frame.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_hour_entry.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_image_label.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_render_widget.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_tab.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_text_entry.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_text_label.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_value_entry.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_value_label.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_vscroll_bar.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_widgets.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_window.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_box_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_check_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_entry_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_graphical_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_text_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_text_entry_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_textual_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_entry_component.cpp">
+      <Filter>JGL\srcs\widget_component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_algorithm.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_basics_functions.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_draw_image.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_draw_primitive.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_draw_triangle.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_file_handler.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_fps_handler.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_json_handler.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_log_handler.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_operator_cout.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_privitive_mesh.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_text.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mesh_part.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\shader_content_2D.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\shader_content_3D.cpp">
+      <Filter>JGL\srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_unique_string.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_string.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pool.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_material.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_share_object.cpp">
+      <Filter>JGL\srcs\structure</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_camera.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_color.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_data.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_engine.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_geometry.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_glyph.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_image.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_matrix.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_mesh.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_plot.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_system.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_tileset.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_vector.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_viewport.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_button.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_check_box.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_check_entry.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_frame.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_hour_entry.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_image_label.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_render_widget.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_tab.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_text_entry.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_text_label.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_value_entry.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_value_label.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_vscrollable_bar.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_widgets.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_window.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget_component\jgl_widget_component.h">
+      <Filter>JGL\includes\widget_component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_algorithm.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_basics_functions.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_define.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_dirent.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_draw_image.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_draw_primitive.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_enum.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_file_handler.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_fps_handler.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_includes.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_json_handler.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_log_handler.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_text.h">
+      <Filter>JGL\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_contener.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_file_menu.h">
+      <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_array.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_pool.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_unique_string.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_string.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_reference_count.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_share_object.h">
+      <Filter>JGL\includes\structure</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Erelia-2D.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{a644de0f-f864-4074-aa82-f6a530cc0b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Includes">
+      <UniqueIdentifier>{69415b0a-46e4-4f68-83b8-594ccfc6341b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL">
+      <UniqueIdentifier>{eb7f0ce2-0af2-48d8-a226-003d8054f968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\includes">
+      <UniqueIdentifier>{99b088b4-f6ac-40d8-8ef0-7148544d784d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\srcs">
+      <UniqueIdentifier>{ab43ea02-559b-4586-bb3e-d18bdc9ecec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\includes\structure">
+      <UniqueIdentifier>{84745820-e5ce-45d3-87a5-1e3d8c63766c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\includes\widget">
+      <UniqueIdentifier>{fa7ab8f3-d03b-4684-8789-ac9f129942a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\includes\widget_component">
+      <UniqueIdentifier>{65c8cc40-91a4-47db-aeea-e632b57f01e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\srcs\widget_component">
+      <UniqueIdentifier>{e9094ffc-3010-4186-a6ea-cafaec7b268b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\srcs\widget">
+      <UniqueIdentifier>{868a8194-ab9d-4a49-b714-74e34e35d428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JGL\srcs\structure">
+      <UniqueIdentifier>{f37043c5-c3c7-4425-b81b-bfae292ebc0a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

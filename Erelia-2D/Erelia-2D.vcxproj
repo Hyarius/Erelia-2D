@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_algorithm.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_basics_functions.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_draw_image.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_draw_primitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_draw_triangle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_file_handler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_fps_handler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_json_handler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_log_handler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_operator_cout.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_privitive_mesh.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\jgl_text.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\shader_content_2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\shader_content_3D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_application.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_camera.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_color.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_data.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_engine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_glyph.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_image.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_keyboard.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_material.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_matrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mesh.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mesh_part.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mouse.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pixel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_plot.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pool.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_shader_handler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_share_object.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_string.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_unique_string.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_tileset.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_vector2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_vector3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_vector4.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_viewport.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_button.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_check_box.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_check_entry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_frame.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_hour_entry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_image_label.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_render_widget.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_tab.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_text_entry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_text_label.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_value_entry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_value_label.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_vscroll_bar.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_widgets.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_window.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_box_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_check_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_entry_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_graphical_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_textual_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_text_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_text_entry_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_component.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_entry_component.cpp" />
+    <ClCompile Include="srcs\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_algorithm.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_basics_functions.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_define.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_dirent.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_draw_image.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_draw_primitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_enum.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_file_handler.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_fps_handler.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_includes.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_json_handler.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_log_handler.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl_text.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_array.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_camera.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_color.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_data.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_engine.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_geometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_glyph.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_image.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_matrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_mesh.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_plot.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_pool.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_reference_count.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_share_object.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_string.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_unique_string.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_system.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_tileset.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_vector.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_viewport.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_button.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_check_box.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_check_entry.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_contener.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_file_menu.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_frame.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_hour_entry.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_image_label.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_render_widget.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_tab.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_text_entry.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_text_label.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_value_entry.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_value_label.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_vscrollable_bar.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_widgets.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_window.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget_component\jgl_widget_component.h" />
+    <ClInclude Include="includes\Erelia-2D.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{2f950e61-1b09-442f-9e04-ed58d9a1f6fd}</ProjectGuid>
+    <RootNamespace>Erelia_2D</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>includes;$(IncludePath);C:\Program Files %28x86%29\Visual Leak Detector\include</IncludePath>
+    <LibraryPath>$(LibraryPath);C:\Program Files %28x86%29\Visual Leak Detector\lib\Win32</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>includes;lib/jgl/includes;lib/jgl/includes/structure;lib/jgl/includes/widget;lib/jgl/includes/widget_component;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>includes;lib/jgl/includes;lib/jgl/includes/structure;lib/jgl/includes/widget;lib/jgl/includes/widget_component;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>includes;lib/jgl/includes;lib/jgl/includes/structure;lib/jgl/includes/widget;lib/jgl/includes/widget_component;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Developement\GLM\gtx;C:\Developement\GLM\gtc;C:\Developement\GLM\detail;C:\Developement\GLM;C:\Developement\SDL2\includes;C:\Developement\GLEW\includes;C:\Developement\JGL\includes\;C:\Developement\JGL\includes\widget_component;C:\Developement\JGL\includes\widget;C:\Developement\JGL\includes\structure;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib; opengl32.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Developement\SDL2\lib;C:\Developement\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Developement\GLM\gtx;C:\Developement\GLM\gtc;C:\Developement\GLM\detail;C:\Developement\GLM;C:\Developement\SDL2\includes;C:\Developement\GLEW\includes;C:\Developement\JGL\includes\;C:\Developement\JGL\includes\widget_component;C:\Developement\JGL\includes\widget;C:\Developement\JGL\includes\structure;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib; opengl32.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Developement\SDL2\lib;C:\Developement\GLEW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;opengl32.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;opengl32.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
