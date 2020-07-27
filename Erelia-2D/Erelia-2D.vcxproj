@@ -46,7 +46,6 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mesh.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mesh_part.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mouse.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pixel.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_plot.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pool.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_shader_handler.cpp" />

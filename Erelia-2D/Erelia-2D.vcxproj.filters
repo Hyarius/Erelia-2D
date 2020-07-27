@@ -34,9 +34,6 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_mouse.cpp">
       <Filter>JGL\srcs\structure</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_pixel.cpp">
-      <Filter>JGL\srcs\structure</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\structure\jgl_plot.cpp">
       <Filter>JGL\srcs\structure</Filter>
     </ClCompile>
