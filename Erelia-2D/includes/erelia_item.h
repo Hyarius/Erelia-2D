@@ -27,7 +27,7 @@ public:
 	jgl::Sprite_sheet* tileset() { return (_tileset); }
 	jgl::Vector2 sprite() { return (_sprite); }
 
-	void draw(jgl::Vector2 p_anchor, jgl::Vector2 p_area, jgl::Viewport* p_viewport)
+	void draw(jgl::Vector2 p_anchor, jgl::Vector2 p_area, const jgl::Viewport* p_viewport)
 	{
 		_tileset->draw(_sprite, p_anchor, p_area, 1.0f, p_viewport);
 	}

@@ -20,6 +20,16 @@ Item_slot* Editor_inventory_tab::add_item_slot(Item* p_item)
 	return (result);
 }
 
+Item_slot* Editor_inventory_tab::find_slot()
+{
+	for (size_t i = 0; i < _item_slots.size(); i++)
+	{
+		if (_item_slots[i]->is_pointed() == true)
+			return (_item_slots[i]);
+	}
+	return (nullptr);
+}
+
 void Editor_inventory_tab::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
 	_background->set_geometry(0, p_area);

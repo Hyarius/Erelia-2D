@@ -27,6 +27,9 @@ Editor_inventory::Editor_inventory(jgl::Widget* p_parent) : jgl::Widget(p_parent
 		_shortcut->set_item(i, item_array[0]->operator[](i));
 	_shortcut->activate();
 
+	_indicator = new Editor_mouse_indicator(this);
+	_indicator->activate();
+
 	size_t nb_part = 5;
 	size_t part = item_array[0]->size() / nb_part;
 	for (size_t i = 0; i < item_type_name.size() + nb_part - 1; i++)
@@ -58,6 +61,7 @@ Editor_inventory::Editor_inventory(jgl::Widget* p_parent) : jgl::Widget(p_parent
 	}
 
 	activate_tab(jgl::Data(2, _tab[0], &_active_tab));
+	_indicator->send_front();
 }
 
 Item* Editor_inventory::select_item()
@@ -100,6 +104,48 @@ bool Editor_inventory::handle_keyboard()
 
 bool Editor_inventory::handle_mouse()
 {
+	static bool b_first = false;
+	static bool b_second = false;
+	static Item_slot* first = nullptr;
+	static Item_slot* second = nullptr;
+
+	if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::pressed)
+	{
+		if (status() == true)
+		{
+			first = _shortcut->find_slot();
+			if (first != nullptr)
+				b_first = true;
+			else
+				first = _active_tab->find_slot();
+			_indicator->set_item((first == nullptr ? nullptr : first->item()));
+		}
+	}
+	if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
+	{
+		if (status() == true)
+		{
+			second = _shortcut->find_slot();
+			if (second != nullptr)
+				b_second = true;
+			else
+				second = _active_tab->find_slot();
+
+			if (second != nullptr)
+			{
+				Item* tmp = second->item();
+				if (b_second == true)
+					second->set_item(first->item());
+				if (b_first == true)
+					first->set_item((b_second == true ? tmp : nullptr));
+				b_first = false;
+				b_second = false;
+				first = nullptr;
+				second = nullptr;
+				_indicator->set_item(nullptr);
+			}
+		}
+	}
 	return (false);
 }
 

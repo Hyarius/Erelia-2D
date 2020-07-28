@@ -8,6 +8,8 @@
 #include "erelia_player_controller.h"
 #include "erelia_editor.h"
 
+#include "erelia_console.h"
+
 extern std::string custom_texture_shader_vert;
 extern std::string custom_texture_shader_frag;
 
@@ -19,12 +21,16 @@ private:
 	Player* _player;
 
 	Renderer* _renderer;
+	jgl::Contener* _editor_contener;
 	Player_controller* _player_controller;
 	Editor_inventory* _editor_inventory;
 	Editor_interact* _editor_interacter;
 
+	Console* _console;
+
 public:
 	Game_engine(jgl::Widget* p_parent = nullptr);
+
 	bool handle_keyboard();
 	bool handle_mouse();
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);

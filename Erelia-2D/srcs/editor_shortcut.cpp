@@ -22,6 +22,16 @@ void Editor_shortcut_bar::set_item(size_t index, Item* p_item)
 	_slots[index]->set_item(p_item);
 }
 
+Item_slot* Editor_shortcut_bar::find_slot()
+{
+	for (size_t i = 0; i < _slots.size(); i++)
+	{
+		if (_slots[i]->is_pointed() == true)
+			return (_slots[i]);
+	}
+	return (nullptr);
+}
+
 bool Editor_shortcut_bar::handle_mouse()
 {
 	if (g_mouse->wheel != 0)

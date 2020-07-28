@@ -84,10 +84,13 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_entry_component.cpp" />
     <ClCompile Include="srcs\chunk.cpp" />
     <ClCompile Include="srcs\editor.cpp" />
+    <ClCompile Include="srcs\console.cpp" />
     <ClCompile Include="srcs\editor_interact.cpp" />
+    <ClCompile Include="srcs\editor_mouse_indicator.cpp" />
     <ClCompile Include="srcs\editor_shortcut.cpp" />
     <ClCompile Include="srcs\editor_tab.cpp" />
     <ClCompile Include="srcs\item_data.cpp" />
+    <ClCompile Include="srcs\item_slot.cpp" />
     <ClCompile Include="srcs\main.cpp" />
     <ClCompile Include="srcs\node_data.cpp" />
     <ClCompile Include="srcs\shader_source.cpp" />
@@ -151,6 +154,7 @@
     <ClInclude Include="includes\Erelia.h" />
     <ClInclude Include="includes\Erelia_board.h" />
     <ClInclude Include="includes\Erelia_chunk.h" />
+    <ClInclude Include="includes\erelia_console.h" />
     <ClInclude Include="includes\erelia_define.h" />
     <ClInclude Include="includes\Erelia_editor.h" />
     <ClInclude Include="includes\Erelia_game_engine.h" />

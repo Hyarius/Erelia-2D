@@ -18,6 +18,7 @@ private:
 public:
 	Editor_inventory_tab(size_t p_nb_slot, jgl::Widget* p_parent = nullptr);
 	Item_slot* add_item_slot(Item* p_item);
+	Item_slot* find_slot();
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
 	void render();
 };
@@ -33,7 +34,19 @@ public:
 	Editor_shortcut_bar(jgl::Widget* p_parent = nullptr);
 	void set_item(size_t index, Item* p_item);
 	Item_slot* selected() { return (_selected); }
+	Item_slot* find_slot();
 	bool handle_mouse();
+	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
+	void render();
+};
+
+class Editor_mouse_indicator : public jgl::Widget
+{
+private:
+	Item* _item;
+public:
+	Editor_mouse_indicator(jgl::Widget* p_parent = nullptr);
+	void set_item(Item* p_item) { _item = p_item; }
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
 	void render();
 };
@@ -43,6 +56,7 @@ class Editor_inventory : public jgl::Widget
 private:
 	bool _activated = false;
 	jgl::Frame* _background = nullptr;
+	Editor_mouse_indicator* _indicator = nullptr;
 	Editor_shortcut_bar* _shortcut = nullptr;
 	Editor_inventory_tab* _active_tab = nullptr;
 	jgl::Array<Editor_inventory_tab*> _tab;
@@ -50,6 +64,7 @@ private:
 
 public:
 	Editor_inventory(jgl::Widget* p_parent = nullptr);
+	Editor_shortcut_bar* shortcut() { return (_shortcut); }
 	Item* select_item();
 	bool status();
 	void enable();
