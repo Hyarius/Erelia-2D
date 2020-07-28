@@ -82,7 +82,17 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_text_entry_component.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_component.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_entry_component.cpp" />
+    <ClCompile Include="srcs\chunk.cpp" />
+    <ClCompile Include="srcs\editor.cpp" />
+    <ClCompile Include="srcs\editor_interact.cpp" />
+    <ClCompile Include="srcs\editor_shortcut.cpp" />
+    <ClCompile Include="srcs\editor_tab.cpp" />
+    <ClCompile Include="srcs\item_data.cpp" />
     <ClCompile Include="srcs\main.cpp" />
+    <ClCompile Include="srcs\node_data.cpp" />
+    <ClCompile Include="srcs\shader_source.cpp" />
+    <ClCompile Include="srcs\board.cpp" />
+    <ClCompile Include="srcs\game_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\jgl.h" />
@@ -138,7 +148,18 @@
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_widgets.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_window.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget_component\jgl_widget_component.h" />
-    <ClInclude Include="includes\Erelia-2D.h" />
+    <ClInclude Include="includes\Erelia.h" />
+    <ClInclude Include="includes\Erelia_board.h" />
+    <ClInclude Include="includes\Erelia_chunk.h" />
+    <ClInclude Include="includes\erelia_define.h" />
+    <ClInclude Include="includes\Erelia_editor.h" />
+    <ClInclude Include="includes\Erelia_game_engine.h" />
+    <ClInclude Include="includes\erelia_item.h" />
+    <ClInclude Include="includes\erelia_item_slot.h" />
+    <ClInclude Include="includes\Erelia_node.h" />
+    <ClInclude Include="includes\erelia_player.h" />
+    <ClInclude Include="includes\erelia_player_controller.h" />
+    <ClInclude Include="includes\Erelia_renderer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
