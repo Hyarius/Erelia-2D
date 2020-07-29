@@ -28,6 +28,28 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_renderer->send_back();
 }
 
+extern jgl::Array<Item*> node_item_list;
+
+Game_engine::~Game_engine()
+{
+	if (_tileset != nullptr)
+		delete _tileset;
+
+	if (_board != nullptr)
+		delete _board;
+	if (_player != nullptr)
+		delete _player;
+
+	for (size_t i = 0; i < node_item_list.size(); i++)
+	{
+		delete node_item_list[i];
+	}
+	for (size_t i = 0; i < node_array.size(); i++)
+	{
+		delete node_array[i];
+	}
+}
+
 bool Game_engine::handle_keyboard()
 {
 	if (jgl::get_key(jgl::key::F2) == jgl::key_state::release ||

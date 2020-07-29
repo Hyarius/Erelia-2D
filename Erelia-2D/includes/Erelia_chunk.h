@@ -23,6 +23,14 @@ public:
 			return (true);
 		return (false);
 	}
+	Node* node(jgl::Vector2 pos)
+	{
+		int x = static_cast<int>(pos.x);
+		int y = static_cast<int>(pos.y);
+		if (x < 0 || x >= chunk_size ||
+			y < 0 || y >= chunk_size)
+			return (nullptr);
+		return (_content[x][y]); }
 	Chunk(jgl::Vector2 p_pos)
 	{
 		_pos = p_pos;

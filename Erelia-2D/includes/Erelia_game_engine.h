@@ -30,7 +30,7 @@ private:
 
 public:
 	Game_engine(jgl::Widget* p_parent = nullptr);
-
+	~Game_engine();
 	bool handle_keyboard();
 	bool handle_mouse();
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);

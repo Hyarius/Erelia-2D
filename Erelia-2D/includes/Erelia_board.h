@@ -20,10 +20,46 @@ public:
 	Board(jgl::Sprite_sheet* p_tileset, jgl::String path)
 	{
 		_tileset = p_tileset;
+		load(path);
+	}
+	~Board()
+	{
+		for (auto tmp : _chunks)
+		{
+			delete tmp.second;
+		}
+	}
+	void save(jgl::String path)
+	{
+		std::fstream file = jgl::open_file(path, std::ios_base::out | std::ios_base::trunc);
+		for (auto tmp : _chunks)
+		{
+			file << tmp.first.x << ";" << tmp.first.y << std::endl;
+			for (size_t y = 0; y < chunk_size; y++)
+			{
+				for (size_t x = 0; x < chunk_size; x++)
+				{
+					if (x != 0)
+						file << ";";
+					Node* tmp_node = tmp.second->node(jgl::Vector2(x, y));
+					if (tmp_node == nullptr)
+						file << "-1";
+					else
+						file << tmp_node->index;
+				}
+				file << std::endl;
+			}
+		}
+	}
+	void load(jgl::String path)
+	{
 		bool in_chunk = false;
 		jgl::Vector2 chunk_pos;
 		int chunk_line;
 
+		for (auto tmp : _chunks)
+			delete tmp.second;
+		_chunks.clear();
 		std::fstream file = jgl::open_file(path);
 		while (file.eof() == false)
 		{
