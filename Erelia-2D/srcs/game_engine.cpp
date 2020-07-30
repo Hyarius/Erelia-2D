@@ -3,7 +3,7 @@
 Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 60));
-	create_node_item_list(_tileset);
+	create_item_list(_tileset);
 	_board = new Board(_tileset, "ressources/maps/world.map");
 	_player = new Player();
 
@@ -22,7 +22,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_editor_interacter = new Editor_interact(_editor_inventory, _board, _player, _editor_contener);
 	_editor_interacter->activate();
 
-	_console = new Console(_board, _player, this);
+	_console = new Console(_editor_inventory, _tileset, _editor_interacter, _board, _player, this);
 
 	_editor_inventory->send_front();
 	_renderer->send_back();
@@ -40,13 +40,14 @@ Game_engine::~Game_engine()
 	if (_player != nullptr)
 		delete _player;
 
-	for (size_t i = 0; i < node_item_list.size(); i++)
-	{
-		delete node_item_list[i];
-	}
+	delete_item_list();
 	for (size_t i = 0; i < node_array.size(); i++)
 	{
 		delete node_array[i];
+	}
+	for (size_t i = 0; i < prefab_array.size(); i++)
+	{
+		delete prefab_array[i];
 	}
 }
 

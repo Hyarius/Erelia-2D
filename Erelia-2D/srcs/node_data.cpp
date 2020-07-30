@@ -1,5 +1,7 @@
 #include "erelia.h"
 
+jgl::Array<Prefab*> prefab_array;
+
 jgl::Array<Node*> node_array = {
 	new Node(0, jgl::Vector2(0, 0), WALKABLE),
 	new Node(1, jgl::Vector2(1, 0), WALKABLE),
@@ -1121,24 +1123,5 @@ jgl::Array<Node*> node_array = {
 	new Node(1117, jgl::Vector2(15, 58), WALKABLE),
 	new Node(1118, jgl::Vector2(16, 58), WALKABLE),
 	new Node(1119, jgl::Vector2(17, 58), WALKABLE),
-	new Node(1120, jgl::Vector2(18, 58), WALKABLE),
-	new Node(1121, jgl::Vector2(0, 59), WALKABLE),
-	new Node(1122, jgl::Vector2(1, 59), WALKABLE),
-	new Node(1123, jgl::Vector2(2, 59), WALKABLE),
-	new Node(1124, jgl::Vector2(3, 59), WALKABLE),
-	new Node(1125, jgl::Vector2(4, 59), WALKABLE),
-	new Node(1126, jgl::Vector2(5, 59), WALKABLE),
-	new Node(1127, jgl::Vector2(6, 59), WALKABLE),
-	new Node(1128, jgl::Vector2(7, 59), WALKABLE),
-	new Node(1129, jgl::Vector2(8, 59), WALKABLE),
-	new Node(1130, jgl::Vector2(9, 59), WALKABLE),
-	new Node(1131, jgl::Vector2(10, 59), WALKABLE),
-	new Node(1132, jgl::Vector2(11, 59), WALKABLE),
-	new Node(1133, jgl::Vector2(12, 59), WALKABLE),
-	new Node(1134, jgl::Vector2(13, 59), WALKABLE),
-	new Node(1135, jgl::Vector2(14, 59), WALKABLE),
-	new Node(1136, jgl::Vector2(15, 59), WALKABLE),
-	new Node(1137, jgl::Vector2(16, 59), WALKABLE),
-	new Node(1138, jgl::Vector2(17, 59), WALKABLE),
-	new Node(1139, jgl::Vector2(18, 59), WALKABLE)
+	new Node(1120, jgl::Vector2(18, 58), WALKABLE)
 };

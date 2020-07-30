@@ -31,7 +31,7 @@ Editor_inventory::Editor_inventory(jgl::Widget* p_parent) : jgl::Widget(p_parent
 	_indicator->activate();
 
 	size_t nb_part = 5;
-	size_t part = item_array[0]->size() / nb_part;
+	size_t part = (item_array[0]->size() + 19) / nb_part;
 	for (size_t i = 0; i < item_type_name.size() + nb_part - 1; i++)
 	{
 		Editor_inventory_tab* result = new Editor_inventory_tab(19, _background);

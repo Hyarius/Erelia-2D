@@ -8,6 +8,7 @@
 #include "erelia_player_controller.h"
 #include "erelia_editor.h"
 
+#include "erelia_prefab.h"
 #include "erelia_console.h"
 
 extern std::string custom_texture_shader_vert;
@@ -37,6 +38,7 @@ public:
 	void render();
 };
 
-void create_node_item_list(jgl::Sprite_sheet* tileset);
+void create_item_list(jgl::Sprite_sheet* tileset);
+void delete_item_list();
 
 #endif

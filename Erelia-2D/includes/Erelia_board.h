@@ -17,6 +17,17 @@ public:
 			return (nullptr);
 		return (_chunks[pos]);
 	}
+	Node* node(jgl::Vector2 pos)
+	{
+		Chunk* target_chunk = chunk(chunk_pos(pos));
+		if (target_chunk == nullptr)
+			return nullptr;
+		jgl::Vector2 target_pos = rel_node_pos(pos);
+		Node* target_node = target_chunk->node(target_pos);
+		if (target_node == nullptr)
+			return nullptr;
+		return (target_node);
+	}
 	Board(jgl::Sprite_sheet* p_tileset, jgl::String path)
 	{
 		_tileset = p_tileset;

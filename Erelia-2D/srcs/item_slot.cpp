@@ -63,5 +63,9 @@ void Item_slot::render()
 
 	_box.render(_viewport);
 	if (_item != nullptr)
+	{
 		_item->draw(_box.anchor() + _box.border(), _box.area() - _box.border() * 2, _viewport);
+		if (_item->item_type() == Item_type::node && jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::down)
+			jgl::draw_text(jgl::itoa((static_cast<Node_item*>(_item))->node_index()), _box.anchor() + _box.border() * 2, 12, 1, jgl::text_color::light_green);
+	}
 }

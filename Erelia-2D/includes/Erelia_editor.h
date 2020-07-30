@@ -65,6 +65,8 @@ private:
 public:
 	Editor_inventory(jgl::Widget* p_parent = nullptr);
 	Editor_shortcut_bar* shortcut() { return (_shortcut); }
+	Editor_inventory_tab* tab(size_t index) { if (index >= _tab.size())return (nullptr);return (_tab[index]); }
+	Item_slot* selected_slot() { return (_shortcut->selected()); }
 	Item* select_item();
 	bool status();
 	void enable();
@@ -86,11 +88,20 @@ private:
 	bool _state = false;
 	jgl::Vector2 _first = -1;
 	jgl::Vector2 _second = -1;
+	jgl::Vector2 _pink_flag = -1;
+	jgl::Vector2 _blue_flag = -1;
 
 public:
 	Editor_interact(Editor_inventory* p_inventory, Board* p_board, Player* p_player, jgl::Widget* p_parent = nullptr);
-	void handle_multi_pos();
+
+	jgl::Vector2 pink_flag() { return (_pink_flag); }
+	jgl::Vector2 blue_flag() { return (_blue_flag); }
+
+	bool handle_click();
+	void handle_remove_multi_pos();
+	void handle_multi_pos(Item* tmp);
 	bool handle_mouse();
+	void update();
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
 	void render();
 };

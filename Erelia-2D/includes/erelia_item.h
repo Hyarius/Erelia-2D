@@ -3,15 +3,20 @@
 
 #include "jgl.h"
 
+#include "erelia_console.h"
+#include "erelia_prefab.h"
+
 enum class Item_type
 {
 	node = 0,
+	interact = 1,
+	prefab = 2,
 	count
 };
 
 class Item
 {
-private:
+protected:
 	Item_type _item_type;
 	jgl::Sprite_sheet* _tileset;
 	jgl::Vector2 _sprite;
@@ -27,7 +32,7 @@ public:
 	jgl::Sprite_sheet* tileset() { return (_tileset); }
 	jgl::Vector2 sprite() { return (_sprite); }
 
-	void draw(jgl::Vector2 p_anchor, jgl::Vector2 p_area, const jgl::Viewport* p_viewport)
+	virtual void draw(jgl::Vector2 p_anchor, jgl::Vector2 p_area, const jgl::Viewport* p_viewport)
 	{
 		_tileset->draw(_sprite, p_anchor, p_area, 1.0f, p_viewport);
 	}
@@ -52,6 +57,49 @@ public:
 		Board* board = param.acces<Board*>(0);
 		jgl::Vector2* pos = param.acces<jgl::Vector2*>(1);
 		board->place(*pos, _node_index);
+	}
+};
+
+class Editor_item : public Item
+{
+private:
+	jgl::Funct _funct;
+
+public:
+	Editor_item(jgl::Funct p_funct, jgl::Sprite_sheet* p_tileset, jgl::Vector2 p_sprite) : Item(Item_type::interact, p_tileset, p_sprite)
+	{
+		_funct = p_funct;
+	}
+
+	void use(jgl::Data param)
+	{
+		if (_funct != nullptr)
+			_funct(param);
+	}
+};
+
+class Prefab_item : public Item
+{
+private:
+	Prefab* _prefab;
+
+public:
+	Prefab_item(Prefab* p_prefab, jgl::Sprite_sheet* p_tileset) : Item(Item_type::prefab, p_tileset, jgl::Vector2(18, 59))
+	{
+		_prefab = p_prefab;
+	}
+
+	void use(jgl::Data param)
+	{
+		Board* board = param.acces<Board*>(0);
+		jgl::Vector2* start = param.acces<jgl::Vector2*>(1);
+		_prefab->use(board, *start);
+	}
+
+	void draw(jgl::Vector2 p_anchor, jgl::Vector2 p_area, const jgl::Viewport* p_viewport)
+	{
+		_tileset->draw(_sprite, p_anchor, p_area, 1.0f, p_viewport);
+		jgl::draw_centred_text(_prefab->name(), p_anchor + p_area / 2, 16, 1, jgl::text_color::white, jgl::text_style::normal, nullptr);
 	}
 };
 

@@ -232,6 +232,12 @@
     <ClCompile Include="srcs\console.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\editor_item_data.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\prefab.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
@@ -430,6 +436,9 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\erelia_console.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_prefab.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

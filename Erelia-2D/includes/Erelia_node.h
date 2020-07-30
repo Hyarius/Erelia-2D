@@ -19,5 +19,4 @@ struct Node
 };
 
 extern jgl::Array<Node*> node_array;
-
 #endif
