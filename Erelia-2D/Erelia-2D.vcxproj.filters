@@ -238,6 +238,21 @@
     <ClCompile Include="srcs\prefab.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\renderer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\entity.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\Erelia\player.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\Erelia\npc.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\player_controller.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
@@ -439,6 +454,12 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\erelia_prefab.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_entity.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_npc.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

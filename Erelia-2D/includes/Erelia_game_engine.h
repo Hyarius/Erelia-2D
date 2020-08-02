@@ -18,6 +18,7 @@ class Game_engine : public jgl::Widget
 {
 private:
 	jgl::Sprite_sheet* _tileset;
+	jgl::Sprite_sheet* _charset;
 	Board* _board;
 	Player* _player;
 

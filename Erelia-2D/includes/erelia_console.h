@@ -33,6 +33,8 @@ public:
 	bool handle_generate_command(jgl::Array<jgl::String>& tab);
 	bool handle_replace_command(jgl::Array<jgl::String>& tab);
 	bool handle_prefab_command(jgl::Array<jgl::String>& tab);
+	bool handle_ghost_command(jgl::Array<jgl::String>& tab);
+	bool handle_coord_command(jgl::Array<jgl::String>& tab);
 
 	bool handle_keyboard();
 	bool handle_mouse();

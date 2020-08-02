@@ -12,8 +12,6 @@ Console::Console(Editor_inventory* p_inventory, jgl::Sprite_sheet* p_tileset, Ed
 	_entry->activate();
 }
 
-extern jgl::Array<Item*> prefab_item_list;
-
 bool Console::handle_save_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 2)
@@ -198,18 +196,61 @@ bool Console::handle_prefab_command(jgl::Array<jgl::String>& tab)
 	{
 		Prefab* new_prefab = new Prefab();
 		new_prefab->save(tab[1], _board, _interacter->pink_flag(), _interacter->blue_flag());
+		new_prefab->save_to_file("ressources/prefab/" + tab[1] + ".prefab");
 		prefab_array.push_back(new_prefab);
 		Prefab_item* new_item = new Prefab_item(new_prefab, _tileset);
 		prefab_item_list.push_back(new_item);
 		_inventory->tab(8)->add_item_slot(new_item);
 		_inventory->tab(8)->set_geometry(_inventory->tab(7)->viewport()->anchor(), _inventory->tab(7)->area());
-		_old_entry.push_back("Prefab [" + tab[1] + "]succesfully created");
+		_old_entry.push_back("Prefab [" + tab[1] + "] succesfully created");
 		return (true);
 	}
 	else
 	{
 		_old_entry.push_back("Usage : prefab [prefab name - 0-4 letters]");
 	}
+	return (false);
+}
+bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
+{
+	if (tab.size() == 2)
+	{
+		bool state;
+		if (tab[1] == "on")
+			state = true;
+		else if (tab[1] == "off")
+			state = false;
+		else
+		{
+			_old_entry.push_back("Usage : ghost [on / off]");
+			return (true);
+		}
+		_player->set_ghost(state);
+		if (state == true)
+			_old_entry.push_back("Ghost set to on");
+		else
+			_old_entry.push_back("Ghost set to off");
+
+		return (true);
+	}
+	else
+	{
+		_old_entry.push_back("Usage : ghost [on / off]");
+	}
+	return (false);
+}
+bool Console::handle_coord_command(jgl::Array<jgl::String>& tab)
+{
+	if (tab.size() == 1)
+	{
+		_old_entry.push_back("Player coord : " + _player->pos().str());
+		return (true);
+	}
+	else
+	{
+		_old_entry.push_back("Usage : coord");
+	}
+	return (false);
 }
 
 bool Console::handle_console_entry(jgl::String cmd)
@@ -244,6 +285,16 @@ bool Console::handle_console_entry(jgl::String cmd)
 	{
 		return (handle_prefab_command(tab));
 	}
+	else if (tab[0] == "coord")
+	{
+		return (handle_coord_command(tab));
+		_old_entry.push_back(_player->pos().str());
+		return (true);
+	}
+	else if (tab[0] == "ghost")
+	{
+		return (handle_ghost_command(tab));
+	}
 	return (false);
 }
 
@@ -275,6 +326,6 @@ void Console::render()
 	{
 		jgl::Vector2 tmp = _entry->anchor() - jgl::Vector2(0.0f, 30.0f);
 		jgl::Vector2 pos = tmp + jgl::Vector2(20.0f, i * -21.0f);
-		jgl::draw_text(_old_entry[_old_entry.size() - i - 1], pos, 16, 0, jgl::text_color::white);
+		jgl::draw_text(_old_entry[_old_entry.size() - i - 1], pos, 16, 1, jgl::text_color::white);
 	}
 }

@@ -11,12 +11,12 @@ bool Editor_interact::handle_click()
 {
 	if (_state == false)
 	{
-		_first = _board->tile_coord(_player->pos(), g_mouse->pos);
+		_first = screen_to_tile(_player->pos(), g_mouse->pos);
 		_state = true;
 	}
 	else
 	{
-		_second = _board->tile_coord(_player->pos(), g_mouse->pos);
+		_second = screen_to_tile(_player->pos(), g_mouse->pos);
 		_state = false;
 		return (true);
 	}
@@ -72,7 +72,7 @@ bool Editor_interact::handle_mouse()
 
 	if (jgl::get_button(jgl::mouse_button::center) == jgl::mouse_state::release)
 	{
-		jgl::Vector2 target = _board->tile_coord(_player->pos(), g_mouse->pos);
+		jgl::Vector2 target = screen_to_tile(_player->pos(), g_mouse->pos);
 		Node* target_node = _board->node(target);
 		if (target_node == nullptr)
 			return false;
@@ -106,8 +106,7 @@ bool Editor_interact::handle_mouse()
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 		{
-			jgl::Vector2 target = _board->tile_coord(_player->pos(), g_mouse->pos);
-			std::cout << "Target found = " << target << std::endl;
+			jgl::Vector2 target = screen_to_tile(_player->pos(), g_mouse->pos);
 			tmp->use(jgl::Data(2, _board, &target));
 		}
 	}
@@ -140,21 +139,21 @@ void Editor_interact::render()
 	{
 		if (_state == true)
 		{
-			jgl::Vector2 _third = _board->tile_coord(_player->pos(), g_mouse->pos);
+			jgl::Vector2 _third = screen_to_tile(_player->pos(), g_mouse->pos);
 			jgl::Vector2 start = jgl::Vector2((_first.x < _third.x ? _first.x : _third.x), (_first.y < _third.y ? _first.y : _third.y));
 			jgl::Vector2 end = jgl::Vector2((_first.x > _third.x ? _first.x : _third.x), (_first.y > _third.y ? _first.y : _third.y));
 			for (float i = start.x; i <= end.x; i++)
 				for (float j = start.y; j <= end.y; j++)
 				{
-					jgl::Vector2 coord = _board->tile_on_screen(_player->pos(), jgl::Vector2(i, j));
+					jgl::Vector2 coord = tile_to_screen(_player->pos(), jgl::Vector2(i, j));
 					jgl::draw_rectangle(coord, node_size, 1, jgl::Color(0, 0, 0), _viewport);
 				}
 		}
 	}
 	else if (tmp->item_type() == Item_type::interact)
 	{
-		jgl::draw_rectangle(_board->tile_on_screen(_player->pos(), _pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
-		jgl::draw_rectangle(_board->tile_on_screen(_player->pos(), _blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
+		jgl::draw_rectangle(tile_to_screen(_player->pos(), _pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
+		jgl::draw_rectangle(tile_to_screen(_player->pos(), _blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
 	}
 	
 }

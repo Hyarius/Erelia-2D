@@ -7,7 +7,7 @@ void define_first_coord(jgl::Data param)
 	jgl::Vector2* first = param.acces<jgl::Vector2*>(2);
 	jgl::Vector2* second = param.acces<jgl::Vector2*>(3);
 
-	*first = board->tile_coord(player->pos(), g_mouse->pos);
+	*first = screen_to_tile(player->pos(), g_mouse->pos);
 }
 
 void define_second_coord(jgl::Data param)
@@ -17,7 +17,7 @@ void define_second_coord(jgl::Data param)
 	jgl::Vector2* first = param.acces<jgl::Vector2*>(2);
 	jgl::Vector2* second = param.acces<jgl::Vector2*>(3);
 
-	*second = board->tile_coord(player->pos(), g_mouse->pos);
+	*second = screen_to_tile(player->pos(), g_mouse->pos);
 }
 
 jgl::Funct funct_array[18] = {

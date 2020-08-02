@@ -3,14 +3,15 @@
 Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 60));
+	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 41));
 	create_item_list(_tileset);
-	_board = new Board(_tileset, "ressources/maps/world.map");
-	_player = new Player();
+	_board = new Board(_tileset, _charset, "ressources/maps/world.map");
+	_player = new Player(chunk_size / 2, _charset, 0);
 
 	_renderer = new Renderer(_board, _player, this);
 	_renderer->activate();
 
-	_player_controller = new Player_controller(_player, this);
+	_player_controller = new Player_controller(_board, _player, this);
 	_player_controller->activate();
 
 	_editor_contener = new jgl::Contener(this);
@@ -24,6 +25,8 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 
 	_console = new Console(_editor_inventory, _tileset, _editor_interacter, _board, _player, this);
 
+	
+
 	_editor_inventory->send_front();
 	_renderer->send_back();
 }
@@ -34,6 +37,8 @@ Game_engine::~Game_engine()
 {
 	if (_tileset != nullptr)
 		delete _tileset;
+	if (_charset != nullptr)
+		delete _charset;
 
 	if (_board != nullptr)
 		delete _board;
@@ -70,7 +75,7 @@ bool Game_engine::handle_keyboard()
 		else
 			_editor_inventory->shortcut()->activate();
 	}
-	if (jgl::get_key(jgl::key::tab) == jgl::key_state::release)
+	if (jgl::get_key(jgl::key::tab) == jgl::key_state::release || (_editor_contener->is_frozen() == false && jgl::get_key(jgl::key::escape) == jgl::key_state::release))
 	{
 		if (_editor_contener->is_frozen() == false)
 		{

@@ -90,11 +90,16 @@
     <ClCompile Include="srcs\editor_mouse_indicator.cpp" />
     <ClCompile Include="srcs\editor_shortcut.cpp" />
     <ClCompile Include="srcs\editor_tab.cpp" />
+    <ClCompile Include="srcs\entity.cpp" />
+    <ClCompile Include="srcs\Erelia\npc.cpp" />
+    <ClCompile Include="srcs\Erelia\player.cpp" />
     <ClCompile Include="srcs\item_data.cpp" />
     <ClCompile Include="srcs\item_slot.cpp" />
     <ClCompile Include="srcs\main.cpp" />
     <ClCompile Include="srcs\node_data.cpp" />
+    <ClCompile Include="srcs\player_controller.cpp" />
     <ClCompile Include="srcs\prefab.cpp" />
+    <ClCompile Include="srcs\renderer.cpp" />
     <ClCompile Include="srcs\shader_source.cpp" />
     <ClCompile Include="srcs\board.cpp" />
     <ClCompile Include="srcs\game_engine.cpp" />
@@ -163,10 +168,12 @@
     <ClInclude Include="includes\erelia_item.h" />
     <ClInclude Include="includes\erelia_item_slot.h" />
     <ClInclude Include="includes\Erelia_node.h" />
+    <ClInclude Include="includes\erelia_npc.h" />
     <ClInclude Include="includes\erelia_player.h" />
     <ClInclude Include="includes\erelia_player_controller.h" />
     <ClInclude Include="includes\erelia_prefab.h" />
     <ClInclude Include="includes\Erelia_renderer.h" />
+    <ClInclude Include="includes\erelia_entity.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
