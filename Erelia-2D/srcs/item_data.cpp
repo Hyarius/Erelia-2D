@@ -1,7 +1,7 @@
 #include "erelia.h"
 
 jgl::Array<jgl::String> item_type_name = {
-	"Node", "Env.", "Trainer", "Interact", "Prefab"
+	"Tile", "Env.", "Trainer", "Interact", "Prefab"
 };
 
 jgl::Array<Item*> node_item_list;
@@ -12,16 +12,16 @@ jgl::Array<Item*> prefab_item_list;
 jgl::Array<Item*> npc_item_list;
 
 jgl::Array<jgl::Array<Item*> *> item_array = {
-	& node_item_list, &env_item_list, &trainer_item_list, &interact_item_list, &prefab_item_list, &npc_item_list
+	&node_item_list, &env_item_list, &trainer_item_list, &interact_item_list, &prefab_item_list, &npc_item_list
 };
 
 extern jgl::Funct funct_array[19];
 
 void create_item_list(jgl::Sprite_sheet* tileset)
 {
-	for (size_t i = 0; i < node_array.size(); i++)
+	for (size_t i = 0; i < tile_array.size(); i++)
 	{
-		node_item_list.push_back( new Node_item(i, tileset, node_array[i]->sprite) );
+		node_item_list.push_back( new Node_item(i, tileset, tile_array[i]->sprite) );
 	}
 	for (size_t i = 0; i < 18; i++)
 	{

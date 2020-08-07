@@ -2,7 +2,7 @@
 
 Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
-	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 60));
+	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 72));
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 41));
 	create_item_list(_tileset);
 	_board = new Board(_tileset, _charset, "ressources/maps/world.map");
@@ -46,9 +46,9 @@ Game_engine::~Game_engine()
 		delete _player;
 
 	delete_item_list();
-	for (size_t i = 0; i < node_array.size(); i++)
+	for (size_t i = 0; i < tile_array.size(); i++)
 	{
-		delete node_array[i];
+		delete tile_array[i];
 	}
 	for (size_t i = 0; i < prefab_array.size(); i++)
 	{
@@ -56,41 +56,65 @@ Game_engine::~Game_engine()
 	}
 }
 
+void Game_engine::active_console()
+{
+	_editor_contener->set_frozen(true);
+	_console->activate();
+	_console->entry()->select();
+	_player_controller->set_frozen(true);
+	_editor_interacter->set_frozen(true);
+	_editor_inventory->desactivate();
+}
+
+void Game_engine::desactive_console()
+{
+	_editor_contener->set_frozen(false);
+	_console->desactivate();
+	_console->entry()->select();
+	_player_controller->set_frozen(false);
+	_editor_interacter->set_frozen(false);
+	_editor_inventory->activate();
+	desactive_inventory();
+}
+
+void Game_engine::active_inventory()
+{
+	_player_controller->set_frozen(true);
+	_editor_interacter->set_frozen(true);
+	_editor_inventory->enable();
+}
+
+void Game_engine::desactive_inventory()
+{
+	_player_controller->set_frozen(false);
+	_editor_interacter->set_frozen(false);
+	_editor_inventory->disable();
+}
+
+void Game_engine::update()
+{
+	_board->update();
+	_player->update(_board);
+}
+
 bool Game_engine::handle_keyboard()
 {
 	if (jgl::get_key(jgl::key::F2) == jgl::key_state::release ||
 		(jgl::get_key(jgl::key::escape) == jgl::key_state::release && _console->is_active() == true))
 	{
-		_editor_contener->set_frozen(!_editor_contener->is_frozen());
-		_console->set_active(!_console->is_active());
-		if (_console->is_active() == true)
-			_console->entry()->select();
-		_player_controller->set_frozen(!_player_controller->is_frozen());
-		_editor_interacter->set_frozen(!_editor_interacter->is_frozen());
-		if (_editor_contener->is_frozen() == true)
-		{
-			_editor_inventory->disable();
-			_editor_inventory->shortcut()->desactivate();
-		}
+		if (_console->is_active() == false)
+			active_console();
 		else
-			_editor_inventory->shortcut()->activate();
+			desactive_console();
 	}
-	if (jgl::get_key(jgl::key::tab) == jgl::key_state::release || (_editor_contener->is_frozen() == false && jgl::get_key(jgl::key::escape) == jgl::key_state::release))
+	if (jgl::get_key(jgl::key::tab) == jgl::key_state::release || (_editor_inventory->status() == true && jgl::get_key(jgl::key::escape) == jgl::key_state::release))
 	{
 		if (_editor_contener->is_frozen() == false)
 		{
 			if (_editor_inventory->status() == false)
-			{
-				_player_controller->set_frozen(true);
-				_editor_interacter->set_frozen(true);
-				_editor_inventory->enable();
-			}
+				active_inventory();
 			else
-			{
-				_player_controller->set_frozen(false);
-				_editor_interacter->set_frozen(false);
-				_editor_inventory->disable();
-			}
+				desactive_inventory();
 		}
 	}
 	return (false);

@@ -17,6 +17,9 @@ private:
 	jgl::Text_entry* _entry;
 	jgl::Array<jgl::String> _old_entry;
 
+	size_t _cmd_index;
+	jgl::Array<jgl::String> _old_cmd;
+
 public:
 	Console(Editor_inventory* p_inventory, jgl::Sprite_sheet* p_tileset, Editor_interact* p_interacter, Board* p_board, Player* p_player, jgl::Widget* p_parent = nullptr);
 	jgl::Text_entry* entry() { return (_entry); }
@@ -26,6 +29,8 @@ public:
 
 	bool handle_console_entry(jgl::String cmd);
 
+	bool handle_clear_command(jgl::Array<jgl::String>& tab);
+	bool handle_warp_command(jgl::Array<jgl::String>& tab);
 	bool handle_save_command(jgl::Array<jgl::String>& tab);
 	bool handle_load_command(jgl::Array<jgl::String>& tab);
 	bool handle_tp_command(jgl::Array<jgl::String>& tab);
@@ -35,6 +40,8 @@ public:
 	bool handle_prefab_command(jgl::Array<jgl::String>& tab);
 	bool handle_ghost_command(jgl::Array<jgl::String>& tab);
 	bool handle_coord_command(jgl::Array<jgl::String>& tab);
+	bool handle_link_command(jgl::Array<jgl::String>& tab);
+	bool handle_npc_command(jgl::Array<jgl::String>& tab);
 
 	bool handle_keyboard();
 	bool handle_mouse();

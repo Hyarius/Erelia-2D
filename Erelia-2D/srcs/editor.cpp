@@ -30,22 +30,22 @@ Editor_inventory::Editor_inventory(jgl::Widget* p_parent) : jgl::Widget(p_parent
 	_indicator = new Editor_mouse_indicator(this);
 	_indicator->activate();
 
-	size_t nb_part = 5;
-	size_t part = (item_array[0]->size() + 19) / nb_part;
-	for (size_t i = 0; i < item_type_name.size() + nb_part - 1; i++)
+	size_t nb_part = 6;
+	size_t part = 12 * 19;
+	for (size_t i = 0; i < nb_part; i++)
 	{
 		Editor_inventory_tab* result = new Editor_inventory_tab(19, _background);
-		if (i < nb_part)
+		for (size_t k = 0; k < part; k++)
 		{
-			size_t delta = i * part;
-			for (size_t k = 0; k < part; k++)
-				result->add_item_slot(item_array[0]->operator[](k + delta));
+			result->add_item_slot(item_array[0]->operator[](k + i * part));
 		}
-		else
-		{
-			for (size_t j = 0; j < item_array[i - nb_part + 1]->size(); j++)
-				result->add_item_slot(item_array[i - nb_part + 1]->operator[](j));
-		}
+		_tab.push_back(result);
+	}
+	for (size_t i = 1; i < item_type_name.size(); i++)
+	{
+		Editor_inventory_tab* result = new Editor_inventory_tab(19, _background);
+		for (size_t j = 0; j < item_array[i]->size(); j++)
+			result->add_item_slot(item_array[i]->operator[](j));
 		_tab.push_back(result);
 	}
 

@@ -6,7 +6,7 @@ class Prefab
 private:
 	jgl::String _name;
 	jgl::Vector2 _size;
-	std::map<jgl::Vector2, Node*> _content;
+	std::map<jgl::Vector2, Tile*> _content;
 
 public:
 	Prefab();

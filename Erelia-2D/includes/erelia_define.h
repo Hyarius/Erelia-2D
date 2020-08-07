@@ -5,15 +5,17 @@
 #define chunk_size 9
 #define node_size 32
 
-#define OBSTACLE		0b00000000
-#define WALKABLE		0b00011111
-#define DOWN_WALKABLE	0b00000010
-#define LEFT_WALKABLE	0b00000100
-#define RIGHT_WALKABLE	0b00001000
-#define UP_WALKABLE		0b00010000
-#define SWIMABLE		0b00100000
+#define OBSTACLE		0b000000000
+#define WALKABLE		0b000011111
+#define DOWN_WALKABLE	0b000000010
+#define LEFT_WALKABLE	0b000000100
+#define RIGHT_WALKABLE	0b000001000
+#define UP_WALKABLE		0b000010000
+#define SWIMABLE		0b000100000
+#define JUMPING			0b001000000
+#define CASCADE			0b010000000
 
-using node_type = char;
+using node_type = short;
 
 #define NODE_TAB		0
 #define ENV_TAB			5

@@ -16,8 +16,8 @@ void Prefab::save(jgl::String p_name, Board* board, jgl::Vector2 _first, jgl::Ve
 		for (float j = 0; j < _size.y; j++)
 		{
 			jgl::Vector2 pos = (jgl::Vector2(i, j)).floor();
-			Node* node = board->node(jgl::Vector2(i, j) + start);
-			_content[pos] = node;
+			Tile* tile = board->tile(jgl::Vector2(i, j) + start);
+			_content[pos] = tile;
 		}
 }
 
@@ -37,12 +37,12 @@ Prefab::Prefab(jgl::String path)
 		for (int i = 0; i < _size.x; i++)
 		{
 			int type = jgl::stoi(tab[i]);
-			if (type < static_cast<int>(node_array.size()))
+			if (type < static_cast<int>(tile_array.size()))
 			{
 				if (type < 0)
 					_content[jgl::Vector2(i, nb_line)] = nullptr;
 				else
-					_content[jgl::Vector2(i, nb_line)] = node_array[type];
+					_content[jgl::Vector2(i, nb_line)] = tile_array[type];
 			}
 		}
 	}
@@ -74,9 +74,9 @@ void Prefab::use(Board* board, jgl::Vector2 start)
 	for (auto tmp : _content)
 	{
 		jgl::Vector2 pos = tmp.first + start;
-		Node* node = tmp.second;
-		if (node != nullptr)
-			board->place(pos, node);
+		Tile* tile = tmp.second;
+		if (tile != nullptr)
+			board->place(pos, tile);
 	}
 	jgl::Vector2 A = ((start) / chunk_size).floor();
 	jgl::Vector2 B = ((start + _size) / chunk_size).floor();

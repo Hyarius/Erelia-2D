@@ -20,7 +20,7 @@ public:
 	bool is_border(int x, int y);
 	Node* node(jgl::Vector2 pos);
 	Chunk(jgl::Vector2 p_pos);
-	void place(jgl::Vector2 coord, Node* p_node, bool need_bake = false);
+	void place(jgl::Vector2 coord, Tile* p_tile, bool need_bake = false);
 	void bake(jgl::Sprite_sheet* tileset);
 	void render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Viewport* viewport);
 };

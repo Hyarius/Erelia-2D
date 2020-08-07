@@ -25,14 +25,14 @@ Chunk::Chunk(jgl::Vector2 p_pos)
 
 	for (size_t i = 0; i < chunk_size; i++)
 		for (size_t j = 0; j < chunk_size; j++)
-			_content[i][j] = nullptr;
+			_content[i][j] = new Node(nullptr);
 }
 
-void Chunk::place(jgl::Vector2 coord, Node* p_node, bool need_bake)
+void Chunk::place(jgl::Vector2 coord, Tile* p_tile, bool need_bake)
 {
 	int x = jgl::floor(coord.x);
 	int y = jgl::floor(coord.y);
-	_content[x][y] = p_node;
+	_content[x][y]->set_tile(p_tile);
 }
 
 void Chunk::bake(jgl::Sprite_sheet* tileset)
@@ -41,7 +41,7 @@ void Chunk::bake(jgl::Sprite_sheet* tileset)
 	_uvs.clear();
 	for (int i = 0; i < chunk_size; i++)
 		for (int j = 0; j < chunk_size; j++)
-			if (_content[i][j] != nullptr)
+			if (_content[i][j]->tile() != nullptr)
 			{
 				jgl::Vector2 tmp = (jgl::Vector2(i, j) + _pos * chunk_size) * node_size;
 
@@ -52,7 +52,7 @@ void Chunk::bake(jgl::Sprite_sheet* tileset)
 				_points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(1, 1) * node_size));
 				_points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(1, 0) * node_size));
 
-				jgl::Vector2 tmp_sprite = tileset->sprite(_content[i][j]->sprite);
+				jgl::Vector2 tmp_sprite = tileset->sprite(_content[i][j]->tile()->sprite);
 
 				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, 0.0f));
 				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, tileset->unit().y));
@@ -93,4 +93,5 @@ void Chunk::render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Viewpor
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(_points.size()));
+
 }

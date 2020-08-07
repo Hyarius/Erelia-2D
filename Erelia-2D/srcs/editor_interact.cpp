@@ -73,7 +73,7 @@ bool Editor_interact::handle_mouse()
 	if (jgl::get_button(jgl::mouse_button::center) == jgl::mouse_state::release)
 	{
 		jgl::Vector2 target = screen_to_tile(_player->pos(), g_mouse->pos);
-		Node* target_node = _board->node(target);
+		Tile* target_node = _board->tile(target);
 		if (target_node == nullptr)
 			return false;
 		_inventory->selected_slot()->set_item(node_item_list[target_node->index]);
@@ -90,7 +90,7 @@ bool Editor_interact::handle_mouse()
 	if (tmp == nullptr)
 		return (false);
 
-	if (tmp->item_type() == Item_type::node)
+	if (tmp->item_type() == Item_type::tile)
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::pressed ||
 			jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
@@ -120,7 +120,7 @@ void Editor_interact::update()
 	if (tmp == nullptr)
 		return;
 
-	if (tmp->item_type() != Item_type::node)
+	if (tmp->item_type() != Item_type::tile)
 		_state = false;
 }
 
@@ -135,7 +135,7 @@ void Editor_interact::render()
 	if (tmp == nullptr)
 		return;
 
-	if (tmp->item_type() == Item_type::node)
+	if (tmp->item_type() == Item_type::tile)
 	{
 		if (_state == true)
 		{

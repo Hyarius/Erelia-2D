@@ -8,7 +8,7 @@
 
 enum class Item_type
 {
-	node = 0,
+	tile = 0,
 	interact = 1,
 	prefab = 2,
 	count
@@ -45,7 +45,7 @@ private:
 	size_t _node_index;
 
 public:
-	Node_item(size_t p_node_index, jgl::Sprite_sheet* p_tileset, jgl::Vector2 p_sprite) : Item(Item_type::node, p_tileset, p_sprite)
+	Node_item(size_t p_node_index, jgl::Sprite_sheet* p_tileset, jgl::Vector2 p_sprite) : Item(Item_type::tile, p_tileset, p_sprite)
 	{
 		_node_index = p_node_index;
 	}
@@ -84,7 +84,7 @@ private:
 	Prefab* _prefab;
 
 public:
-	Prefab_item(Prefab* p_prefab, jgl::Sprite_sheet* p_tileset) : Item(Item_type::prefab, p_tileset, jgl::Vector2(18, 59))
+	Prefab_item(Prefab* p_prefab, jgl::Sprite_sheet* p_tileset) : Item(Item_type::prefab, p_tileset, jgl::Vector2(18, 71))
 	{
 		_prefab = p_prefab;
 	}

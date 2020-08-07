@@ -193,9 +193,6 @@
     <ClCompile Include="srcs\main.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="srcs\node_data.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="srcs\shader_source.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -251,6 +248,15 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="srcs\player_controller.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\basic_function.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\tile_data.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\link.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -414,9 +420,6 @@
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_share_object.h">
       <Filter>JGL\includes\structure</Filter>
     </ClInclude>
-    <ClInclude Include="includes\Erelia_node.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Erelia_board.h">
       <Filter>Includes</Filter>
     </ClInclude>
@@ -460,6 +463,12 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\erelia_npc.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Erelia_tile.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_node.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
