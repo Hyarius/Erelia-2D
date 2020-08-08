@@ -50,6 +50,9 @@ public:
 	void bake_chunk(jgl::Vector2 pos);
 	void update();
 	void render(jgl::Vector2 player_pos, jgl::Viewport* viewport);
+
+	Node* find_closest(jgl::Array<jgl::Vector2>& to_calc);
+	jgl::Array<jgl::Vector2> pathfinding(jgl::Vector2 start, jgl::Vector2 end);
 };
 
 #endif

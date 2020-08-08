@@ -298,7 +298,7 @@ bool Console::handle_coord_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 1)
 	{
-		_old_entry.push_front("Player coord : " + _player->pos().str());
+		_old_entry.push_front("Player coord : " + jgl::itoa(static_cast<int>(_player->pos().x)) + " / " + jgl::itoa(static_cast<int>(_player->pos().y)));
 		return (true);
 	}
 	else

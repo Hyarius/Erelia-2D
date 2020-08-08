@@ -19,19 +19,48 @@ public:
 class Node
 {
 private:
+	jgl::Vector2 _pos;
 	Tile* _tile;
 	Link* _link;
 	bool _occuped;
+	bool _calculated;
+	size_t _s_cost;
+	size_t _e_cost;
+	size_t _t_cost;
+
 public:
-	Node(Tile* p_tile)
+	Node(Tile* p_tile, jgl::Vector2 p_pos)
 	{
+		_pos = p_pos;
 		_tile = p_tile;
 		_link = nullptr;
 		_occuped = false;
+		_calculated = false;
 	}
 	Tile* tile() { return (_tile); }
 	Link* link() { return (_link); }
 	bool occuped() { return (_occuped); }
+	void set_calculated(bool p_state) { _calculated = p_state; }
+	bool calculated() { return (_calculated); }
+	jgl::Vector2 pos() { return (_pos); }
+	void reset_cost() { _s_cost = 0; _e_cost = 0; _t_cost = 0; _calculated = false; }
+	void calc_cost(jgl::Vector2 start, jgl::Vector2 end)
+	{
+		size_t s = static_cast<int>(std::abs(_pos.x - start.x)) + static_cast<int>(std::abs(_pos.y - start.y));
+		size_t e = static_cast<int>(std::abs(_pos.x - end.x)) + static_cast<int>(std::abs(_pos.y - end.y));
+
+		_s_cost = s;
+		_e_cost = e;
+		_t_cost = s + e;
+	}
+
+	void set_s_cost(size_t p_cost) { _s_cost = p_cost; }
+	void set_e_cost(size_t p_cost) { _e_cost = p_cost; }
+	void set_t_cost(size_t p_cost) { _t_cost = p_cost; }
+
+	size_t s_cost() { return (_s_cost); }
+	size_t e_cost() { return (_e_cost); }
+	size_t t_cost() { return (_t_cost); }
 
 	void set_tile(Tile* p_tile) { _tile = p_tile; }
 	void set_link(Link* p_link) { _link = p_link; }

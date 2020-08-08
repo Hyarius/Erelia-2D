@@ -34,9 +34,10 @@ bool Player_controller::handle_keyboard()
 					_player->set_look_dir(look_dir_value[i]);
 				return (true);
 			}
+			else
+				return (false);
 		}
 	}
-	
 	return (false);
 }
 

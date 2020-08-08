@@ -16,5 +16,16 @@ void Renderer::render()
 	_board->render(_player->pos(), _viewport);
 	_player->render(_player->pos(), _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), 50, 16, 1, jgl::text_color::white, jgl::text_style::normal, _viewport);
+	jgl::Array<jgl::Vector2> path = _board->pathfinding(_player->pos().round(), screen_to_tile(_player->pos(), g_mouse->pos));
+
+	for (size_t i = 0; i < path.size(); i++)
+	{
+		jgl::Vector2 pos = tile_to_screen(_player->pos(), path[i]);
+		Node* tmp = _board->node(path[i]);
+		jgl::draw_rectangle(pos, node_size, 1, jgl::Color(0, 0, 0));
+		jgl::draw_text(jgl::itoa(tmp->s_cost()), pos + jgl::Vector2(0.5f, 0.0f) * node_size, 10, 0, jgl::text_color::red, jgl::text_style::normal, _viewport);
+		jgl::draw_text(jgl::itoa(tmp->e_cost()), pos + jgl::Vector2(0.0f, 0.5f) * node_size, 10, 0, jgl::text_color::green, jgl::text_style::normal, _viewport);
+		jgl::draw_text(jgl::itoa(tmp->t_cost()), pos + jgl::Vector2(0.5f, 0.5f) * node_size, 10, 0, jgl::text_color::blue, jgl::text_style::normal, _viewport);
+	}
 }
 

@@ -353,3 +353,52 @@ void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
 		jgl::draw_centred_text(tmp.first, pos - jgl::Vector2(0, 30), 16, 1, jgl::text_color::green);
 	}
 }
+
+Node* Board::find_closest(jgl::Array<jgl::Vector2>& to_calc)
+{
+	Node* result = nullptr;
+
+	for (size_t i = 0; i < to_calc.size(); i++)
+	{
+		Node* other = node(to_calc[i]);
+		if (other != nullptr && other->calculated() == false && (result == nullptr || (result->e_cost() > other->e_cost())))
+			result = other;
+	}
+	return (result);
+}
+
+jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end)
+{
+	if (start == end)
+		return (jgl::Array<jgl::Vector2>());
+	static jgl::Vector2 neightbour[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
+
+	jgl::Array<jgl::Vector2> result;
+	jgl::Array<jgl::Vector2> to_calc;
+	
+	node(start)->calc_cost(start, end);
+	to_calc.push_back(start);
+	Node* target_node = node(start);
+	while (target_node != nullptr)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			jgl::Vector2 actual = target_node->pos() + neightbour[j];
+			Node* actual_node = node(actual);
+
+			if (actual_node != nullptr && actual_node->calculated() == false)
+			{
+				node(actual)->calc_cost(start, end);
+				to_calc.push_back(actual);
+			}
+		}
+		target_node->set_calculated(true);
+		target_node = find_closest(to_calc);
+		
+		if (target_node != nullptr && target_node->pos() == end)
+			target_node = nullptr;
+	}
+	for (size_t i = 0; i < to_calc.size(); i++)
+		node(to_calc[i])->set_calculated(false);
+	return (to_calc);
+}

@@ -25,7 +25,7 @@ Chunk::Chunk(jgl::Vector2 p_pos)
 
 	for (size_t i = 0; i < chunk_size; i++)
 		for (size_t j = 0; j < chunk_size; j++)
-			_content[i][j] = new Node(nullptr);
+			_content[i][j] = new Node(nullptr, jgl::Vector2(i, j) + _pos * chunk_size);
 }
 
 void Chunk::place(jgl::Vector2 coord, Tile* p_tile, bool need_bake)
