@@ -181,6 +181,7 @@ void Board::load(jgl::String path)
 	for (auto tmp : _chunks)
 		delete tmp.second;
 	_chunks.clear();
+	
 	std::fstream file = jgl::open_file(path);
 	while (file.eof() == false)
 	{
@@ -354,6 +355,27 @@ void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
 	}
 }
 
+bool Board::can_acces(jgl::Vector2 pos, jgl::Vector2 delta)
+{
+	static jgl::Vector2 move_delta[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
+	static node_type rev_type[4] = { DOWN_WALKABLE, UP_WALKABLE, LEFT_WALKABLE, RIGHT_WALKABLE };
+	static node_type type[4] = { UP_WALKABLE, DOWN_WALKABLE, RIGHT_WALKABLE, LEFT_WALKABLE };
+	size_t i = 0;
+	for (; i < 4; i++)
+		if (delta == move_delta[i])
+			break;
+	if (i == 4)
+		return (false);
+	Node* tmp = node((pos + delta).round());
+	Node* actual = node(pos.round());
+	if (tmp != nullptr && actual != nullptr &&
+		tmp->tile() != nullptr && actual->tile() != nullptr &&
+		(tmp->tile()->type & rev_type[i]) == rev_type[i] &&
+		(actual->tile()->type & type[i]) == type[i])
+		return (true);
+	return (false);
+}
+
 Node* Board::find_closest(jgl::Array<jgl::Vector2>& to_calc)
 {
 	Node* result = nullptr;
@@ -361,7 +383,7 @@ Node* Board::find_closest(jgl::Array<jgl::Vector2>& to_calc)
 	for (size_t i = 0; i < to_calc.size(); i++)
 	{
 		Node* other = node(to_calc[i]);
-		if (other != nullptr && other->calculated() == false && (result == nullptr || (result->e_cost() > other->e_cost())))
+		if (other != nullptr && other->calculated() == false && (result == nullptr || (result->t_cost() > other->t_cost())))
 			result = other;
 	}
 	return (result);
@@ -369,27 +391,36 @@ Node* Board::find_closest(jgl::Array<jgl::Vector2>& to_calc)
 
 jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end)
 {
-	if (start == end)
+	if (start == end ||
+		node(start) == nullptr || node(start)->tile() == nullptr || node(start)->tile()->type != WALKABLE ||
+		node(end) == nullptr || node(end)->tile() == nullptr || node(end)->tile()->type != WALKABLE)
 		return (jgl::Array<jgl::Vector2>());
 	static jgl::Vector2 neightbour[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
 
 	jgl::Array<jgl::Vector2> result;
 	jgl::Array<jgl::Vector2> to_calc;
 	
-	node(start)->calc_cost(start, end);
+	node(start)->calc_cost(0, end);
+	if (node(start)->t_cost() >= 15)
+		return (jgl::Array<jgl::Vector2>());
 	to_calc.push_back(start);
 	Node* target_node = node(start);
+	target_node->set_parent(nullptr);
 	while (target_node != nullptr)
 	{
 		for (size_t j = 0; j < 4; j++)
 		{
-			jgl::Vector2 actual = target_node->pos() + neightbour[j];
-			Node* actual_node = node(actual);
-
-			if (actual_node != nullptr && actual_node->calculated() == false)
+			if (can_acces(target_node->pos(), neightbour[j]) == true)
 			{
-				node(actual)->calc_cost(start, end);
-				to_calc.push_back(actual);
+				jgl::Vector2 actual = target_node->pos() + neightbour[j];
+				Node* actual_node = node(actual);
+
+				if (actual_node != nullptr && actual_node->calculated() == false)
+				{
+					node(actual)->calc_cost(target_node->s_cost() + 1, end);
+					node(actual)->set_parent(target_node);
+					to_calc.push_back(actual);
+				}
 			}
 		}
 		target_node->set_calculated(true);
@@ -400,5 +431,11 @@ jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end
 	}
 	for (size_t i = 0; i < to_calc.size(); i++)
 		node(to_calc[i])->set_calculated(false);
-	return (to_calc);
+	target_node = node(end);
+	while (target_node != nullptr)
+	{
+		result.push_back(target_node->pos());
+		target_node = target_node->parent();
+	}
+	return (result);
 }

@@ -18,24 +18,11 @@ Entity::Entity(jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_
 
 bool Entity::can_move(Board* board, jgl::Vector2 delta)
 {
-	static jgl::Vector2 move_delta[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
-	static node_type rev_type[4] = { DOWN_WALKABLE, UP_WALKABLE, LEFT_WALKABLE, RIGHT_WALKABLE };
-	static node_type type[4] = { UP_WALKABLE, DOWN_WALKABLE, RIGHT_WALKABLE, LEFT_WALKABLE };
-	size_t i = 0;
-	for (; i < 4; i++)
-		if (delta == move_delta[i])
-			break;
-	if (is_active() == false && i != 4)
-	{
-		Node* tmp = board->node((this->pos() + delta).round());
-		Node* actual = board->node((this->pos()).round());
-		if (tmp != nullptr && actual != nullptr &&
-			tmp->tile() != nullptr && actual->tile() != nullptr &&
-			tmp->occuped() == false &&
-			(tmp->tile()->type & rev_type[i]) == rev_type[i] &&
-			(actual->tile()->type & type[i]) == type[i])
-			return (true);
-	}
+	Node* tmp = board->node((this->pos() + delta).round());
+	
+	if (tmp != nullptr && tmp->occuped() == false &&
+		board->can_acces(this->pos(), delta) == true)
+		return (true);
 	return (false);
 }
 

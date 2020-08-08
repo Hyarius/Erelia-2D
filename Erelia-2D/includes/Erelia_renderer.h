@@ -14,6 +14,7 @@ private:
 public:
 	Renderer(Board* p_board, Player* p_player, jgl::Widget* p_parent);
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
+	bool handle_keyboard();
 	void render();
 };
 
