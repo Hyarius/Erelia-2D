@@ -1,12 +1,13 @@
 #include "erelia.h"
 
-Console::Console(Editor_inventory* p_inventory, jgl::Sprite_sheet* p_tileset, Editor_interact* p_interacter, Board* p_board, Player* p_player, jgl::Widget* p_parent) : jgl::Widget(p_parent)
+Console::Console(Game_engine* p_engine) : jgl::Widget(p_engine)
 {
-	_tileset = p_tileset;
-	_board = p_board;
-	_player = p_player;
-	_inventory = p_inventory;
-	_interacter = p_interacter;
+	_engine = p_engine;
+	_tileset = _engine->tileset();
+	_board = _engine->board();
+	_player = _engine->player();
+	_inventory = _engine->editor_inventory();
+	_interacter = _engine->editor_interacter();
 	_cmd_index = 0;
 	_entry = new jgl::Text_entry("", this);
 	_entry->activate();
@@ -55,7 +56,7 @@ bool Console::handle_warp_command(jgl::Array<jgl::String>& tab)
 		std::string tmp = tab[1].std();
 		if (_board->warps().contains(tmp) != 0)
 		{
-			_player->place(_board->warp(tmp));
+			_player->place(_board, _board->warp(tmp));
 			_old_entry.push_front("Player teleported to " + _player->pos().str());
 		}
 		else
@@ -70,6 +71,7 @@ bool Console::handle_save_command(jgl::Array<jgl::String>& tab)
 	if (tab.size() == 2)
 	{
 		_board->save("ressources/maps/" + tab[1] + ".map");
+		_engine->save("ressources/save/" + _player->name() + ".sav");
 		_old_entry.push_front("Saving map into file " + tab[1] + ".map");
 	}
 	else
@@ -81,6 +83,8 @@ bool Console::handle_load_command(jgl::Array<jgl::String>& tab)
 	if (tab.size() == 2)
 	{
 		_board->load("ressources/maps/" + tab[1] + ".map");
+		if (jgl::check_file_exist("ressources/save/Player.sav") == true)
+			_engine->load("ressources/save/" + _player->name() + ".sav");
 		_old_entry.push_front("Loading map from file " + tab[1] + ".map");
 	}
 	else
@@ -92,7 +96,7 @@ bool Console::handle_tp_command(jgl::Array<jgl::String>& tab)
 	if (tab.size() == 3)
 	{
 		jgl::Vector2 dest = jgl::Vector2(jgl::stof(tab[1]), jgl::stof(tab[2]));
-		_player->place(dest);
+		_player->place(_board, dest);
 		_old_entry.push_front("Teleport to " + _player->pos().str());
 	}
 	else
@@ -282,9 +286,15 @@ bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
 		}
 		_player->set_ghost(state);
 		if (state == true)
+		{
+			_board->node(_player->pos())->set_occupant(_player);
 			_old_entry.push_front("Ghost set to on");
+		}
 		else
+		{
+			_board->node(_player->pos())->set_occupant(nullptr);
 			_old_entry.push_front("Ghost set to off");
+		}
 
 		return (true);
 	}

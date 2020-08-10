@@ -22,7 +22,8 @@ public:
 	Chunk(jgl::Vector2 p_pos);
 	void place(jgl::Vector2 coord, Tile* p_tile, bool need_bake = false);
 	void bake(jgl::Sprite_sheet* tileset);
-	void render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Viewport* viewport);
+	void update(class Board* board);
+	void render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Vector2 player_pos, jgl::Viewport* viewport);
 };
 
 #endif

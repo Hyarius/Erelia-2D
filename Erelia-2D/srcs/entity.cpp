@@ -1,7 +1,8 @@
 #include "erelia.h"
 
-Entity::Entity(jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite)
+Entity::Entity(jgl::String p_name, jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite)
 {
+	_name = p_name;
 	_look_dir = Entity_direction::south;
 	_wait_time = 50;
 	_charset = p_charset;
@@ -15,7 +16,6 @@ Entity::Entity(jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_
 	_total_tick = _move_tick / _move_speed;
 }
 
-
 bool Entity::can_move(Board* board, jgl::Vector2 delta)
 {
 	Node* tmp = board->node((this->pos() + delta).round());
@@ -26,14 +26,21 @@ bool Entity::can_move(Board* board, jgl::Vector2 delta)
 	return (false);
 }
 
-void Entity::place(jgl::Vector2 p_pos)
+void Entity::place(Board* board, jgl::Vector2 p_pos)
 {
+	board->node(_pos.round())->set_occupant(nullptr);
 	_pos = p_pos.round();
+	board->node(_pos.round())->set_occupant(this);
 	_did_tp = true;
 	_in_motion = true;
 	_total_tick = 0;
 	_last_tick = static_cast<float>(g_time);
 	_actual_tick = _last_tick;
+}
+
+void Entity::update(Board* board)
+{
+	update_pos(board);
 }
 
 void Entity::move(jgl::Vector2 delta)
@@ -56,8 +63,10 @@ void Entity::move(jgl::Vector2 delta)
 	_actual_tick = _last_tick;
 	_direction = delta / (_move_tick / _move_speed);
 }
-void Entity::update_pos()
+void Entity::update_pos(Board *board)
 {
+	jgl::Vector2 rpos = _pos.round();
+
 	if (_in_motion == true)
 	{
 		if (_last_tick + _wait_time > g_time)
@@ -81,6 +90,12 @@ void Entity::update_pos()
 	_pos += delta_pos;
 	if (_total_tick >= (_move_tick / _move_speed))
 		_direction = 0;
+
+	if (rpos != _pos.round())
+	{
+		board->node(rpos)->set_occupant(nullptr);
+		board->node(_pos.round())->set_occupant(this);
+	}
 }
 
 jgl::Array<size_t> tmp_delta[9]

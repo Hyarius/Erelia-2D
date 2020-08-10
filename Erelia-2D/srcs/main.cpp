@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-	jgl::Application app = jgl::Application("Erelia 2D", 0.8f);
+	jgl::Application app = jgl::Application("Erelia 2D", jgl::Vector2(640, 420));
 	//app.set_max_fps(60);
 	jgl::set_font_path("ressources/font/karma suture.ttf");
 

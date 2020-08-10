@@ -54,13 +54,13 @@ void Editor_shortcut_bar::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p
 	_background->set_geometry(0, p_area);
 
 	size_t nb = _slots.size();
-	float offset = 10;
+	float offset = p_area.y / 8;
 	float size = p_area.y - offset * 2;
-	float space = ((p_area.x - offset * 2) - (nb * size)) / (nb - 1);
-	jgl::Vector2 delta = (p_area - jgl::Vector2(space * (nb - 1) + size * nb, size)) / 2;
+	float space = (p_area.x - (offset * 2)) / static_cast<float>(nb);// ((p_area.x - offset * 2) - (nb * size)) / (nb - 1);
+	jgl::Vector2 delta = jgl::Vector2(offset, (p_area.y - size) / 2);
 	for (size_t i = 0; i < nb; i++)
 	{
-		jgl::Vector2 pos = delta + jgl::Vector2((size + space) * i, 0.0f);
+		jgl::Vector2 pos = delta + jgl::Vector2(space * i, 0.0f);
 		_slots[i]->set_geometry(pos, size);
 	}
 	_slots[_index]->select();

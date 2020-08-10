@@ -151,7 +151,7 @@ bool Editor_inventory::handle_mouse()
 
 void Editor_inventory::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	float tmp_size = node_size * 2.5f + 5;
+	float tmp_size = p_area.x / 10.2;
 	jgl::Vector2 shortcut_size = jgl::Vector2(tmp_size * 10, tmp_size);
 	jgl::Vector2 tab_size = jgl::Vector2(shortcut_size.x, p_area.y - shortcut_size.y - 30);
 	float tmp_value = (p_area.x - tab_size.x - 40) / 2.0f;

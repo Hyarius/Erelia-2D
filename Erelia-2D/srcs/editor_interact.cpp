@@ -5,6 +5,7 @@ Editor_interact::Editor_interact(Editor_inventory* p_inventory, Board* p_board, 
 	_inventory = p_inventory;
 	_board = p_board;
 	_player = p_player;
+	_selected_entity = nullptr;
 }
 
 bool Editor_interact::handle_click()
@@ -100,7 +101,7 @@ bool Editor_interact::handle_mouse()
 	else if (tmp->item_type() == Item_type::interact)
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
-			tmp->use(jgl::Data(4, _board, _player, &_pink_flag, &_blue_flag));
+			tmp->use(jgl::Data(5, _board, _player, &_pink_flag, &_blue_flag, &_selected_entity));
 	}
 	else if (tmp->item_type() == Item_type::prefab)
 	{
@@ -154,6 +155,18 @@ void Editor_interact::render()
 	{
 		jgl::draw_rectangle(tile_to_screen(_player->pos(), _pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
 		jgl::draw_rectangle(tile_to_screen(_player->pos(), _blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
+	}
+
+	if (_selected_entity != nullptr)
+	{
+		NPC* tmp = static_cast<NPC*>(_selected_entity);
+		if (tmp->check_point().size() > 1)
+		{
+			for (size_t i = 0; i < tmp->check_point().size(); i++)
+			{
+				jgl::draw_rectangle(tile_to_screen(_player->pos(), tmp->check_point(i)), node_size, 1, jgl::Color(0, 255, 0));
+			}
+		}
 	}
 	
 }

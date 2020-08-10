@@ -12,6 +12,7 @@ enum class Entity_direction
 class Entity
 {
 protected:
+	jgl::String _name;
 	Entity_direction _look_dir;
 	jgl::Sprite_sheet* _charset;
 	jgl::Vector2 _sprite;
@@ -27,8 +28,10 @@ protected:
 	float _actual_tick;
 	float _move_tick;
 public:
-	Entity(jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite);
-	void place(jgl::Vector2 p_pos);
+	Entity(jgl::String p_name, jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite);
+	jgl::String name() { return (_name); }
+	void set_name(jgl::String p_name) { _name = p_name; }
+	void place(class Board* board, jgl::Vector2 p_pos);
 
 	void set_wait_time(Uint32 p_time) { _wait_time = p_time; }
 	Uint32 wait_time() { return (_wait_time); }
@@ -55,7 +58,8 @@ public:
 
 	void render(jgl::Vector2 player_pos, jgl::Viewport* p_viewport);
 	void move(jgl::Vector2 delta);
-	void update_pos();
+	virtual void update(class Board* board);
+	void update_pos(class Board* board);
 };
 
 #endif

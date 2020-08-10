@@ -6,7 +6,9 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 41));
 	create_item_list(_tileset);
 	_board = new Board(_tileset, _charset, "ressources/maps/world.map");
-	_player = new Player(chunk_size / 2, _charset, 0);
+	_player = new Player(_charset, 0);
+	if (jgl::check_file_exist("ressources/save/Player.sav") == true)
+		load("ressources/save/Player.sav");
 
 	_renderer = new Renderer(_board, _player, this);
 	_renderer->activate();
@@ -23,9 +25,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_editor_interacter = new Editor_interact(_editor_inventory, _board, _player, _editor_contener);
 	_editor_interacter->activate();
 
-	_console = new Console(_editor_inventory, _tileset, _editor_interacter, _board, _player, this);
-
-	
+	_console = new Console(this);
 
 	_editor_inventory->send_front();
 	_renderer->send_back();
@@ -54,6 +54,23 @@ Game_engine::~Game_engine()
 	{
 		delete prefab_array[i];
 	}
+}
+
+void Game_engine::save(jgl::String path)
+{
+	std::fstream file = jgl::open_file(path, std::ios_base::out | std::ios_base::trunc);
+
+	file << _player->name() << std::endl;
+	file << _player->pos().x << ";" << _player->pos().y << std::endl;
+}
+
+void Game_engine::load(jgl::String path)
+{
+	std::fstream file = jgl::open_file(path, std::ios_base::in);
+
+	_player->set_name(jgl::get_str(file));
+	jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
+	_player->place(_board, jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
 }
 
 void Game_engine::active_console()
@@ -93,8 +110,7 @@ void Game_engine::desactive_inventory()
 
 void Game_engine::update()
 {
-	_board->update();
-	_player->update(_board);
+	_board->update(_player->pos());
 }
 
 bool Game_engine::handle_keyboard()
@@ -129,7 +145,8 @@ bool Game_engine::handle_mouse()
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
 	_renderer->set_geometry(0, p_area);
-	_editor_inventory->set_geometry(50, p_area - 100);
+	int tmp = g_application->size().x / 30;
+	_editor_inventory->set_geometry(tmp, p_area - tmp * 2);
 	_editor_interacter->set_geometry(0, p_area);
 
 	_console->set_geometry(0, g_application->size());

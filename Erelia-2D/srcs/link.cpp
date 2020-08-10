@@ -6,10 +6,10 @@ Link::Link(jgl::Vector2 p_A, jgl::Vector2 p_B)
 	_B = p_B;
 }
 
-void Link::use(Player* player)
+void Link::use(Board* board, Player* player)
 {
 	if (player->pos().round() == _A.round())
-		player->place(_B);
+		player->place(board, _B);
 	else
-		player->place(_A);
+		player->place(board, _A);
 }

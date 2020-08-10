@@ -82,6 +82,7 @@ class Editor_interact : public jgl::Widget
 {
 private:
 	Editor_inventory* _inventory;
+	Entity* _selected_entity;
 	Board* _board;
 	Player* _player;
 

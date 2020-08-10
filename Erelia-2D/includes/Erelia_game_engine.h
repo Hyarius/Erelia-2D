@@ -31,6 +31,18 @@ private:
 	Console* _console;
 
 public:
+	jgl::Sprite_sheet* tileset() { return (_tileset);}
+	jgl::Sprite_sheet* charset() { return (_charset); }
+	Board* board() { return (_board); }
+	Player* player() { return (_player); }
+
+	Renderer* renderer() { return (_renderer); }
+	jgl::Contener* editor_contener() { return (_editor_contener); }
+	Player_controller* player_controller() { return (_player_controller); }
+	Editor_inventory* editor_inventory() { return (_editor_inventory); }
+	Editor_interact* editor_interacter() { return (_editor_interacter); }
+	Console* console() { return (_console); }
+
 	Game_engine(jgl::Widget* p_parent = nullptr);
 	~Game_engine();
 
@@ -38,6 +50,9 @@ public:
 	void desactive_console();
 	void active_inventory();
 	void desactive_inventory();
+
+	void save(jgl::String path);
+	void load(jgl::String path);
 
 	void update();
 	bool handle_keyboard();

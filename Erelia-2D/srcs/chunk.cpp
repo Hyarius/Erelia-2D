@@ -72,7 +72,15 @@ void Chunk::bake(jgl::Sprite_sheet* tileset)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _points.size() * 2, static_cast<const float*>(&(tmp2[0].x)), GL_STATIC_DRAW);
 }
 
-void Chunk::render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Viewport* viewport)
+void Chunk::update(Board* board)
+{
+	for (size_t i = 0; i < chunk_size; i++)
+		for (size_t j = 0; j < chunk_size; j++)
+			if (_content[i][j]->occupant() != nullptr)
+				_content[i][j]->occupant()->update(board);
+}
+
+void Chunk::render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Vector2 player_pos, jgl::Viewport* viewport)
 {
 	glBindVertexArray(g_application->vertex_array());
 
@@ -94,4 +102,8 @@ void Chunk::render(jgl::Sprite_sheet* tileset, jgl::Vector2 center, jgl::Viewpor
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(_points.size()));
 
+	for (size_t i = 0; i < chunk_size; i++)
+		for (size_t j = 0; j < chunk_size; j++)
+			if (_content[i][j]->occupant() != nullptr)
+				_content[i][j]->occupant()->render(player_pos, viewport);
 }

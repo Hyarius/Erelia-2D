@@ -8,10 +8,10 @@ Chunk* Board::chunk(jgl::Vector2 pos)
 }
 Tile* Board::tile(jgl::Vector2 pos)
 {
-	Chunk* target_chunk = chunk(chunk_pos(pos));
+	Chunk* target_chunk = chunk(chunk_pos(pos.round()));
 	if (target_chunk == nullptr)
 		return nullptr;
-	jgl::Vector2 target_pos = rel_node_pos(pos);
+	jgl::Vector2 target_pos = rel_node_pos(pos.round());
 	Node* target_node = target_chunk->node(target_pos);
 	if (target_node == nullptr)
 		return nullptr;
@@ -19,10 +19,10 @@ Tile* Board::tile(jgl::Vector2 pos)
 }
 Node* Board::node(jgl::Vector2 pos)
 {
-	Chunk* target_chunk = chunk(chunk_pos(pos));
+	Chunk* target_chunk = chunk(chunk_pos(pos.round()));
 	if (target_chunk == nullptr)
 		return nullptr;
-	jgl::Vector2 target_pos = rel_node_pos(pos);
+	jgl::Vector2 target_pos = rel_node_pos(pos.round());
 	Node* target_node = target_chunk->node(target_pos);
 	if (target_node == nullptr)
 		return nullptr;
@@ -36,16 +36,18 @@ Board::Board(jgl::Sprite_sheet* p_tileset, jgl::Sprite_sheet* p_charset, jgl::St
 }
 Board::~Board()
 {
-	for (auto tmp : _chunks)
-	{
-		delete tmp.second;
-	}
+	clear();
 }
 void Board::clear()
 {
 	for (auto tmp : _chunks)
 		delete tmp.second;
 	_chunks.clear();
+	_warps.clear();
+	for (size_t i = 0; i < _npc_array.size(); i++)
+		delete _npc_array[i];
+	for (size_t i = 0; i < _links.size(); i++)
+		delete _links[i];
 }
 void Board::save(jgl::String path)
 {
@@ -148,13 +150,15 @@ void Board::load_npc(std::fstream& file, jgl::Array<jgl::String> tab)
 		if (line.size() == 0)
 			break;
 		jgl::Array<jgl::String> tab = line.split(";");
-		if (tab.size() < 5)
+		if (tab.size() < 5 || tab.size() % 2 == 0)
 			jgl::error_exit(1, "Error in map file - Line [" + line + "]");
 		jgl::String name = tab[0];
 		jgl::Vector2 pos = jgl::Vector2(jgl::stoi(tab[1]), jgl::stoi(tab[2]));
 		jgl::Vector2 sprite = jgl::Vector2(jgl::stoi(tab[3]), jgl::stoi(tab[4]));
 		NPC* npc = new NPC(name, pos, _charset, sprite);
-		_npc_array.push_back(npc);
+		for (size_t i = 5; i < tab.size(); i += 2)
+			npc->add_check_point(jgl::Vector2(jgl::stoi(tab[i]), jgl::stoi(tab[i + 1])));
+		add_npc(npc);
 	}
 }
 
@@ -178,9 +182,7 @@ void Board::load_link(std::fstream& file, jgl::Array<jgl::String> tab)
 
 void Board::load(jgl::String path)
 {
-	for (auto tmp : _chunks)
-		delete tmp.second;
-	_chunks.clear();
+	clear();
 	
 	std::fstream file = jgl::open_file(path);
 	while (file.eof() == false)
@@ -236,6 +238,7 @@ void Board::add_link(jgl::Vector2 p_a, jgl::Vector2 p_b, bool dual)
 void Board::add_npc(NPC* p_npc)
 {
 	_npc_array.push_back(p_npc);
+	node(p_npc->pos())->set_occupant(p_npc);
 }
 
 void Board::remove_npc(jgl::String p_name)
@@ -276,11 +279,11 @@ void Board::remove_warp(jgl::String name)
 
 jgl::Vector2 Board::chunk_pos(jgl::Vector2 node_pos)
 {
-	return ((node_pos / chunk_size).floor());
+return ((node_pos / chunk_size).floor());
 }
 jgl::Vector2 Board::rel_node_pos(jgl::Vector2 node_pos)
 {
-	jgl::Vector2 tmp = chunk_pos(node_pos);
+	jgl::Vector2 tmp = chunk_pos(node_pos.round());
 	return (node_pos - tmp * chunk_size);
 }
 void Board::place(jgl::Vector2 node_pos, size_t index, bool need_bake)
@@ -319,12 +322,19 @@ void Board::bake_chunk(jgl::Vector2 pos)
 	_chunks[pos]->bake(_tileset);
 }
 
-void Board::update()
+void Board::update(jgl::Vector2 player_pos)
 {
-	for (size_t i = 0; i < _npc_array.size(); i++)
-	{
-		_npc_array[i]->update(this);
-	}
+	jgl::Vector2 start_node = screen_to_tile(player_pos, 0);
+	jgl::Vector2 end_node = screen_to_tile(player_pos, g_application->size());
+	jgl::Vector2 start = (start_node / chunk_size).floor();
+	jgl::Vector2 end = (end_node / chunk_size).floor();
+	for (float i = start.x; i <= end.x; i++)
+		for (float j = start.y; j <= end.y; j++)
+		{
+			jgl::Vector2 tmp = jgl::Vector2(i, j);
+			if (_chunks.contains(tmp) != 0)
+				_chunks[tmp]->update(this);
+		}
 }
 
 void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
@@ -339,14 +349,8 @@ void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->render(_tileset, delta, viewport);
+				_chunks[tmp]->render(_tileset, delta, player_pos, viewport);
 		}
-	for (size_t i = 0; i < _npc_array.size(); i++)
-	{
-		jgl::Vector2 pos = _npc_array[i]->pos();
-		if (point_in_rectangle(pos, start_node, end_node - start_node) == true)
-			_npc_array[i]->render(player_pos, viewport);
-	}
 	for (auto tmp : _warps)
 	{
 		jgl::Vector2 pos = tile_to_screen(player_pos, tmp.second) + node_size / 2;
@@ -357,12 +361,13 @@ void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
 
 bool Board::can_acces(jgl::Vector2 pos, jgl::Vector2 delta)
 {
+	jgl::Vector2 norm_delta = delta.normalize().round();
 	static jgl::Vector2 move_delta[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
 	static node_type rev_type[4] = { DOWN_WALKABLE, UP_WALKABLE, LEFT_WALKABLE, RIGHT_WALKABLE };
 	static node_type type[4] = { UP_WALKABLE, DOWN_WALKABLE, RIGHT_WALKABLE, LEFT_WALKABLE };
 	size_t i = 0;
 	for (; i < 4; i++)
-		if (delta == move_delta[i])
+		if (norm_delta == move_delta[i])
 			break;
 	if (i == 4)
 		return (false);
@@ -372,7 +377,14 @@ bool Board::can_acces(jgl::Vector2 pos, jgl::Vector2 delta)
 		tmp->tile() != nullptr && actual->tile() != nullptr &&
 		(tmp->tile()->type & rev_type[i]) == rev_type[i] &&
 		(actual->tile()->type & type[i]) == type[i])
-		return (true);
+		{
+			if ((tmp->tile()->type & JUMPING) == JUMPING)
+			{
+				return (can_acces(pos, delta + norm_delta));
+			}
+			else
+				return (true);
+		}
 	return (false);
 }
 
@@ -401,7 +413,7 @@ jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end
 	jgl::Array<jgl::Vector2> to_calc;
 	
 	node(start)->calc_cost(0, end);
-	if (node(start)->t_cost() >= 15)
+	if (node(start)->t_cost() >= 30)
 		return (jgl::Array<jgl::Vector2>());
 	to_calc.push_back(start);
 	Node* target_node = node(start);
@@ -414,10 +426,11 @@ jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end
 			{
 				jgl::Vector2 actual = target_node->pos() + neightbour[j];
 				Node* actual_node = node(actual);
-
 				if (actual_node != nullptr && actual_node->calculated() == false)
 				{
 					node(actual)->calc_cost(target_node->s_cost() + 1, end);
+					if (node(actual)->t_cost() > 30)
+						return (jgl::Array<jgl::Vector2>());
 					node(actual)->set_parent(target_node);
 					to_calc.push_back(actual);
 				}
@@ -437,5 +450,6 @@ jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end
 		result.push_back(target_node->pos());
 		target_node = target_node->parent();
 	}
+	result.reverse();
 	return (result);
 }

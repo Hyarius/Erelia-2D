@@ -48,7 +48,7 @@ public:
 	void place(jgl::Vector2 node_pos, size_t index, bool need_bake = false);
 	void place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake = false);
 	void bake_chunk(jgl::Vector2 pos);
-	void update();
+	void update(jgl::Vector2 player_pos);
 	void render(jgl::Vector2 player_pos, jgl::Viewport* viewport);
 
 	bool can_acces(jgl::Vector2 pos, jgl::Vector2 delta);

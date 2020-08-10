@@ -13,7 +13,7 @@ public:
 	Link(jgl::Vector2 p_A, jgl::Vector2 p_B);
 	jgl::Vector2 a() { return (_A); }
 	jgl::Vector2 b() { return (_B); }
-	void use(Player* player);
+	void use(class Board* board, Player* player);
 };
 
 class Node
@@ -22,7 +22,7 @@ private:
 	jgl::Vector2 _pos;
 	Tile* _tile;
 	Link* _link;
-	bool _occuped;
+	class Entity* _occupant;
 
 	bool _calculated;
 	size_t _s_cost;
@@ -36,12 +36,13 @@ public:
 		_pos = p_pos;
 		_tile = p_tile;
 		_link = nullptr;
-		_occuped = false;
+		_occupant = nullptr;
 		_calculated = false;
 	}
 	Tile* tile() { return (_tile); }
 	Link* link() { return (_link); }
-	bool occuped() { return (_occuped); }
+	class Entity* occupant(){return (_occupant);}
+	bool occuped() { return (_occupant != nullptr); }
 	void set_calculated(bool p_state) { _calculated = p_state; }
 	bool calculated() { return (_calculated); }
 	Node* parent() { return (_parent); }
@@ -67,7 +68,7 @@ public:
 
 	void set_tile(Tile* p_tile) { _tile = p_tile; }
 	void set_link(Link* p_link) { _link = p_link; }
-	void set_occuped(bool p_occuped) { _occuped = p_occuped; }
+	void set_occupant(class Entity* p_occupant) { _occupant = p_occupant; }
 };
 
 #endif

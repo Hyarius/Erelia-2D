@@ -24,11 +24,11 @@ bool Player_controller::handle_keyboard()
 					_player->move(move_delta[i]);
 				else if (_player->can_move(_board, move_delta[i]) == true)
 				{
-					jgl::Vector2 tmp = move_delta[i];
-					if ((_board->node(_player->pos().round() + move_delta[i])->tile()->type & JUMPING) == JUMPING)
-						tmp *= 2;
-					_board->node(_player->pos().round() + tmp)->set_occuped(true);
-					_player->move(tmp);
+					jgl::Vector2 tmp_pos = move_delta[i];
+					while ((_board->node(_player->pos().round() + tmp_pos)->tile()->type & JUMPING) == JUMPING)
+						tmp_pos += move_delta[i];
+					_board->node(_player->pos().round() + tmp_pos)->set_occupant(_player);
+					_player->move(tmp_pos);
 				}
 				else
 					_player->set_look_dir(look_dir_value[i]);
@@ -48,8 +48,8 @@ void Player_controller::update()
 	{
 		if (_player->did_tp() == false)
 		{
-			_board->node(_player->pos().round())->set_occuped(false);
-			actual->link()->use(_player);
+			_board->node(_player->pos().round())->set_occupant(nullptr);
+			actual->link()->use(_board, _player);
 		}
 	}
 
