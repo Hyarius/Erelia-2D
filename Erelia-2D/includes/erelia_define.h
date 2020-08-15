@@ -2,8 +2,7 @@
 #define ERELIA_DEFINE_H
 
 
-#define chunk_size 9
-#define node_size 64
+#define CHUNK_SIZE 9
 
 #define OBSTACLE		0b000000000
 #define WALKABLE		0b000011111

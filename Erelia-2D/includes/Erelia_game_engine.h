@@ -1,6 +1,8 @@
 #ifndef ERELIA_GAME_ENGINE_H
 #define ERELIA_GAME_ENGINE_H
 
+extern int node_size;
+
 #include "erelia_board.h"
 #include "erelia_player.h"
 
@@ -10,6 +12,8 @@
 
 #include "erelia_prefab.h"
 #include "erelia_console.h"
+
+#include "Erelia_interacter.h"
 
 extern std::string custom_texture_shader_vert;
 extern std::string custom_texture_shader_frag;
@@ -30,6 +34,8 @@ private:
 
 	Console* _console;
 
+	Interacter* _interacter;
+
 public:
 	jgl::Sprite_sheet* tileset() { return (_tileset);}
 	jgl::Sprite_sheet* charset() { return (_charset); }
@@ -46,6 +52,8 @@ public:
 	Game_engine(jgl::Widget* p_parent = nullptr);
 	~Game_engine();
 
+	void active_interacter(Entity* entity);
+	void desactive_interacter();
 	void active_console();
 	void desactive_console();
 	void active_inventory();

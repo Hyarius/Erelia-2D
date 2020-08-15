@@ -78,8 +78,8 @@ void Prefab::use(Board* board, jgl::Vector2 start)
 		if (tile != nullptr)
 			board->place(pos, tile);
 	}
-	jgl::Vector2 A = ((start) / chunk_size).floor();
-	jgl::Vector2 B = ((start + _size) / chunk_size).floor();
+	jgl::Vector2 A = ((start) / CHUNK_SIZE).floor();
+	jgl::Vector2 B = ((start + _size) / CHUNK_SIZE).floor();
 	for (float i = A.x; i <= B.x; i++)
 		for (float j = A.y; j <= B.y; j++)
 		{

@@ -3,6 +3,8 @@
 
 #include "jgl.h"
 
+//#include "vld.h"
+
 #include "erelia_define.h"
 
 extern GLuint programID;

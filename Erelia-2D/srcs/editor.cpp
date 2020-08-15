@@ -151,8 +151,7 @@ bool Editor_inventory::handle_mouse()
 
 void Editor_inventory::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	float tmp_size = p_area.x / 10.2;
-	jgl::Vector2 shortcut_size = jgl::Vector2(tmp_size * 10, tmp_size);
+	jgl::Vector2 shortcut_size = jgl::Vector2(p_area.x - p_area.y / 2, p_area.y / 8);
 	jgl::Vector2 tab_size = jgl::Vector2(shortcut_size.x, p_area.y - shortcut_size.y - 30);
 	float tmp_value = (p_area.x - tab_size.x - 40) / 2.0f;
 	jgl::Vector2 button_size = jgl::Vector2(tmp_value > 100 ? 100 : tmp_value, 30.0f);
@@ -170,7 +169,9 @@ void Editor_inventory::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_ar
 		_tab[i]->set_geometry(10, tab_size);
 
 	for (size_t i = 0; i < _tab_button.size(); i++)
+	{
 		_tab_button[i]->set_geometry(button_pos + jgl::Vector2((i % 2) * (button_size.x + 10), (i / 2) * (button_size.y + 10)), button_size);
+	}
 }
 
 void Editor_inventory::render()

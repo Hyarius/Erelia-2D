@@ -37,8 +37,8 @@ void Editor_interact::handle_multi_pos(Item* tmp)
 			jgl::Vector2 pos = jgl::Vector2(i, j);
 			tmp->use(jgl::Data(2, _board, &pos));
 		}
-	start = (start / chunk_size).floor();
-	end = (end / chunk_size).floor();
+	start = (start / CHUNK_SIZE).floor();
+	end = (end / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
@@ -56,8 +56,8 @@ void Editor_interact::handle_remove_multi_pos()
 			jgl::Vector2 pos = jgl::Vector2(i, j);
 			_board->place(pos, nullptr);
 		}
-	start = (start / chunk_size).floor();
-	end = (end / chunk_size).floor();
+	start = (start / CHUNK_SIZE).floor();
+	end = (end / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
@@ -160,11 +160,14 @@ void Editor_interact::render()
 	if (_selected_entity != nullptr)
 	{
 		NPC* tmp = static_cast<NPC*>(_selected_entity);
+		jgl::draw_centred_text(tmp->name(), tile_to_screen(_player->pos(), tmp->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
 		if (tmp->check_point().size() > 1)
 		{
 			for (size_t i = 0; i < tmp->check_point().size(); i++)
 			{
-				jgl::draw_rectangle(tile_to_screen(_player->pos(), tmp->check_point(i)), node_size, 1, jgl::Color(0, 255, 0));
+				jgl::Vector2 pos = tile_to_screen(_player->pos(), tmp->check_point(i));
+				jgl::draw_centred_text(jgl::itoa(i), pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
+				jgl::draw_rectangle(pos, node_size, 1, jgl::Color(0, 255, 0));
 			}
 		}
 	}

@@ -8,6 +8,7 @@
 class Console : public jgl::Widget
 {
 private:
+	bool _complete;
 	class Game_engine* _engine;
 	Board* _board;
 	Player* _player;
@@ -28,6 +29,8 @@ public:
 	jgl::Array<size_t> parse_regex_simple(jgl::String text);
 	jgl::Array<size_t> parse_regex_percent(jgl::String text);
 
+	bool complete() { return (_complete); }
+
 	bool handle_console_entry(jgl::String cmd);
 
 	bool handle_clear_command(jgl::Array<jgl::String>& tab);
@@ -43,6 +46,8 @@ public:
 	bool handle_coord_command(jgl::Array<jgl::String>& tab);
 	bool handle_link_command(jgl::Array<jgl::String>& tab);
 	bool handle_npc_command(jgl::Array<jgl::String>& tab);
+
+	void start();
 
 	bool handle_keyboard();
 	bool handle_mouse();

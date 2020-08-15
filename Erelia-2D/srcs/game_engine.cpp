@@ -27,6 +27,8 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 
 	_console = new Console(this);
 
+	_interacter = new Interacter(this);
+
 	_editor_inventory->send_front();
 	_renderer->send_back();
 }
@@ -68,16 +70,27 @@ void Game_engine::load(jgl::String path)
 {
 	std::fstream file = jgl::open_file(path, std::ios_base::in);
 
-	_player->set_name(jgl::get_str(file));
+	jgl::String line = jgl::get_str(file);
+	_player->set_name(line);
 	jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
 	_player->place(_board, jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
+}
+
+void Game_engine::active_interacter(Entity* entity)
+{
+	_interacter->set_entity(entity);
+
+}
+
+void Game_engine::desactive_interacter()
+{
+
 }
 
 void Game_engine::active_console()
 {
 	_editor_contener->set_frozen(true);
-	_console->activate();
-	_console->entry()->select();
+	_console->start();
 	_player_controller->set_frozen(true);
 	_editor_interacter->set_frozen(true);
 	_editor_inventory->desactivate();
@@ -123,6 +136,8 @@ bool Game_engine::handle_keyboard()
 		else
 			desactive_console();
 	}
+	if (_console->is_active() == true && _console->complete() == true)
+		desactive_console();
 	if (jgl::get_key(jgl::key::tab) == jgl::key_state::release || (_editor_inventory->status() == true && jgl::get_key(jgl::key::escape) == jgl::key_state::release))
 	{
 		if (_editor_contener->is_frozen() == false)
@@ -150,6 +165,7 @@ void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 	_editor_interacter->set_geometry(0, p_area);
 
 	_console->set_geometry(0, g_application->size());
+	_interacter->set_geometry(0, g_application->size());
 }
 
 void Game_engine::render()

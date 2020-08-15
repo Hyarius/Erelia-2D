@@ -24,6 +24,8 @@ std::string custom_texture_shader_frag = {
 	"uniform sampler2D textureID;"
 	"void main()"
 	"{"
+		"if (UV == vec2(-1, -1))"
+			"discard;"
 		"color = texture(textureID, UV).rgba;"
 	"}"
 };

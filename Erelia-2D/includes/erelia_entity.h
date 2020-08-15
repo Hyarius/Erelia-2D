@@ -1,6 +1,13 @@
 #ifndef ERELIA_ENTITY_H
 #define ERELIA_ENTITY_H
 
+enum class Entity_type
+{
+	entity = 0,
+	NPC = 1,
+	Player = 2,
+};
+
 enum class Entity_direction
 {
 	south = 0,
@@ -12,6 +19,7 @@ enum class Entity_direction
 class Entity
 {
 protected:
+	Entity_type _type;
 	jgl::String _name;
 	Entity_direction _look_dir;
 	jgl::Sprite_sheet* _charset;
@@ -28,10 +36,12 @@ protected:
 	float _actual_tick;
 	float _move_tick;
 public:
-	Entity(jgl::String p_name, jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite);
+	Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite);
 	jgl::String name() { return (_name); }
 	void set_name(jgl::String p_name) { _name = p_name; }
 	void place(class Board* board, jgl::Vector2 p_pos);
+
+	Entity_type type(){ return (_type); }
 
 	void set_wait_time(Uint32 p_time) { _wait_time = p_time; }
 	Uint32 wait_time() { return (_wait_time); }
@@ -56,8 +66,11 @@ public:
 	bool is_moving() { return (_in_motion); }
 	bool is_active() { return (_direction != 0); }
 
+	bool is_pointed(jgl::Vector2 player_pos);
+
+	virtual void interact();
 	void render(jgl::Vector2 player_pos, jgl::Viewport* p_viewport);
-	void move(jgl::Vector2 delta);
+	void move(Board* board, jgl::Vector2 delta);
 	virtual void update(class Board* board);
 	void update_pos(class Board* board);
 };

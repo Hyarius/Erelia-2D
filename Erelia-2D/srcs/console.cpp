@@ -2,6 +2,7 @@
 
 Console::Console(Game_engine* p_engine) : jgl::Widget(p_engine)
 {
+	_complete = false;
 	_engine = p_engine;
 	_tileset = _engine->tileset();
 	_board = _engine->board();
@@ -189,8 +190,8 @@ bool Console::handle_generate_command(jgl::Array<jgl::String>& tab)
 				size_t tmp = elem[jgl::generate_nbr(0, elem.size())];
 				_board->place(jgl::Vector2(i, j), tmp, false);
 			}
-		start = (start / chunk_size).floor();
-		end = (end / chunk_size).floor();
+		start = (start / CHUNK_SIZE).floor();
+		end = (end / CHUNK_SIZE).floor();
 		for (float i = start.x; i <= end.x; i++)
 			for (float j = start.y; j <= end.y; j++)
 			{
@@ -234,8 +235,8 @@ bool Console::handle_replace_command(jgl::Array<jgl::String>& tab)
 				}
 				
 			}
-		start = (start / chunk_size).floor();
-		end = (end / chunk_size).floor();
+		start = (start / CHUNK_SIZE).floor();
+		end = (end / CHUNK_SIZE).floor();
 		for (float i = start.x; i <= end.x; i++)
 			for (float j = start.y; j <= end.y; j++)
 			{
@@ -287,12 +288,14 @@ bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
 		_player->set_ghost(state);
 		if (state == true)
 		{
-			_board->node(_player->pos())->set_occupant(_player);
+			if (_board->node(_player->pos().round()) != nullptr)
+				_board->node(_player->pos())->set_occupant(_player);
 			_old_entry.push_front("Ghost set to on");
 		}
 		else
 		{
-			_board->node(_player->pos())->set_occupant(nullptr);
+			if (_board->node(_player->pos().round()) != nullptr)
+				_board->node(_player->pos())->set_occupant(nullptr);
 			_old_entry.push_front("Ghost set to off");
 		}
 
@@ -359,17 +362,32 @@ bool Console::handle_link_command(jgl::Array<jgl::String>& tab)
 }
 bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 {
-	if (tab.size() >= 3)
+	if (tab.size() >= 2)
 	{
-		if (tab[1] == "create" && tab.size() == 4)
+		if (tab[1] == "create" && tab.size() >= 4)
 		{
-			jgl::Vector2 sprite = jgl::Vector2(0, jgl::stoi(tab[3]));
-			NPC* new_npc = new NPC(tab[2], _interacter->pink_flag(), _board->charset(), sprite);
+			jgl::Vector2 sprite = jgl::Vector2(0, jgl::stoi(tab[tab.size() - 1]));
+			jgl::String name = "";
+			for (size_t i = 2; i < tab.size() - 1; i++)
+			{
+				if (i != 2)
+					name += " ";
+				name += tab[i];
+			}
+			NPC* new_npc = new NPC(name, _interacter->pink_flag(), _board->charset(), sprite);
 			_board->add_npc(new_npc);
 		}
-		else if (tab[1] == "copy")
+		else if (tab[1] == "clear")
 		{
-
+			if (_interacter->selected_entity() != nullptr && _interacter->selected_entity()->type() == Entity_type::NPC)
+			{
+				NPC* tmp = static_cast<NPC*>(_interacter->selected_entity());
+				tmp->check_point().clear();
+				tmp->road().clear();
+				tmp->add_check_point(tmp->starting_pos());
+				tmp->place(_board, tmp->starting_pos());
+				tmp->move(_board, 0);
+			}
 		}
 		else if (tab[1] == "delete")
 		{
@@ -379,7 +397,7 @@ bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 	}
 	else
 	{
-		_old_entry.push_front("Usage : npc [create / copy / delete] [NPC name]");
+		_old_entry.push_front("Usage : npc [create / clear / delete] [NPC name]");
 		return (true);
 	}
 }
@@ -417,6 +435,14 @@ bool Console::handle_console_entry(jgl::String cmd)
 	return (false);
 }
 
+
+void Console::start()
+{
+	activate();
+	entry()->select();
+	_complete = false;
+}
+
 bool Console::handle_keyboard()
 {
 	if (jgl::get_key(jgl::key::return_key) == jgl::key_state::release || jgl::get_key(jgl::key::key_pad_return_key) == jgl::key_state::release)
@@ -427,6 +453,7 @@ bool Console::handle_keyboard()
 		_entry->set_text("");
 		_entry->select();
 		_cmd_index = 0;
+		_complete = true;
 	}
 	if (jgl::get_key(jgl::key::up_arrow) == jgl::key_state::release)
 	{

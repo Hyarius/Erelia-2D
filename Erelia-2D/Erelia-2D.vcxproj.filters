@@ -259,6 +259,9 @@
     <ClCompile Include="srcs\link.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\interacter.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
@@ -469,6 +472,9 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\erelia_node.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Erelia_interacter.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

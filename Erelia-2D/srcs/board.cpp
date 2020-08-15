@@ -56,9 +56,9 @@ void Board::save(jgl::String path)
 	for (auto tmp : _chunks)
 	{
 		file << tmp.first.x << ";" << tmp.first.y << std::endl;
-		for (size_t y = 0; y < chunk_size; y++)
+		for (size_t y = 0; y < CHUNK_SIZE; y++)
 		{
-			for (size_t x = 0; x < chunk_size; x++)
+			for (size_t x = 0; x < CHUNK_SIZE; x++)
 			{
 				if (x != 0)
 					file << ";";
@@ -122,18 +122,18 @@ void Board::load_chunk(std::fstream& file, jgl::Array<jgl::String> tab)
 		tab = line.split(";");
 		chunk_pos = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
 
-		for (int nb_line = 0; nb_line < chunk_size; nb_line++)
+		for (int nb_line = 0; nb_line < CHUNK_SIZE; nb_line++)
 		{
 			jgl::String line = jgl::get_str(file);
 			if (line.size() == 0)
 				jgl::error_exit(1, "Error in map file - Line [" + line + "]");
 			tab = line.split(";");
-			for (int i = 0; i < chunk_size; i++)
+			for (int i = 0; i < CHUNK_SIZE; i++)
 			{
 				int type = jgl::stoi(tab[i]);
 				if (type != -1 && type < static_cast<int>(tile_array.size()))
 				{
-					jgl::Vector2 node_pos = jgl::Vector2(i, nb_line) + chunk_pos * chunk_size;
+					jgl::Vector2 node_pos = jgl::Vector2(i, nb_line) + chunk_pos * CHUNK_SIZE;
 					place(node_pos, tile_array[type]);
 				}
 			}
@@ -279,12 +279,12 @@ void Board::remove_warp(jgl::String name)
 
 jgl::Vector2 Board::chunk_pos(jgl::Vector2 node_pos)
 {
-return ((node_pos / chunk_size).floor());
+return ((node_pos / CHUNK_SIZE).floor());
 }
 jgl::Vector2 Board::rel_node_pos(jgl::Vector2 node_pos)
 {
 	jgl::Vector2 tmp = chunk_pos(node_pos.round());
-	return (node_pos - tmp * chunk_size);
+	return (node_pos - tmp * CHUNK_SIZE);
 }
 void Board::place(jgl::Vector2 node_pos, size_t index, bool need_bake)
 {
@@ -326,8 +326,8 @@ void Board::update(jgl::Vector2 player_pos)
 {
 	jgl::Vector2 start_node = screen_to_tile(player_pos, 0);
 	jgl::Vector2 end_node = screen_to_tile(player_pos, g_application->size());
-	jgl::Vector2 start = (start_node / chunk_size).floor();
-	jgl::Vector2 end = (end_node / chunk_size).floor();
+	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
+	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
@@ -339,17 +339,23 @@ void Board::update(jgl::Vector2 player_pos)
 
 void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
 {
-	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(player_pos * node_size);
 	jgl::Vector2 start_node = screen_to_tile(player_pos, 0);
 	jgl::Vector2 end_node = screen_to_tile(player_pos, g_application->size());
-	jgl::Vector2 start = (start_node / chunk_size).floor();
-	jgl::Vector2 end = (end_node / chunk_size).floor();
+	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
+	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->render(_tileset, delta, player_pos, viewport);
+				_chunks[tmp]->render(_tileset, player_pos, viewport);
+		}
+	for (float i = start.x; i <= end.x; i++)
+		for (float j = start.y; j <= end.y; j++)
+		{
+			jgl::Vector2 tmp = jgl::Vector2(i, j);
+			if (_chunks.contains(tmp) != 0)
+				_chunks[tmp]->render_entity(player_pos, viewport);
 		}
 	for (auto tmp : _warps)
 	{

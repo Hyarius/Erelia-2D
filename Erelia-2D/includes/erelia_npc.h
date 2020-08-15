@@ -8,7 +8,6 @@ class NPC : public Entity
 {
 private:
 	jgl::Vector2 _starting_pos;
-	jgl::String _name;
 	jgl::Array<jgl::Vector2> _check_point;
 	size_t _check_point_index;
 	jgl::Array<jgl::Vector2> _road;
@@ -21,9 +20,13 @@ public:
 	void update(class Board* board);
 	void save(std::fstream& file);
 
-	jgl::Array<jgl::Vector2> check_point() { return (_check_point); }
+	jgl::Vector2 starting_pos() { return (_starting_pos); }
+
+
+	void interact();
+	jgl::Array<jgl::Vector2>& check_point() { return (_check_point); }
 	jgl::Vector2 check_point(size_t i) { return (_check_point[i]); }
-	jgl::Array<jgl::Vector2> road() { return (_road); }
+	jgl::Array<jgl::Vector2>& road() { return (_road); }
 	jgl::Vector2 road(size_t i) { return (_road[i]); }
 };
 

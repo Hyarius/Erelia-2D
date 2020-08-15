@@ -95,6 +95,7 @@ private:
 public:
 	Editor_interact(Editor_inventory* p_inventory, Board* p_board, Player* p_player, jgl::Widget* p_parent = nullptr);
 
+	Entity* selected_entity() { return (_selected_entity); }
 	jgl::Vector2 pink_flag() { return (_pink_flag); }
 	jgl::Vector2 blue_flag() { return (_blue_flag); }
 
