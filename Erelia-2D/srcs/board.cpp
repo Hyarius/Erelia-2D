@@ -41,8 +41,10 @@ void Board::clear()
 	_warps.clear();
 	for (size_t i = 0; i < _npc_array.size(); i++)
 		delete _npc_array[i];
+	_npc_array.clear();
 	for (size_t i = 0; i < _links.size(); i++)
 		delete _links[i];
+	_links.clear();
 	for (auto tmp : _chunks)
 		delete tmp.second;
 	_chunks.clear();

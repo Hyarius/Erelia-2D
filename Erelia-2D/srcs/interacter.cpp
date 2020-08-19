@@ -13,13 +13,13 @@ Interacter::Interacter(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 
 void Interacter::run_action()
 {
-	if (_source->interaction().size() == 0 || _source->interaction(_index)->type() == Interaction_type::none)
+	if (_source->interaction().size() == 0 || _source->interaction(_index).type() == Interaction_type::none)
 		return;
-	Interaction *tmp_interact = _source->interaction(_index);
-	size_t tmp_index = static_cast<size_t>(tmp_interact->type());
+	Interaction tmp_interact = _source->interaction(_index);
+	size_t tmp_index = static_cast<size_t>(tmp_interact.type());
 
 	M_funct tmp = action_tab[tmp_index];
-	(this->*tmp)(tmp_interact->param());
+	(this->*tmp)(tmp_interact.param());
 }
 
 void Interacter::update()

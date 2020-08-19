@@ -37,7 +37,7 @@ protected:
 	jgl::Vector2 _direction;
 	float _move_speed;
 
-	jgl::Array<Interaction*> _interaction;
+	jgl::Array<Interaction> _interaction;
 
 	jgl::Vector2 _starting_pos;
 	jgl::Array<jgl::Vector2> _check_point;
@@ -55,8 +55,8 @@ protected:
 public:
 	Entity();
 	Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Vector2 p_sprite);
-	jgl::Array<Interaction*>& interaction() { return (_interaction); }
-	Interaction* interaction(size_t index) { return (_interaction[index]); }
+	jgl::Array<Interaction>& interaction() { return (_interaction); }
+	Interaction interaction(size_t index) { return (_interaction[index]); }
 	jgl::String name() { return (_name); }
 	void set_name(jgl::String p_name) { _name = p_name; }
 	void place(jgl::Vector2 p_pos);

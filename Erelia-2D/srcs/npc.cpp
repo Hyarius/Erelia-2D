@@ -23,10 +23,10 @@ void NPC::load(std::fstream& file)
 		for (size_t j = 0; j < nb_interact; j++)
 		{
 			Interaction_type type = static_cast<Interaction_type>(jgl::stoi(tab[i]));
-			Interaction* inter = new Interaction(type);
+			Interaction inter = Interaction(type);
 			I_funct funct = interact_parse_tab[static_cast<size_t>(type)];
 			i++;
-			i += (inter->*funct)(tab, i);
+			i += (inter.*funct)(tab, i);
 			_interaction.push_back(inter);
 		}
 	}
