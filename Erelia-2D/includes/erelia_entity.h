@@ -1,6 +1,8 @@
 #ifndef ERELIA_ENTITY_H
 #define ERELIA_ENTITY_H
 
+#include "erelia_interaction.h"
+
 enum class Entity_type
 {
 	entity = 0,
@@ -16,17 +18,32 @@ enum class Entity_direction
 	east = 8
 };
 
+enum class Entity_movement
+{
+	controled = 1,
+	errant = -1,
+	fix = 0
+};
+
 class Entity
 {
 protected:
 	Entity_type _type;
+	Entity_movement _movement_type;
 	jgl::String _name;
 	Entity_direction _look_dir;
-	jgl::Sprite_sheet* _charset;
 	jgl::Vector2 _sprite;
 	jgl::Vector2 _pos;
 	jgl::Vector2 _direction;
 	float _move_speed;
+
+	jgl::Array<Interaction*> _interaction;
+
+	jgl::Vector2 _starting_pos;
+	jgl::Array<jgl::Vector2> _check_point;
+	size_t _check_point_index;
+	jgl::Array<jgl::Vector2> _road;
+	size_t _road_index;
 
 	bool _did_tp;
 	bool _in_motion;
@@ -36,10 +53,13 @@ protected:
 	float _actual_tick;
 	float _move_tick;
 public:
-	Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite);
+	Entity();
+	Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Vector2 p_sprite);
+	jgl::Array<Interaction*>& interaction() { return (_interaction); }
+	Interaction* interaction(size_t index) { return (_interaction[index]); }
 	jgl::String name() { return (_name); }
 	void set_name(jgl::String p_name) { _name = p_name; }
-	void place(class Board* board, jgl::Vector2 p_pos);
+	void place(jgl::Vector2 p_pos);
 
 	Entity_type type(){ return (_type); }
 
@@ -57,7 +77,7 @@ public:
 
 	float last_tick() { return (_last_tick); }
 
-	bool can_move(class Board* board, jgl::Vector2 delta);
+	bool can_move(jgl::Vector2 delta);
 	jgl::Vector2 direction() { return (_direction); }
 	jgl::Vector2 pos() { return (_pos); }
 
@@ -65,14 +85,30 @@ public:
 	bool is_static() { return (_total_tick >= (_move_tick / _move_speed)); }
 	bool is_moving() { return (_in_motion); }
 	bool is_active() { return (_direction != 0); }
+	bool is_interacting();
 
-	bool is_pointed(jgl::Vector2 player_pos);
+	bool is_pointed(jgl::Vector2 target);
 
-	virtual void interact();
-	void render(jgl::Vector2 player_pos, jgl::Viewport* p_viewport);
-	void move(Board* board, jgl::Vector2 delta);
-	virtual void update(class Board* board);
-	void update_pos(class Board* board);
+	void render(jgl::Viewport* p_viewport);
+	void move(jgl::Vector2 delta);
+	virtual void update();
+	void update_pos();
+
+	void load(std::fstream& file);
+	size_t load_from_line(jgl::Array<jgl::String> tab);
+	void save(std::fstream& file);
+
+	void remove_check_point(jgl::Vector2 pos);
+	void add_check_point(jgl::Vector2 p_point) { _check_point.push_back(p_point); }
+	void calc_next_road();
+	void calc_road_to(jgl::Vector2 destination);
+	void return_starting_position();
+
+	jgl::Vector2 starting_pos() { return (_starting_pos); }
+	jgl::Array<jgl::Vector2>& check_point() { return (_check_point); }
+	jgl::Vector2 check_point(size_t i) { return (_check_point[i]); }
+	jgl::Array<jgl::Vector2>& road() { return (_road); }
+	jgl::Vector2 road(size_t i) { return (_road[i]); }
 };
 
 #endif

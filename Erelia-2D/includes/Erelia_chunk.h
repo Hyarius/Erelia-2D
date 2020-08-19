@@ -25,10 +25,10 @@ public:
 				delete _content[i][j];
 	}
 	void place(jgl::Vector2 coord, Tile* p_tile, bool need_bake = false);
-	void bake(jgl::Sprite_sheet* tileset);
-	void update(class Board* board);
-	void render(jgl::Sprite_sheet* tileset, jgl::Vector2 player_pos, jgl::Viewport* viewport);
-	void render_entity(jgl::Vector2 player_pos, jgl::Viewport* viewport);
+	void bake();
+	void update();
+	void render(jgl::Viewport* viewport);
+	void render_entity(jgl::Viewport* viewport);
 };
 
 #endif

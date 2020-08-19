@@ -1,9 +1,8 @@
 #include "erelia.h"
 
-Player_controller::Player_controller(Board* p_board, Player* p_player, jgl::Widget* p_parent) : jgl::Widget(p_parent)
+Player_controller::Player_controller(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
-	_board = p_board;
-	_player = p_player;
+
 }
 
 bool Player_controller::handle_keyboard()
@@ -16,37 +15,40 @@ bool Player_controller::handle_keyboard()
 	{
 		if (jgl::get_key(key_value[i]) == jgl::key_state::down)
 		{
-			if (_player->is_static() == true)
+			if (engine->player()->is_static() == true)
 			{
-				Node* tmp = _board->node((_player->pos() + move_delta[i]).round());
-				Node* actual = _board->node((_player->pos()).round());
-				if (_player->ghost() == true)
-					_player->move(_board, move_delta[i]);
-				else if (_player->can_move(_board, move_delta[i]) == true)
+				Node* tmp = engine->board()->node((engine->player()->pos() + move_delta[i]).round());
+				Node* actual = engine->board()->node((engine->player()->pos()).round());
+				if (engine->player()->ghost() == true)
+					engine->player()->move(move_delta[i]);
+				else if (engine->player()->can_move(move_delta[i]) == true)
 				{
 					jgl::Vector2 tmp_pos = move_delta[i];
-					while ((_board->node(_player->pos().round() + tmp_pos)->tile()->type & JUMPING) == JUMPING)
+					while ((engine->board()->node(engine->player()->pos().round() + tmp_pos)->tile()->type & JUMPING) == JUMPING)
 						tmp_pos += move_delta[i];
-					_board->node(_player->pos().round() + tmp_pos)->set_occupant(_player);
-					_player->move(_board, tmp_pos);
+					engine->board()->node(engine->player()->pos().round() + tmp_pos)->set_occupant(engine->player());
+					engine->player()->move(tmp_pos);
 				}
 				else
-					_player->set_look_dir(look_dir_value[i]);
+					engine->player()->set_look_dir(look_dir_value[i]);
 				return (true);
 			}
 			else
 				return (false);
 		}
 	}
-	if (jgl::get_key(jgl::key::space) == jgl::key_state::down)
+	if (jgl::get_key(jgl::key::space) == jgl::key_state::release)
 	{
 		size_t i = 0;
-		for (; i < 4 && look_dir_value[i] != _player->look_dir(); i++);
+		for (; i < 4 && look_dir_value[i] != engine->player()->look_dir(); i++);
 		if (i != 4)
 		{
-			Node* tmp = _board->node(_player->pos() + move_delta[i]);
-			if (tmp != nullptr && tmp->occupant() != nullptr && tmp->occupant() != _player)
-				tmp->occupant()->interact();
+			Node* tmp = engine->board()->node(engine->player()->pos() + move_delta[i]);
+			if (tmp != nullptr && tmp->occupant() != nullptr && tmp->occupant() != engine->player() && tmp->occupant()->is_active() == false)
+			{
+				engine->interact_between(tmp->occupant(), engine->player());
+				return (true);
+			}
 		}
 	}
 	return (false);
@@ -54,13 +56,13 @@ bool Player_controller::handle_keyboard()
 
 void Player_controller::update()
 {
-	Node* actual = _board->node((_player->pos()).round());
-	if (_player->is_static() == true && actual != nullptr && actual->link() != nullptr)
+	Node* actual = engine->board()->node((engine->player()->pos()).round());
+	if (engine->player()->is_static() == true && actual != nullptr && actual->link() != nullptr)
 	{
-		if (_player->did_tp() == false)
+		if (engine->player()->did_tp() == false)
 		{
-			_board->node(_player->pos().round())->set_occupant(nullptr);
-			actual->link()->use(_board, _player);
+			engine->board()->node(engine->player()->pos().round())->set_occupant(nullptr);
+			actual->link()->use(engine->board(), engine->player());
 		}
 	}
 

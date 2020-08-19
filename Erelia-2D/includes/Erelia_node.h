@@ -38,6 +38,10 @@ public:
 		_link = nullptr;
 		_occupant = nullptr;
 		_calculated = false;
+		_parent = nullptr;
+		_s_cost = 0;
+		_e_cost = 0;
+		_t_cost = 0;
 	}
 	Tile* tile() { return (_tile); }
 	Link* link() { return (_link); }

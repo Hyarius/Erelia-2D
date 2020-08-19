@@ -10,10 +10,10 @@ class Player : public Entity
 private:
 	bool _ghost;
 public:
-	Player(jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite);
+	Player();
 	bool ghost() { return (_ghost); }
 	void set_ghost(bool p_state) { _ghost = p_state; }
-	void update(Board* board);
+	void update();
 };
 
 #endif

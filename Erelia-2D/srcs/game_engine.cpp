@@ -2,18 +2,16 @@
 
 Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
+	engine = this;
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 72));
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 41));
 	create_item_list(_tileset);
-	_board = new Board(_tileset, _charset, "ressources/maps/world.map");
-	_player = new Player(_charset, 0);
+	_board = new Board("ressources/maps/world.map");
+	_player = new Player();
 	if (jgl::check_file_exist("ressources/save/Player.sav") == true)
 		load("ressources/save/Player.sav");
 
-	_renderer = new Renderer(_board, _player, this);
-	_renderer->activate();
-
-	_player_controller = new Player_controller(_board, _player, this);
+	_player_controller = new Player_controller(this);
 	_player_controller->activate();
 
 	_editor_contener = new jgl::Contener(this);
@@ -22,7 +20,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_editor_inventory = new Editor_inventory(_editor_contener);
 	_editor_inventory->activate();
 
-	_editor_interacter = new Editor_interact(_editor_inventory, _board, _player, _editor_contener);
+	_editor_interacter = new Editor_interact(_editor_contener);
 	_editor_interacter->activate();
 
 	_console = new Console(this);
@@ -30,7 +28,6 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_interacter = new Interacter(this);
 
 	_editor_inventory->send_front();
-	_renderer->send_back();
 }
 
 extern jgl::Array<Item*> node_item_list;
@@ -73,18 +70,44 @@ void Game_engine::load(jgl::String path)
 	jgl::String line = jgl::get_str(file);
 	_player->set_name(line);
 	jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
-	_player->place(_board, jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
+	_player->place(jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
 }
 
-void Game_engine::active_interacter(Entity* entity)
+void Game_engine::interact_between(Entity* source, Entity* target)
 {
-	_interacter->set_entity(entity);
+	if (source == nullptr || target == nullptr)
+		return;
+	if (target->look_dir() == Entity_direction::south)
+		source->set_look_dir(Entity_direction::north);
+	else if (target->look_dir() == Entity_direction::north)
+		source->set_look_dir(Entity_direction::south);
+	else if (target->look_dir() == Entity_direction::east)
+		source->set_look_dir(Entity_direction::west);
+	else if (target->look_dir() == Entity_direction::west)
+		source->set_look_dir(Entity_direction::east);
 
+	if (source->interaction().size() == 0)
+		return ;
+	
+	_interacter->set_entity(source, target);
+
+	active_interacter();
+}
+
+void Game_engine::active_interacter()
+{
+	_editor_contener->desactivate();
+	_player_controller->set_frozen(true);
+	_interacter->activate();
+	_interacter->run_action();
 }
 
 void Game_engine::desactive_interacter()
 {
-
+	_editor_contener->activate();
+	_player_controller->set_frozen(false);
+	_interacter->activate();
+	_interacter->set_entity(nullptr, nullptr);
 }
 
 void Game_engine::active_console()
@@ -123,7 +146,7 @@ void Game_engine::desactive_inventory()
 
 void Game_engine::update()
 {
-	_board->update(_player->pos());
+	_board->update();
 }
 
 bool Game_engine::handle_keyboard()
@@ -135,6 +158,16 @@ bool Game_engine::handle_keyboard()
 			active_console();
 		else
 			desactive_console();
+	}
+	if (jgl::get_key(jgl::key::F1) == jgl::key_state::release)
+	{
+		node_size /= 2;
+		_board->bake();
+	}
+	else if (jgl::get_key(jgl::key::F3) == jgl::key_state::release)
+	{
+		node_size *= 2;
+		_board->bake();
 	}
 	if (_console->is_active() == true && _console->complete() == true)
 		desactive_console();
@@ -159,7 +192,6 @@ bool Game_engine::handle_mouse()
 
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	_renderer->set_geometry(0, p_area);
 	int tmp = g_application->size().x / 30;
 	_editor_inventory->set_geometry(tmp, p_area - tmp * 2);
 	_editor_interacter->set_geometry(0, p_area);
@@ -170,5 +202,7 @@ void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 
 void Game_engine::render()
 {
-
+	_board->render(_viewport);
+	_player->render(_viewport);
+	jgl::draw_text("Fps : " + jgl::itoa(print_fps), 50, 16, 1, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

@@ -28,10 +28,8 @@ Node* Board::node(jgl::Vector2 pos)
 		return nullptr;
 	return (target_node);
 }
-Board::Board(jgl::Sprite_sheet* p_tileset, jgl::Sprite_sheet* p_charset, jgl::String path)
+Board::Board(jgl::String path)
 {
-	_tileset = p_tileset;
-	_charset = p_charset;
 	load(path);
 }
 Board::~Board()
@@ -40,14 +38,14 @@ Board::~Board()
 }
 void Board::clear()
 {
-	for (auto tmp : _chunks)
-		delete tmp.second;
-	_chunks.clear();
 	_warps.clear();
 	for (size_t i = 0; i < _npc_array.size(); i++)
 		delete _npc_array[i];
 	for (size_t i = 0; i < _links.size(); i++)
 		delete _links[i];
+	for (auto tmp : _chunks)
+		delete tmp.second;
+	_chunks.clear();
 }
 void Board::save(jgl::String path)
 {
@@ -146,18 +144,8 @@ void Board::load_npc(std::fstream& file, jgl::Array<jgl::String> tab)
 	size_t nb_npc = jgl::stoi(tab[1]);
 	for (size_t t = 0; t < nb_npc; t++)
 	{
-		jgl::String line = jgl::get_str(file);
-		if (line.size() == 0)
-			break;
-		jgl::Array<jgl::String> tab = line.split(";");
-		if (tab.size() < 5 || tab.size() % 2 == 0)
-			jgl::error_exit(1, "Error in map file - Line [" + line + "]");
-		jgl::String name = tab[0];
-		jgl::Vector2 pos = jgl::Vector2(jgl::stoi(tab[1]), jgl::stoi(tab[2]));
-		jgl::Vector2 sprite = jgl::Vector2(jgl::stoi(tab[3]), jgl::stoi(tab[4]));
-		NPC* npc = new NPC(name, pos, _charset, sprite);
-		for (size_t i = 5; i < tab.size(); i += 2)
-			npc->add_check_point(jgl::Vector2(jgl::stoi(tab[i]), jgl::stoi(tab[i + 1])));
+		NPC* npc = new NPC();
+		npc->load(file);
 		add_npc(npc);
 	}
 }
@@ -212,7 +200,7 @@ void Board::load(jgl::String path)
 	}
 	for (auto tmp : _chunks)
 	{
-		tmp.second->bake(_tileset);
+		tmp.second->bake();
 	}
 }
 
@@ -298,7 +286,7 @@ void Board::place(jgl::Vector2 node_pos, size_t index, bool need_bake)
 	jgl::Vector2 tmp_chunk = chunk_pos(node_pos);
 
 	if (need_bake == true)
-		_chunks[tmp_chunk]->bake(_tileset);
+		_chunks[tmp_chunk]->bake();
 
 }
 void Board::place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake)
@@ -312,20 +300,27 @@ void Board::place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake)
 	tmp->place(rel_node_pos(node_pos), p_node);
 
 	if (need_bake == true)
-		tmp->bake(_tileset);
+		tmp->bake();
+}
+extern jgl::Array<jgl::Vector3> points;
+void Board::bake()
+{
+	points.clear();
+	for (auto tmp : _chunks)
+		tmp.second->bake();
 }
 void Board::bake_chunk(jgl::Vector2 pos)
 {
 	if (_chunks.contains(pos) == 0)
 		return;
 	g_application->viewport()->use();
-	_chunks[pos]->bake(_tileset);
+	_chunks[pos]->bake();
 }
 
-void Board::update(jgl::Vector2 player_pos)
+void Board::update()
 {
-	jgl::Vector2 start_node = screen_to_tile(player_pos, 0);
-	jgl::Vector2 end_node = screen_to_tile(player_pos, g_application->size());
+	jgl::Vector2 start_node = screen_to_tile(0);
+	jgl::Vector2 end_node = screen_to_tile(g_application->size());
 	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
 	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
@@ -333,14 +328,14 @@ void Board::update(jgl::Vector2 player_pos)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->update(this);
+				_chunks[tmp]->update();
 		}
 }
 
-void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
+void Board::render(jgl::Viewport* viewport)
 {
-	jgl::Vector2 start_node = screen_to_tile(player_pos, 0);
-	jgl::Vector2 end_node = screen_to_tile(player_pos, g_application->size());
+	jgl::Vector2 start_node = screen_to_tile(0);
+	jgl::Vector2 end_node = screen_to_tile(g_application->size());
 	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
 	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
@@ -348,18 +343,18 @@ void Board::render(jgl::Vector2 player_pos, jgl::Viewport* viewport)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->render(_tileset, player_pos, viewport);
+				_chunks[tmp]->render(viewport);
 		}
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->render_entity(player_pos, viewport);
+				_chunks[tmp]->render_entity(viewport);
 		}
 	for (auto tmp : _warps)
 	{
-		jgl::Vector2 pos = tile_to_screen(player_pos, tmp.second) + node_size / 2;
+		jgl::Vector2 pos = tile_to_screen(tmp.second) + node_size / 2;
 		jgl::draw_centred_rectangle(pos, node_size, 1, jgl::Color(146, 235, 52));
 		jgl::draw_centred_text(tmp.first, pos - jgl::Vector2(0, 30), 16, 1, jgl::text_color::green);
 	}

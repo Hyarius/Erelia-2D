@@ -68,7 +68,7 @@ void Prefab::save_to_file(jgl::String path)
 	}
 }
 
-void Prefab::use(Board* board, jgl::Vector2 start)
+void Prefab::use(jgl::Vector2 start)
 {
 	start.y -= _size.y - 1;
 	for (auto tmp : _content)
@@ -76,13 +76,13 @@ void Prefab::use(Board* board, jgl::Vector2 start)
 		jgl::Vector2 pos = tmp.first + start;
 		Tile* tile = tmp.second;
 		if (tile != nullptr)
-			board->place(pos, tile);
+			engine->board()->place(pos, tile);
 	}
 	jgl::Vector2 A = ((start) / CHUNK_SIZE).floor();
 	jgl::Vector2 B = ((start + _size) / CHUNK_SIZE).floor();
 	for (float i = A.x; i <= B.x; i++)
 		for (float j = A.y; j <= B.y; j++)
 		{
-			board->bake_chunk(jgl::Vector2(i, j));
+			engine->board()->bake_chunk(jgl::Vector2(i, j));
 		}
 }

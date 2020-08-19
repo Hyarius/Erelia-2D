@@ -8,7 +8,6 @@ class Editor_inventory_tab : public jgl::Widget
 {
 private:
 	size_t _nb_slot;
-	jgl::Sprite_sheet* _icon_tileset;
 
 	jgl::Frame* _background;
 
@@ -81,10 +80,7 @@ public:
 class Editor_interact : public jgl::Widget
 {
 private:
-	Editor_inventory* _inventory;
 	Entity* _selected_entity;
-	Board* _board;
-	Player* _player;
 
 	bool _state = false;
 	jgl::Vector2 _first = -1;
@@ -93,11 +89,11 @@ private:
 	jgl::Vector2 _blue_flag = -1;
 
 public:
-	Editor_interact(Editor_inventory* p_inventory, Board* p_board, Player* p_player, jgl::Widget* p_parent = nullptr);
+	Editor_interact(jgl::Widget* p_parent = nullptr);
 
-	Entity* selected_entity() { return (_selected_entity); }
-	jgl::Vector2 pink_flag() { return (_pink_flag); }
-	jgl::Vector2 blue_flag() { return (_blue_flag); }
+	Entity*& selected_entity() { return (_selected_entity); }
+	jgl::Vector2& pink_flag() { return (_pink_flag); }
+	jgl::Vector2& blue_flag() { return (_blue_flag); }
 
 	bool handle_click();
 	void handle_remove_multi_pos();

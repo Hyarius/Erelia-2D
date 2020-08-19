@@ -9,12 +9,6 @@ class Console : public jgl::Widget
 {
 private:
 	bool _complete;
-	class Game_engine* _engine;
-	Board* _board;
-	Player* _player;
-	jgl::Sprite_sheet* _tileset;
-	class Editor_interact* _interacter;
-	class Editor_inventory* _inventory;
 
 	jgl::Text_entry* _entry;
 	jgl::Array<jgl::String> _old_entry;
@@ -23,7 +17,7 @@ private:
 	jgl::Array<jgl::String> _old_cmd;
 
 public:
-	Console(class Game_engine* p_engine = nullptr);
+	Console(jgl::Widget* p_engine = nullptr);
 	jgl::Text_entry* entry() { return (_entry); }
 
 	jgl::Array<size_t> parse_regex_simple(jgl::String text);

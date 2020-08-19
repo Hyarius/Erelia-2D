@@ -21,12 +21,12 @@ void create_item_list(jgl::Sprite_sheet* tileset)
 {
 	for (size_t i = 0; i < tile_array.size(); i++)
 	{
-		node_item_list.push_back( new Node_item(i, tileset, tile_array[i]->sprite) );
+		node_item_list.push_back( new Node_item(i, tile_array[i]->sprite) );
 	}
 	for (size_t i = 0; i < 18; i++)
 	{
 		jgl::Vector2 sprite = jgl::Vector2(static_cast<float>(i), tileset->size().y - 1);
-		interact_item_list.push_back( new Editor_item(funct_array[i], tileset, sprite) );
+		interact_item_list.push_back( new Editor_item(funct_array[i], sprite) );
 	}
 	jgl::Array<jgl::File> list = jgl::list_files("ressources/prefab", ".prefab");
 	for (size_t i = 1; i < list.size(); i++)
@@ -34,7 +34,7 @@ void create_item_list(jgl::Sprite_sheet* tileset)
 		jgl::String path = list[i].path + "/" + list[i].name + list[i].extension;
 		Prefab* new_prefab = new Prefab(path);
 		prefab_array.push_back(new_prefab);
-		Prefab_item* new_item = new Prefab_item(new_prefab, tileset);
+		Prefab_item* new_item = new Prefab_item(new_prefab);
 		prefab_item_list.push_back(new_item);
 	}
 }

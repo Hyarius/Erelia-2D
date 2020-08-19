@@ -1,10 +1,7 @@
 #include "erelia.h"
 
-Editor_interact::Editor_interact(Editor_inventory* p_inventory, Board* p_board, Player* p_player, jgl::Widget* p_parent) : jgl::Widget(p_parent)
+Editor_interact::Editor_interact(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
-	_inventory = p_inventory;
-	_board = p_board;
-	_player = p_player;
 	_selected_entity = nullptr;
 }
 
@@ -12,12 +9,12 @@ bool Editor_interact::handle_click()
 {
 	if (_state == false)
 	{
-		_first = screen_to_tile(_player->pos(), g_mouse->pos);
+		_first = screen_to_tile(g_mouse->pos);
 		_state = true;
 	}
 	else
 	{
-		_second = screen_to_tile(_player->pos(), g_mouse->pos);
+		_second = screen_to_tile(g_mouse->pos);
 		_state = false;
 		return (true);
 	}
@@ -35,14 +32,14 @@ void Editor_interact::handle_multi_pos(Item* tmp)
 		for (float j = start.y; j <= end.y; j++)
 		{
 			jgl::Vector2 pos = jgl::Vector2(i, j);
-			tmp->use(jgl::Data(2, _board, &pos));
+			tmp->use(jgl::Data(2, engine->board(), &pos));
 		}
 	start = (start / CHUNK_SIZE).floor();
 	end = (end / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
-			_board->bake_chunk(jgl::Vector2(i, j));
+			engine->board()->bake_chunk(jgl::Vector2(i, j));
 		}
 }
 
@@ -54,14 +51,14 @@ void Editor_interact::handle_remove_multi_pos()
 		for (float j = start.y; j <= end.y; j++)
 		{
 			jgl::Vector2 pos = jgl::Vector2(i, j);
-			_board->place(pos, nullptr);
+			engine->board()->place(pos, nullptr);
 		}
 	start = (start / CHUNK_SIZE).floor();
 	end = (end / CHUNK_SIZE).floor();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
-			_board->bake_chunk(jgl::Vector2(i, j));
+			engine->board()->bake_chunk(jgl::Vector2(i, j));
 		}
 }
 
@@ -69,22 +66,24 @@ extern jgl::Array<Item*> node_item_list;
 
 bool Editor_interact::handle_mouse()
 {
-	Item* tmp = _inventory->select_item();
+	Item* tmp = engine->editor_inventory()->select_item();
 
 	if (jgl::get_button(jgl::mouse_button::center) == jgl::mouse_state::release)
 	{
-		jgl::Vector2 target = screen_to_tile(_player->pos(), g_mouse->pos);
-		Tile* target_node = _board->tile(target);
+		jgl::Vector2 target = screen_to_tile(g_mouse->pos);
+		Tile* target_node = engine->board()->tile(target);
 		if (target_node == nullptr)
 			return false;
-		_inventory->selected_slot()->set_item(node_item_list[target_node->index]);
+		engine->editor_inventory()->selected_slot()->set_item(node_item_list[target_node->index]);
 	}
 	
 	if (jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::pressed ||
 		jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::release)
 		{
-			if (handle_click() == true)
+			if (tmp->item_type() == Item_type::tile && handle_click() == true)
 				handle_remove_multi_pos();
+			else if (tmp == interact_item_list[3] && _selected_entity != nullptr)
+				_selected_entity->remove_check_point(screen_to_tile(g_mouse->pos));
 			return (true);
 		}
 
@@ -101,14 +100,14 @@ bool Editor_interact::handle_mouse()
 	else if (tmp->item_type() == Item_type::interact)
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
-			tmp->use(jgl::Data(5, _board, _player, &_pink_flag, &_blue_flag, &_selected_entity));
+			tmp->use(nullptr);
 	}
 	else if (tmp->item_type() == Item_type::prefab)
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 		{
-			jgl::Vector2 target = screen_to_tile(_player->pos(), g_mouse->pos);
-			tmp->use(jgl::Data(2, _board, &target));
+			jgl::Vector2 target = screen_to_tile(g_mouse->pos);
+			tmp->use(&target);
 		}
 	}
 	return (false);
@@ -116,7 +115,7 @@ bool Editor_interact::handle_mouse()
 
 void Editor_interact::update()
 {
-	Item* tmp = _inventory->select_item();
+	Item* tmp = engine->editor_inventory()->select_item();
 
 	if (tmp == nullptr)
 		return;
@@ -131,7 +130,7 @@ void Editor_interact::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_are
 
 void Editor_interact::render()
 {
-	Item* tmp = _inventory->select_item();
+	Item* tmp = engine->editor_inventory()->select_item();
 
 	if (tmp == nullptr)
 		return;
@@ -140,32 +139,31 @@ void Editor_interact::render()
 	{
 		if (_state == true)
 		{
-			jgl::Vector2 _third = screen_to_tile(_player->pos(), g_mouse->pos);
+			jgl::Vector2 _third = screen_to_tile(g_mouse->pos);
 			jgl::Vector2 start = jgl::Vector2((_first.x < _third.x ? _first.x : _third.x), (_first.y < _third.y ? _first.y : _third.y));
 			jgl::Vector2 end = jgl::Vector2((_first.x > _third.x ? _first.x : _third.x), (_first.y > _third.y ? _first.y : _third.y));
 			for (float i = start.x; i <= end.x; i++)
 				for (float j = start.y; j <= end.y; j++)
 				{
-					jgl::Vector2 coord = tile_to_screen(_player->pos(), jgl::Vector2(i, j));
+					jgl::Vector2 coord = tile_to_screen(jgl::Vector2(i, j));
 					jgl::draw_rectangle(coord, node_size, 1, jgl::Color(0, 0, 0), _viewport);
 				}
 		}
 	}
 	else if (tmp->item_type() == Item_type::interact)
 	{
-		jgl::draw_rectangle(tile_to_screen(_player->pos(), _pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
-		jgl::draw_rectangle(tile_to_screen(_player->pos(), _blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
+		jgl::draw_rectangle(tile_to_screen(_pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
+		jgl::draw_rectangle(tile_to_screen(_blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
 	}
 
 	if (_selected_entity != nullptr)
 	{
-		NPC* tmp = static_cast<NPC*>(_selected_entity);
-		jgl::draw_centred_text(tmp->name(), tile_to_screen(_player->pos(), tmp->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
-		if (tmp->check_point().size() > 1)
+		jgl::draw_centred_text(_selected_entity->name(), tile_to_screen(_selected_entity->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
+		if (_selected_entity->check_point().size() > 1)
 		{
-			for (size_t i = 0; i < tmp->check_point().size(); i++)
+			for (size_t i = 0; i < _selected_entity->check_point().size(); i++)
 			{
-				jgl::Vector2 pos = tile_to_screen(_player->pos(), tmp->check_point(i));
+				jgl::Vector2 pos = tile_to_screen(_selected_entity->check_point(i));
 				jgl::draw_centred_text(jgl::itoa(i), pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
 				jgl::draw_rectangle(pos, node_size, 1, jgl::Color(0, 255, 0));
 			}

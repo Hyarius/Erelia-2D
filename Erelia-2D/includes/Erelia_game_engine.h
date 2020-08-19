@@ -6,7 +6,6 @@ extern int node_size;
 #include "erelia_board.h"
 #include "erelia_player.h"
 
-#include "erelia_renderer.h"
 #include "erelia_player_controller.h"
 #include "erelia_editor.h"
 
@@ -26,7 +25,6 @@ private:
 	Board* _board;
 	Player* _player;
 
-	Renderer* _renderer;
 	jgl::Contener* _editor_contener;
 	Player_controller* _player_controller;
 	Editor_inventory* _editor_inventory;
@@ -42,17 +40,18 @@ public:
 	Board* board() { return (_board); }
 	Player* player() { return (_player); }
 
-	Renderer* renderer() { return (_renderer); }
 	jgl::Contener* editor_contener() { return (_editor_contener); }
 	Player_controller* player_controller() { return (_player_controller); }
 	Editor_inventory* editor_inventory() { return (_editor_inventory); }
 	Editor_interact* editor_interacter() { return (_editor_interacter); }
 	Console* console() { return (_console); }
+	Interacter* interacter() { return (_interacter); }
 
 	Game_engine(jgl::Widget* p_parent = nullptr);
 	~Game_engine();
 
-	void active_interacter(Entity* entity);
+	void interact_between(Entity* source, Entity* target);
+	void active_interacter();
 	void desactive_interacter();
 	void active_console();
 	void desactive_console();

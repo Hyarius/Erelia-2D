@@ -235,16 +235,7 @@
     <ClCompile Include="srcs\prefab.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="srcs\renderer.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="srcs\entity.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="srcs\Erelia\player.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="srcs\Erelia\npc.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="srcs\player_controller.cpp">
@@ -260,6 +251,24 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="srcs\interacter.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\player.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\item.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\interact_action.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\Interaction.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\NPC.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\dialogue_frame.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -432,9 +441,6 @@
     <ClInclude Include="includes\Erelia_game_engine.h">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="includes\Erelia_renderer.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Erelia_editor.h">
       <Filter>Includes</Filter>
     </ClInclude>
@@ -465,9 +471,6 @@
     <ClInclude Include="includes\erelia_entity.h">
       <Filter>Includes</Filter>
     </ClInclude>
-    <ClInclude Include="includes\erelia_npc.h">
-      <Filter>Includes</Filter>
-    </ClInclude>
     <ClInclude Include="includes\Erelia_tile.h">
       <Filter>Includes</Filter>
     </ClInclude>
@@ -475,6 +478,12 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\Erelia_interacter.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_interaction.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_npc.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

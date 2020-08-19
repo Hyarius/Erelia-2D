@@ -37,7 +37,7 @@ void Chunk::place(jgl::Vector2 coord, Tile* p_tile, bool need_bake)
 	_content[x][y]->set_tile(p_tile);
 }
 
-void Chunk::bake(jgl::Sprite_sheet* tileset)
+void Chunk::bake()
 {
 	_uvs.clear();
 	if (points.size() == 0)
@@ -65,14 +65,15 @@ void Chunk::bake(jgl::Sprite_sheet* tileset)
 		for (int j = 0; j < CHUNK_SIZE; j++)
 			if (_content[i][j]->tile() != nullptr)
 			{
-				jgl::Vector2 tmp_sprite = tileset->sprite(_content[i][j]->tile()->sprite);
+				jgl::Vector2 unit = engine->tileset()->unit();
+				jgl::Vector2 tmp_sprite = engine->tileset()->sprite(_content[i][j]->tile()->sprite);
 
 				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, 0.0f));
-				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, tileset->unit().y));
-				_uvs.push_back(tmp_sprite + jgl::Vector2(tileset->unit().x, 0.0f));
-				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, tileset->unit().y));
-				_uvs.push_back(tmp_sprite + tileset->unit());
-				_uvs.push_back(tmp_sprite + jgl::Vector2(tileset->unit().x, 0.0f));
+				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
+				_uvs.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
+				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
+				_uvs.push_back(tmp_sprite + unit);
+				_uvs.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
 			}
 			else
 			{
@@ -86,24 +87,24 @@ void Chunk::bake(jgl::Sprite_sheet* tileset)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * points.size() * 2, static_cast<const float*>(&(tmp2[0].x)), GL_STATIC_DRAW);
 }
 
-void Chunk::update(Board* board)
+void Chunk::update()
 {
 	for (size_t i = 0; i < CHUNK_SIZE; i++)
 		for (size_t j = 0; j < CHUNK_SIZE; j++)
 			if (_content[i][j]->occupant() != nullptr)
-				_content[i][j]->occupant()->update(board);
+				_content[i][j]->occupant()->update();
 }
 
-void Chunk::render(jgl::Sprite_sheet* tileset, jgl::Vector2 player_pos, jgl::Viewport* viewport)
+void Chunk::render(jgl::Viewport* viewport)
 {
-	jgl::Vector3 delta = jgl::convert_screen_to_opengl((_pos * CHUNK_SIZE - player_pos) * jgl::Vector2(-1, -1) * node_size);
+	jgl::Vector3 delta = jgl::convert_screen_to_opengl((_pos * CHUNK_SIZE - engine->player()->pos() - 0.5f) * jgl::Vector2(-1, -1) * node_size);
 
 	glBindVertexArray(g_application->vertex_array());
 
 	glUseProgram(programID);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tileset->image()->texture_id());
+	glBindTexture(GL_TEXTURE_2D, engine->tileset()->image()->texture_id());
 
 	glUniform3f(delta_pos_uniform, delta.x, delta.y, 0.0f);
 
@@ -119,10 +120,10 @@ void Chunk::render(jgl::Sprite_sheet* tileset, jgl::Vector2 player_pos, jgl::Vie
 	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(points.size()));
 }
 
-void Chunk::render_entity(jgl::Vector2 player_pos, jgl::Viewport* viewport)
+void Chunk::render_entity(jgl::Viewport* viewport)
 {
 	for (size_t i = 0; i < CHUNK_SIZE; i++)
 		for (size_t j = 0; j < CHUNK_SIZE; j++)
 			if (_content[i][j]->occupant() != nullptr && _content[i][j]->occupant()->type() != Entity_type::Player)
-				_content[i][j]->occupant()->render(player_pos, viewport);
+				_content[i][j]->occupant()->render(viewport);
 }

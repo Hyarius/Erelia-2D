@@ -1,24 +1,18 @@
 #include "erelia.h"
 
-Console::Console(Game_engine* p_engine) : jgl::Widget(p_engine)
+Console::Console(jgl::Widget* p_engine) : jgl::Widget(p_engine)
 {
 	_complete = false;
-	_engine = p_engine;
-	_tileset = _engine->tileset();
-	_board = _engine->board();
-	_player = _engine->player();
-	_inventory = _engine->editor_inventory();
-	_interacter = _engine->editor_interacter();
 	_cmd_index = 0;
 	_entry = new jgl::Text_entry("", this);
 	_entry->activate();
-}
+} 
 
 bool Console::handle_clear_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 1)
 	{
-		_board->clear();
+		engine->board()->clear();
 	}
 	else
 		_old_entry.push_front("Usage : clear");
@@ -32,22 +26,22 @@ bool Console::handle_warp_command(jgl::Array<jgl::String>& tab)
 		std::string tmp = tab[2].std();
 		if (tab[1] == "create")
 		{
-			if (_board->warps().contains(tmp) != 0)
+			if (engine->board()->warps().contains(tmp) != 0)
 				_old_entry.push_front("Warp [" + tmp + "] already exist");
 			else
 			{
-				_board->add_warp(tmp, _player->pos());
-				jgl::String text = "Creating warp [" + jgl::String(tmp) + "] at coord " + _player->pos().str();
+				engine->board()->add_warp(tmp, engine->player()->pos());
+				jgl::String text = "Creating warp [" + jgl::String(tmp) + "] at coord " + engine->player()->pos().str();
 				_old_entry.push_front(text);
 			}
 		}
 		else if (tab[1] == "delete")
 		{
-			if (_board->warps().contains(tmp) == 0)
+			if (engine->board()->warps().contains(tmp) == 0)
 				_old_entry.push_front("Warp [" + tmp + "] don't exist");
 			else
 			{
-				_board->remove_warp(tmp);
+				engine->board()->remove_warp(tmp);
 				_old_entry.push_front("Deleting warp [" + tmp + "]");
 			}
 		}
@@ -55,10 +49,10 @@ bool Console::handle_warp_command(jgl::Array<jgl::String>& tab)
 	else if (tab.size() == 2)
 	{
 		std::string tmp = tab[1].std();
-		if (_board->warps().contains(tmp) != 0)
+		if (engine->board()->warps().contains(tmp) != 0)
 		{
-			_player->place(_board, _board->warp(tmp));
-			_old_entry.push_front("Player teleported to " + _player->pos().str());
+			engine->player()->place(engine->board()->warp(tmp));
+			_old_entry.push_front("Player teleported to " + engine->player()->pos().str());
 		}
 		else
 			_old_entry.push_front("Warp [" + tmp + "] don't exist");
@@ -71,8 +65,8 @@ bool Console::handle_save_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 2)
 	{
-		_board->save("ressources/maps/" + tab[1] + ".map");
-		_engine->save("ressources/save/" + _player->name() + ".sav");
+		engine->board()->save("ressources/maps/" + tab[1] + ".map");
+		engine->save("ressources/save/" + engine->player()->name() + ".sav");
 		_old_entry.push_front("Saving map into file " + tab[1] + ".map");
 	}
 	else
@@ -83,9 +77,9 @@ bool Console::handle_load_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 2)
 	{
-		_board->load("ressources/maps/" + tab[1] + ".map");
+		engine->board()->load("ressources/maps/" + tab[1] + ".map");
 		if (jgl::check_file_exist("ressources/save/Player.sav") == true)
-			_engine->load("ressources/save/" + _player->name() + ".sav");
+			engine->load("ressources/save/" + engine->player()->name() + ".sav");
 		_old_entry.push_front("Loading map from file " + tab[1] + ".map");
 	}
 	else
@@ -97,8 +91,8 @@ bool Console::handle_tp_command(jgl::Array<jgl::String>& tab)
 	if (tab.size() == 3)
 	{
 		jgl::Vector2 dest = jgl::Vector2(jgl::stof(tab[1]), jgl::stof(tab[2]));
-		_player->place(_board, dest);
-		_old_entry.push_front("Teleport to " + _player->pos().str());
+		engine->player()->place(dest);
+		_old_entry.push_front("Teleport to " + engine->player()->pos().str());
 	}
 	else
 		_old_entry.push_front("Usage : tp [coord X][coord Y]");
@@ -110,7 +104,7 @@ bool Console::handle_speed_command(jgl::Array<jgl::String>& tab)
 	{
 		float speed = jgl::stof(tab[1]);
 		_old_entry.push_front("Setting speed to " + jgl::ftoa(speed));
-		_player->set_move_speed(speed);
+		engine->player()->set_move_speed(speed);
 	}
 	else
 		_old_entry.push_front("Usage : speed [speed value]");
@@ -177,8 +171,8 @@ bool Console::handle_generate_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 2)
 	{
-		jgl::Vector2 start = jgl::compose_smaller(_interacter->pink_flag(), _interacter->blue_flag());
-		jgl::Vector2 end = jgl::compose_biggest(_interacter->pink_flag(), _interacter->blue_flag());
+		jgl::Vector2 start = jgl::compose_smaller(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
+		jgl::Vector2 end = jgl::compose_biggest(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
 		
 		jgl::Array<size_t> elem = parse_regex_percent(tab[1]);
 		if (elem.size() == 0)
@@ -188,14 +182,14 @@ bool Console::handle_generate_command(jgl::Array<jgl::String>& tab)
 			for (float j = start.y; j <= end.y; j++)
 			{
 				size_t tmp = elem[jgl::generate_nbr(0, elem.size())];
-				_board->place(jgl::Vector2(i, j), tmp, false);
+				engine->board()->place(jgl::Vector2(i, j), tmp, false);
 			}
 		start = (start / CHUNK_SIZE).floor();
 		end = (end / CHUNK_SIZE).floor();
 		for (float i = start.x; i <= end.x; i++)
 			for (float j = start.y; j <= end.y; j++)
 			{
-				_board->bake_chunk(jgl::Vector2(i, j));
+				engine->board()->bake_chunk(jgl::Vector2(i, j));
 			}
 		jgl::String result_string = "Area generated with parameter = " + tab[1];
 		_old_entry.push_front(result_string);
@@ -212,8 +206,8 @@ bool Console::handle_replace_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 3)
 	{
-		jgl::Vector2 start = jgl::compose_smaller(_interacter->pink_flag(), _interacter->blue_flag());
-		jgl::Vector2 end = jgl::compose_biggest(_interacter->pink_flag(), _interacter->blue_flag());
+		jgl::Vector2 start = jgl::compose_smaller(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
+		jgl::Vector2 end = jgl::compose_biggest(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
 
 		jgl::Array<size_t> elem_base = parse_regex_simple(tab[1]);
 		jgl::Array<size_t> elem_next = parse_regex_percent(tab[2]);
@@ -224,13 +218,13 @@ bool Console::handle_replace_command(jgl::Array<jgl::String>& tab)
 		for (float i = start.x; i <= end.x; i++)
 			for (float j = start.y; j <= end.y; j++)
 			{
-				Tile* tile = _board->tile(jgl::Vector2(i, j));
+				Tile* tile = engine->board()->tile(jgl::Vector2(i, j));
 				if (tile != nullptr)
 				{
 					if (elem_base.find(tile->index) != elem_base.end())
 					{
 						size_t tmp = elem_next[jgl::generate_nbr(0, elem_next.size())];
-						_board->place(jgl::Vector2(i, j), tmp, false);
+						engine->board()->place(jgl::Vector2(i, j), tmp, false);
 					}
 				}
 				
@@ -240,7 +234,7 @@ bool Console::handle_replace_command(jgl::Array<jgl::String>& tab)
 		for (float i = start.x; i <= end.x; i++)
 			for (float j = start.y; j <= end.y; j++)
 			{
-				_board->bake_chunk(jgl::Vector2(i, j));
+				engine->board()->bake_chunk(jgl::Vector2(i, j));
 			}
 		jgl::String result_string = "Area change from " + tab[1] + " to " + tab[2];
 		_old_entry.push_front(result_string);
@@ -255,13 +249,13 @@ bool Console::handle_prefab_command(jgl::Array<jgl::String>& tab)
 	if (tab.size() == 2 && tab[1].size() <= 4)
 	{
 		Prefab* new_prefab = new Prefab();
-		new_prefab->save(tab[1], _board, _interacter->pink_flag(), _interacter->blue_flag());
+		new_prefab->save(tab[1], engine->board(), engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
 		new_prefab->save_to_file("ressources/prefab/" + tab[1] + ".prefab");
 		prefab_array.push_back(new_prefab);
-		Prefab_item* new_item = new Prefab_item(new_prefab, _tileset);
+		Prefab_item* new_item = new Prefab_item(new_prefab);
 		prefab_item_list.push_back(new_item);
-		_inventory->tab(9)->add_item_slot(new_item);
-		_inventory->tab(9)->set_geometry(_inventory->tab(7)->viewport()->anchor(), _inventory->tab(7)->area());
+		engine->editor_inventory()->tab(9)->add_item_slot(new_item);
+		engine->editor_inventory()->tab(9)->set_geometry(engine->editor_inventory()->tab(7)->viewport()->anchor(), engine->editor_inventory()->tab(7)->area());
 		_old_entry.push_front("Prefab [" + tab[1] + "] succesfully created");
 		return (true);
 	}
@@ -285,17 +279,17 @@ bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
 			_old_entry.push_front("Usage : ghost [on / off]");
 			return (true);
 		}
-		_player->set_ghost(state);
+		engine->player()->set_ghost(state);
 		if (state == true)
 		{
-			if (_board->node(_player->pos().round()) != nullptr)
-				_board->node(_player->pos())->set_occupant(_player);
+			if (engine->board()->node(engine->player()->pos().round()) != nullptr)
+				engine->board()->node(engine->player()->pos())->set_occupant(engine->player());
 			_old_entry.push_front("Ghost set to on");
 		}
 		else
 		{
-			if (_board->node(_player->pos().round()) != nullptr)
-				_board->node(_player->pos())->set_occupant(nullptr);
+			if (engine->board()->node(engine->player()->pos().round()) != nullptr)
+				engine->board()->node(engine->player()->pos())->set_occupant(nullptr);
 			_old_entry.push_front("Ghost set to off");
 		}
 
@@ -311,7 +305,7 @@ bool Console::handle_coord_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 1)
 	{
-		_old_entry.push_front("Player coord : " + jgl::itoa(static_cast<int>(_player->pos().x)) + " / " + jgl::itoa(static_cast<int>(_player->pos().y)));
+		_old_entry.push_front("Player coord : " + jgl::itoa(static_cast<int>(engine->player()->pos().x)) + " / " + jgl::itoa(static_cast<int>(engine->player()->pos().y)));
 		return (true);
 	}
 	else
@@ -334,18 +328,18 @@ bool Console::handle_link_command(jgl::Array<jgl::String>& tab)
 				_old_entry.push_front("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link");
 				return (true);
 			}
-			_board->add_link(_interacter->pink_flag(), _interacter->blue_flag(), tmp);
-			_old_entry.push_front("Creating link from " + _interacter->pink_flag().str() + " to " + _interacter->blue_flag().str());
+			engine->board()->add_link(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag(), tmp);
+			_old_entry.push_front("Creating link from " + engine->editor_interacter()->pink_flag().str() + " to " + engine->editor_interacter()->blue_flag().str());
 			return (true);
 		}
 		else if (tab[1] == "delete")
 		{
-			Node* a = _board->node(_interacter->pink_flag());
+			Node* a = engine->board()->node(engine->editor_interacter()->pink_flag());
 			if (a != nullptr && a->link() != nullptr)
 			{
 				Link* link = a->link();
 				_old_entry.push_front("Deleting link from " + link->a().str() + " to " + link->b().str());
-				_board->remove_link(_player->pos());
+				engine->board()->remove_link(engine->player()->pos());
 			}
 			else
 				_old_entry.push_front("No link to delete");
@@ -374,24 +368,24 @@ bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 					name += " ";
 				name += tab[i];
 			}
-			NPC* new_npc = new NPC(name, _interacter->pink_flag(), _board->charset(), sprite);
-			_board->add_npc(new_npc);
+			NPC* new_npc = new NPC(name, engine->editor_interacter()->pink_flag(), sprite);
+			engine->board()->add_npc(new_npc);
 		}
 		else if (tab[1] == "clear")
 		{
-			if (_interacter->selected_entity() != nullptr && _interacter->selected_entity()->type() == Entity_type::NPC)
+			if (engine->editor_interacter()->selected_entity() != nullptr && engine->editor_interacter()->selected_entity()->type() == Entity_type::NPC)
 			{
-				NPC* tmp = static_cast<NPC*>(_interacter->selected_entity());
+				Entity* tmp = engine->editor_interacter()->selected_entity();
 				tmp->check_point().clear();
 				tmp->road().clear();
 				tmp->add_check_point(tmp->starting_pos());
-				tmp->place(_board, tmp->starting_pos());
-				tmp->move(_board, 0);
+				tmp->place(tmp->starting_pos());
+				tmp->move(0);
 			}
 		}
 		else if (tab[1] == "delete")
 		{
-			_board->remove_npc(tab[2]);
+			engine->board()->remove_npc(tab[2]);
 		}
 		return (true);
 	}

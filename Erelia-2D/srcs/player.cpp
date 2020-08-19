@@ -1,14 +1,15 @@
 #include "erelia.h"
 
-Player::Player(jgl::Sprite_sheet* p_charset, jgl::Vector2 p_sprite) : Entity(Entity_type::Player, "Player", 0, p_charset, p_sprite)
+Player::Player() : Entity(Entity_type::Player, "Player", 0, 0)
 {
 	_ghost = false;
+	set_move_tick(150);
 }
 
-void Player::update(Board* board)
+void Player::update()
 {
 	if (is_moving() == true)
 	{
-		update_pos(board);
+		update_pos();
 	}
 }
