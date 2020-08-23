@@ -6,17 +6,23 @@ Console::Console(jgl::Widget* p_engine) : jgl::Widget(p_engine)
 	_cmd_index = 0;
 	_entry = new jgl::Text_entry("", this);
 	_entry->activate();
-} 
+}
+
+bool Console::return_funct(jgl::String text)
+{
+	_old_entry.push_front(text);
+	return (true);
+}
 
 bool Console::handle_clear_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 1)
 	{
 		engine->board()->clear();
+		return (return_funct("Board cleared"));
 	}
 	else
-		_old_entry.push_front("Usage : clear");
-	return (true);
+		return (return_funct("Usage : clear"));
 }
 
 bool Console::handle_warp_command(jgl::Array<jgl::String>& tab)
@@ -27,22 +33,21 @@ bool Console::handle_warp_command(jgl::Array<jgl::String>& tab)
 		if (tab[1] == "create")
 		{
 			if (engine->board()->warps().contains(tmp) != 0)
-				_old_entry.push_front("Warp [" + tmp + "] already exist");
+				return (return_funct("Warp [" + tmp + "] already exist"));
 			else
 			{
 				engine->board()->add_warp(tmp, engine->player()->pos());
-				jgl::String text = "Creating warp [" + jgl::String(tmp) + "] at coord " + engine->player()->pos().str();
-				_old_entry.push_front(text);
+				return (return_funct("Creating warp [" + jgl::String(tmp) + "] at coord " + engine->player()->pos().str()));
 			}
 		}
 		else if (tab[1] == "delete")
 		{
 			if (engine->board()->warps().contains(tmp) == 0)
-				_old_entry.push_front("Warp [" + tmp + "] don't exist");
+				return (return_funct("Warp [" + tmp + "] don't exist"));
 			else
 			{
 				engine->board()->remove_warp(tmp);
-				_old_entry.push_front("Deleting warp [" + tmp + "]");
+				return (return_funct("Deleting warp [" + tmp + "]"));
 			}
 		}
 	}
@@ -52,13 +57,13 @@ bool Console::handle_warp_command(jgl::Array<jgl::String>& tab)
 		if (engine->board()->warps().contains(tmp) != 0)
 		{
 			engine->player()->place(engine->board()->warp(tmp));
-			_old_entry.push_front("Player teleported to " + engine->player()->pos().str());
+			return (return_funct("Player teleported to " + engine->player()->pos().str()));
 		}
 		else
-			_old_entry.push_front("Warp [" + tmp + "] don't exist");
+			return (return_funct("Warp [" + tmp + "] don't exist"));
 	}
 	else
-		_old_entry.push_front("Usage : warp [optional : create / delete / empty to teleportation] [warp name]");
+		return (return_funct("Usage : warp [optional : create / delete / empty to teleportation] [warp name]"));
 	return (true);
 }
 bool Console::handle_save_command(jgl::Array<jgl::String>& tab)
@@ -67,10 +72,10 @@ bool Console::handle_save_command(jgl::Array<jgl::String>& tab)
 	{
 		engine->board()->save("ressources/maps/" + tab[1] + ".map");
 		engine->save("ressources/save/" + engine->player()->name() + ".sav");
-		_old_entry.push_front("Saving map into file " + tab[1] + ".map");
+		return (return_funct("Saving map into file " + tab[1] + ".map"));
 	}
 	else
-		_old_entry.push_front("Usage : save [map path]");
+		return (return_funct("Usage : save [map path]"));
 	return (true);
 }
 bool Console::handle_load_command(jgl::Array<jgl::String>& tab)
@@ -80,11 +85,10 @@ bool Console::handle_load_command(jgl::Array<jgl::String>& tab)
 		engine->board()->load("ressources/maps/" + tab[1] + ".map");
 		if (jgl::check_file_exist("ressources/save/Player.sav") == true)
 			engine->load("ressources/save/" + engine->player()->name() + ".sav");
-		_old_entry.push_front("Loading map from file " + tab[1] + ".map");
+		return (return_funct("Loading map from file " + tab[1] + ".map"));
 	}
 	else
-		_old_entry.push_front("Usage : load [map path]");
-	return (true);
+		return (return_funct("Usage : load [map path]"));
 }
 bool Console::handle_tp_command(jgl::Array<jgl::String>& tab)
 {
@@ -92,23 +96,21 @@ bool Console::handle_tp_command(jgl::Array<jgl::String>& tab)
 	{
 		jgl::Vector2 dest = jgl::Vector2(jgl::stof(tab[1]), jgl::stof(tab[2]));
 		engine->player()->place(dest);
-		_old_entry.push_front("Teleport to " + engine->player()->pos().str());
+		return (return_funct("Teleport to " + engine->player()->pos().str()));
 	}
 	else
-		_old_entry.push_front("Usage : tp [coord X][coord Y]");
-	return (true);
+		return (return_funct("Usage : tp [coord X][coord Y]"));
 }
 bool Console::handle_speed_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 2)
 	{
 		float speed = jgl::stof(tab[1]);
-		_old_entry.push_front("Setting speed to " + jgl::ftoa(speed));
 		engine->player()->set_move_speed(speed);
+		return (return_funct("Setting speed to " + jgl::ftoa(speed)));
 	}
 	else
-		_old_entry.push_front("Usage : speed [speed value]");
-	return (true);
+		return (return_funct("Usage : speed [speed value]"));
 }
 
 jgl::Array<size_t> Console::parse_regex_percent(jgl::String text)
@@ -154,7 +156,6 @@ jgl::Array<size_t> Console::parse_regex_simple(jgl::String text)
 	jgl::Array<jgl::String> regex = text.split(",");
 	for (size_t i = 0; i < regex.size(); i++)
 	{
-
 		int index = jgl::stoi(regex[i]);
 		if (index < 0 || index >= static_cast<int>(tile_array.size()))
 		{
@@ -192,7 +193,7 @@ bool Console::handle_generate_command(jgl::Array<jgl::String>& tab)
 				engine->board()->bake_chunk(jgl::Vector2(i, j));
 			}
 		jgl::String result_string = "Area generated with parameter = " + tab[1];
-		_old_entry.push_front(result_string);
+		return (return_funct(result_string));
 	}
 	else
 	{
@@ -237,9 +238,7 @@ bool Console::handle_replace_command(jgl::Array<jgl::String>& tab)
 				engine->board()->bake_chunk(jgl::Vector2(i, j));
 			}
 		jgl::String result_string = "Area change from " + tab[1] + " to " + tab[2];
-		_old_entry.push_front(result_string);
-
-		return (true);
+		return (return_funct(result_string));
 	}
 	else
 		return (false);
@@ -256,14 +255,10 @@ bool Console::handle_prefab_command(jgl::Array<jgl::String>& tab)
 		prefab_item_list.push_back(new_item);
 		engine->editor_inventory()->tab(9)->add_item_slot(new_item);
 		engine->editor_inventory()->tab(9)->set_geometry(engine->editor_inventory()->tab(7)->viewport()->anchor(), engine->editor_inventory()->tab(7)->area());
-		_old_entry.push_front("Prefab [" + tab[1] + "] succesfully created");
-		return (true);
+		return (return_funct("Prefab [" + tab[1] + "] succesfully created"));
 	}
 	else
-	{
-		_old_entry.push_front("Usage : prefab [prefab name - 0-4 letters]");
-	}
-	return (false);
+		return (return_funct("Usage : prefab [prefab name - 0-4 letters]"));
 }
 bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
 {
@@ -275,44 +270,31 @@ bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
 		else if (tab[1] == "off")
 			state = false;
 		else
-		{
-			_old_entry.push_front("Usage : ghost [on / off]");
-			return (true);
-		}
+			return (return_funct("Usage : ghost [on / off]"));
+
 		engine->player()->set_ghost(state);
 		if (state == true)
 		{
 			if (engine->board()->node(engine->player()->pos().round()) != nullptr)
 				engine->board()->node(engine->player()->pos())->set_occupant(engine->player());
-			_old_entry.push_front("Ghost set to on");
+			return (return_funct("Ghost set to on"));
 		}
 		else
 		{
 			if (engine->board()->node(engine->player()->pos().round()) != nullptr)
 				engine->board()->node(engine->player()->pos())->set_occupant(nullptr);
-			_old_entry.push_front("Ghost set to off");
+			return (return_funct("Ghost set to off"));
 		}
-
-		return (true);
 	}
 	else
-	{
-		_old_entry.push_front("Usage : ghost [on / off]");
-	}
-	return (false);
+		return (return_funct("Usage : ghost [on / off]"));
 }
 bool Console::handle_coord_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 1)
-	{
-		_old_entry.push_front("Player coord : " + jgl::itoa(static_cast<int>(engine->player()->pos().x)) + " / " + jgl::itoa(static_cast<int>(engine->player()->pos().y)));
-		return (true);
-	}
+		return (return_funct("Player coord : " + jgl::itoa(static_cast<int>(engine->player()->pos().x)) + " / " + jgl::itoa(static_cast<int>(engine->player()->pos().y))));
 	else
-	{
-		_old_entry.push_front("Usage : coord");
-	}
-	return (false);
+		return (return_funct("Usage : coord"));
 }
 bool Console::handle_link_command(jgl::Array<jgl::String>& tab)
 {
@@ -324,13 +306,9 @@ bool Console::handle_link_command(jgl::Array<jgl::String>& tab)
 			if (tab.size() == 3 && tab[2] == "dual")
 				tmp = true;
 			else if (tab.size() == 3)
-			{
-				_old_entry.push_front("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link");
-				return (true);
-			}
+				return (return_funct("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link"));
 			engine->board()->add_link(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag(), tmp);
-			_old_entry.push_front("Creating link from " + engine->editor_interacter()->pink_flag().str() + " to " + engine->editor_interacter()->blue_flag().str());
-			return (true);
+			return (return_funct("Creating link from " + engine->editor_interacter()->pink_flag().str() + " to " + engine->editor_interacter()->blue_flag().str()));
 		}
 		else if (tab[1] == "delete")
 		{
@@ -338,63 +316,85 @@ bool Console::handle_link_command(jgl::Array<jgl::String>& tab)
 			if (a != nullptr && a->link() != nullptr)
 			{
 				Link* link = a->link();
-				_old_entry.push_front("Deleting link from " + link->a().str() + " to " + link->b().str());
 				engine->board()->remove_link(engine->player()->pos());
+				return (return_funct("Deleting link from " + link->a().str() + " to " + link->b().str()));
 			}
 			else
-				_old_entry.push_front("No link to delete");
-			return (true);
+				return (return_funct("No link to delete"));
 		}
 		else
-			_old_entry.push_front("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link");
+			return (return_funct("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link"));
 	}
 	else
-	{
-		_old_entry.push_front("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link");
-	}
-	return (true);
+		return (return_funct("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link"));
 }
+
 bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() >= 2)
 	{
-		if (tab[1] == "create" && tab.size() >= 4)
+		if (engine->editor_interacter()->selected_entity() == nullptr)
+			return (return_funct("No entity selected"));
+		if (tab[1] == "movement")
 		{
-			jgl::Vector2 sprite = jgl::Vector2(0, jgl::stoi(tab[tab.size() - 1]));
-			jgl::String name = "";
-			for (size_t i = 2; i < tab.size() - 1; i++)
+			if (tab.size() == 3)
 			{
-				if (i != 2)
-					name += " ";
-				name += tab[i];
+				int tmp = jgl::stoi(tab[2]);
+				if (tmp == -1 || tmp == 0 || tmp == 1)
+				{
+					Entity_movement type = static_cast<Entity_movement>(tmp);
+					if (engine->editor_interacter()->selected_entity() != nullptr && engine->editor_interacter()->selected_entity()->movement_type() != type)
+					{
+						engine->editor_interacter()->selected_entity()->set_movement_type(type);
+						if (type == Entity_movement::errant)
+							engine->editor_interacter()->selected_entity()->set_movement_range(5);
+						else if (type == Entity_movement::controled)
+						{
+							engine->editor_interacter()->selected_entity()->check_point().clear();
+							engine->editor_interacter()->selected_entity()->add_check_point(engine->editor_interacter()->selected_entity()->starting_pos());
+						}
+						return (return_funct(engine->editor_interacter()->selected_entity()->name() + " movement type set to " + (tmp == -1 ? "Errant" : (tmp == 0 ? "Immobile" : "Defined path"))));
+					}
+					else if (engine->editor_interacter()->selected_entity()->movement_type() == type)
+						return (return_funct(jgl::String("Selected entity movement type already defined to ") + (tmp == -1 ? "Errant" : (tmp == 0 ? "Immobile" : "Defined path"))));
+					else
+						return (return_funct("No selected entity to edit : command ignored"));
+				}
+				else
+					return (return_funct("Usage : npc movement [-1 : Errant / 0 : Fix / 1 : Defined path]"));
 			}
-			NPC* new_npc = new NPC(name, engine->editor_interacter()->pink_flag(), sprite);
-			engine->board()->add_npc(new_npc);
+			else
+				return (return_funct("Usage : npc movement [-1 : Errant / 0 : Fix / 1 : Defined path]"));
 		}
-		else if (tab[1] == "clear")
+		if (tab[1] == "range")
 		{
-			if (engine->editor_interacter()->selected_entity() != nullptr && engine->editor_interacter()->selected_entity()->type() == Entity_type::NPC)
+			if (engine->editor_interacter()->selected_entity()->movement_type() != Entity_movement::errant)
+				return (return_funct("Entity movement type isn't errant. Use [npc movement 0] to set it"));
+			int tmp = jgl::stoi(tab[2]);
+			if (tmp <= 0)
+				return (return_funct("Entity movement range can't be negative or null"));
+			engine->editor_interacter()->selected_entity()->set_movement_range(tmp);
+			return (return_funct("Entity movement range set to " + jgl::itoa(tmp)));
+		}
+		if (tab[1] == "reset")
+		{
+			if (engine->editor_interacter()->selected_entity()->movement_type() == Entity_movement::errant)
+				engine->editor_interacter()->selected_entity()->set_movement_range(5);
+			else if (engine->editor_interacter()->selected_entity()->movement_type() == Entity_movement::controled)
 			{
-				Entity* tmp = engine->editor_interacter()->selected_entity();
-				tmp->check_point().clear();
-				tmp->road().clear();
-				tmp->add_check_point(tmp->starting_pos());
-				tmp->place(tmp->starting_pos());
-				tmp->move(0);
+				engine->editor_interacter()->selected_entity()->check_point().clear();
+				engine->editor_interacter()->selected_entity()->add_check_point(engine->editor_interacter()->selected_entity()->starting_pos());
 			}
+			engine->editor_interacter()->selected_entity()->calc_road_to(engine->editor_interacter()->selected_entity()->starting_pos());
+			return (return_funct("Entity reseted"));
 		}
-		else if (tab[1] == "delete")
-		{
-			engine->board()->remove_npc(tab[2]);
-		}
-		return (true);
+		else
+			return (return_funct("Usage : npc [movement / range / reset]"));
 	}
 	else
-	{
-		_old_entry.push_front("Usage : npc [create / clear / delete] [NPC name]");
-		return (true);
-	}
+		return (return_funct("Usage : npc [movement / range / reset]"));
 }
+
 
 bool Console::handle_console_entry(jgl::String cmd)
 {
@@ -477,7 +477,7 @@ bool Console::handle_mouse()
 
 void Console::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	_entry->set_geometry(jgl::Vector2(5.0f, p_area.y - 35), jgl::Vector2(p_area.x * 0.75f, 30.0f));
+	_entry->set_geometry(jgl::Vector2(5.0f, p_area.y - 50), jgl::Vector2(p_area.x * 0.75f, 45.0f));
 }
 
 void Console::render()
@@ -486,9 +486,10 @@ void Console::render()
 	{
 		for (int i = _old_entry.size() - 1; i >= 0; i--)
 		{
-			jgl::Vector2 tmp = _entry->anchor() - jgl::Vector2(0.0f, 30.0f);
-			jgl::Vector2 pos = tmp + jgl::Vector2(20.0f, i * -21.0f);
-			jgl::draw_text(_old_entry[i], pos, 16, 1, jgl::text_color::white);
+			int text_size = 20;
+			jgl::Vector2 tmp = _entry->anchor() - jgl::Vector2(0.0f, text_size * 1.4f);
+			jgl::Vector2 pos = tmp + jgl::Vector2(20.0f, i * -(text_size * 1.4f));
+			jgl::draw_text(_old_entry[i], pos, text_size, 2, jgl::text_color::white);
 		}
 	}
 }

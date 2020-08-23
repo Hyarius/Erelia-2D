@@ -1,7 +1,7 @@
 #include "erelia.h"
 
 jgl::Array<jgl::String> item_type_name = {
-	"Tile", "Env.", "Trainer", "Interact", "Prefab"
+	"Tile", "Env.", "Trainer", "Interact", "Prefab", "NPC"
 };
 
 jgl::Array<Item*> node_item_list;
@@ -15,7 +15,34 @@ jgl::Array<jgl::Array<Item*> *> item_array = {
 	&node_item_list, &env_item_list, &trainer_item_list, &interact_item_list, &prefab_item_list, &npc_item_list
 };
 
+
 extern jgl::Funct funct_array[19];
+
+static void create_prefab_list()
+{
+	jgl::Array<jgl::File> list = jgl::list_files("ressources/prefab", ".prefab");
+	for (size_t i = 1; i < list.size(); i++)
+	{
+		jgl::String path = list[i].path + "/" + list[i].name + list[i].extension;
+		Prefab* new_prefab = new Prefab(path);
+		prefab_array.push_back(new_prefab);
+		Prefab_item* new_item = new Prefab_item(new_prefab);
+		prefab_item_list.push_back(new_item);
+	}
+}
+
+static void create_npc_list()
+{
+	jgl::Array<jgl::File> list = jgl::list_files("ressources/npc", ".npc");
+	for (size_t i = 1; i < list.size(); i++)
+	{
+		jgl::String path = list[i].path + "/" + list[i].name + list[i].extension;
+		NPC* new_npc = new NPC(path);
+		NPC_array.push_back(new_npc);
+		NPC_item* new_item = new NPC_item(new_npc);
+		npc_item_list.push_back(new_item);
+	}
+}
 
 void create_item_list(jgl::Sprite_sheet* tileset)
 {
@@ -28,15 +55,8 @@ void create_item_list(jgl::Sprite_sheet* tileset)
 		jgl::Vector2 sprite = jgl::Vector2(static_cast<float>(i), tileset->size().y - 1);
 		interact_item_list.push_back( new Editor_item(funct_array[i], sprite) );
 	}
-	jgl::Array<jgl::File> list = jgl::list_files("ressources/prefab", ".prefab");
-	for (size_t i = 1; i < list.size(); i++)
-	{
-		jgl::String path = list[i].path + "/" + list[i].name + list[i].extension;
-		Prefab* new_prefab = new Prefab(path);
-		prefab_array.push_back(new_prefab);
-		Prefab_item* new_item = new Prefab_item(new_prefab);
-		prefab_item_list.push_back(new_item);
-	}
+	create_prefab_list();
+	create_npc_list();
 }
 
 void delete_item_list()

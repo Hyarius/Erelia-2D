@@ -74,7 +74,22 @@ void Board::save(jgl::String path)
 	file << "npc;" << _npc_array.size() << std::endl;
 	for (size_t i = 0; i < _npc_array.size(); i++)
 	{
-		_npc_array[i]->save(file);
+		file << jgl::round(_npc_array[i]->pos().x) << ";" << jgl::round(_npc_array[i]->pos().y) << ";" << _npc_array[i]->path() << ";" << static_cast<int>(_npc_array[i]->movement_type());
+		if (_npc_array[i]->movement_type() == Entity_movement::errant)
+			file << ";" << _npc_array[i]->movement_range();
+		else if (_npc_array[i]->movement_type() == Entity_movement::controled)
+		{
+			if (_npc_array[i]->check_point().size() < 1)
+				jgl::error_exit(1, "Error while saving npc : no checkpoint");
+			file << ";" << _npc_array[i]->check_point().size() << ";";
+			for (size_t j = 0; j < _npc_array[i]->check_point().size(); j++)
+			{
+				if (j != 0)
+					file << ";";
+				file << _npc_array[i]->check_point(j).x << ";" << _npc_array[i]->check_point(j).y;
+			}
+		}
+		file << std::endl;
 	}
 	file << "warp;" << _warps.size() << std::endl;
 	for (auto tmp : _warps)
@@ -146,8 +161,22 @@ void Board::load_npc(std::fstream& file, jgl::Array<jgl::String> tab)
 	size_t nb_npc = jgl::stoi(tab[1]);
 	for (size_t t = 0; t < nb_npc; t++)
 	{
-		NPC* npc = new NPC();
-		npc->load(file);
+		tab = jgl::get_strsplit(file, ";");
+		jgl::Vector2 pos = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+		NPC* npc = new NPC(tab[2]);
+		npc->set_starting_pos(pos);
+		npc->place(pos);
+		npc->set_movement_type(static_cast<Entity_movement>(jgl::stoi(tab[3])));
+		if (npc->movement_type() == Entity_movement::errant)
+			npc->set_movement_range(jgl::stoi(tab[4]));
+		else if (npc->movement_type() == Entity_movement::controled)
+		{
+			size_t nb_index = jgl::stoi(tab[4]);
+			for (size_t j = 0; j < nb_index; j++)
+			{
+				npc->add_check_point(jgl::Vector2(jgl::stoi(tab[5 + j * 2]), jgl::stoi(tab[6 + j * 2])));
+			}
+		}
 		add_npc(npc);
 	}
 }

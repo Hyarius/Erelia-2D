@@ -29,21 +29,12 @@ class Entity
 {
 protected:
 	Entity_type _type;
-	Entity_movement _movement_type;
 	jgl::String _name;
 	Entity_direction _look_dir;
 	jgl::Vector2 _sprite;
 	jgl::Vector2 _pos;
 	jgl::Vector2 _direction;
 	float _move_speed;
-
-	jgl::Array<Interaction> _interaction;
-
-	jgl::Vector2 _starting_pos;
-	jgl::Array<jgl::Vector2> _check_point;
-	size_t _check_point_index;
-	jgl::Array<jgl::Vector2> _road;
-	size_t _road_index;
 
 	bool _did_tp;
 	bool _in_motion;
@@ -52,15 +43,29 @@ protected:
 	float _last_tick;
 	float _actual_tick;
 	float _move_tick;
+
+	Entity_movement _movement_type;
+	int _movement_range;
+	jgl::Vector2 _starting_pos;
+	jgl::Array<jgl::Vector2> _check_point;
+	size_t _check_point_index;
+	jgl::Array<jgl::Vector2> _road;
+	size_t _road_index;
+
+	jgl::Array<Interaction> _interaction;
+
 public:
 	Entity();
 	Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Vector2 p_sprite);
-	jgl::Array<Interaction>& interaction() { return (_interaction); }
-	Interaction interaction(size_t index) { return (_interaction[index]); }
 	jgl::String name() { return (_name); }
 	void set_name(jgl::String p_name) { _name = p_name; }
 	void place(jgl::Vector2 p_pos);
 
+	void add_interaction(Interaction p_interaction) { _interaction.push_back(p_interaction); }
+	jgl::Array<Interaction>& interaction() { return (_interaction); }
+	Interaction interaction(size_t index) { return (_interaction[index]); }
+
+	jgl::Vector2 sprite() { return (_sprite); }
 	Entity_type type(){ return (_type); }
 
 	void set_wait_time(Uint32 p_time) { _wait_time = p_time; }
@@ -76,8 +81,6 @@ public:
 	Entity_direction look_dir() { return (_look_dir); }
 
 	float last_tick() { return (_last_tick); }
-
-	bool can_move(jgl::Vector2 delta);
 	jgl::Vector2 direction() { return (_direction); }
 	jgl::Vector2 pos() { return (_pos); }
 
@@ -91,12 +94,11 @@ public:
 
 	void render(jgl::Viewport* p_viewport);
 	void move(jgl::Vector2 delta);
-	virtual void update();
 	void update_pos();
 
-	void load(std::fstream& file);
-	size_t load_from_line(jgl::Array<jgl::String> tab);
-	void save(std::fstream& file);
+	bool can_move(jgl::Vector2 delta);
+
+	virtual void update();
 
 	void remove_check_point(jgl::Vector2 pos);
 	void add_check_point(jgl::Vector2 p_point) { _check_point.push_back(p_point); }
@@ -104,6 +106,17 @@ public:
 	void calc_road_to(jgl::Vector2 destination);
 	void return_starting_position();
 
+	void set_movement_type(Entity_movement p_mvt)
+	{
+		_movement_type = p_mvt;
+		calc_road_to(_starting_pos);
+	}
+	void set_movement_range(int p_range) { _movement_range = p_range; }
+
+	Entity_movement movement_type() { return (_movement_type); }
+	int movement_range() { return (_movement_range); }
+
+	void set_starting_pos(jgl::Vector2 p_pos) { _starting_pos = p_pos; }
 	jgl::Vector2 starting_pos() { return (_starting_pos); }
 	jgl::Array<jgl::Vector2>& check_point() { return (_check_point); }
 	jgl::Vector2 check_point(size_t i) { return (_check_point[i]); }

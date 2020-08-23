@@ -41,6 +41,7 @@ public:
 	bool handle_link_command(jgl::Array<jgl::String>& tab);
 	bool handle_npc_command(jgl::Array<jgl::String>& tab);
 
+	bool return_funct(jgl::String text);
 	void start();
 
 	bool handle_keyboard();

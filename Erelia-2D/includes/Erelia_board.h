@@ -9,6 +9,7 @@ class Board
 private:
 	std::map<jgl::Vector2, Chunk*> _chunks;
 
+	std::map<jgl::String, NPC*> _npc_map;
 	jgl::Array<NPC*> _npc_array;
 
 	std::map<std::string, jgl::Vector2> _warps;

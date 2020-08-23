@@ -1,33 +1,30 @@
 #include "erelia.h"
 
-NPC::NPC(jgl::String p_name, jgl::Vector2 p_pos, jgl::Vector2 p_sprite) : Entity(Entity_type::NPC, p_name, p_pos, p_sprite)
+NPC::NPC(jgl::String p_path, jgl::String p_name, jgl::Vector2 p_sprite) : Entity(Entity_type::NPC, p_name, -1, p_sprite)
 {
+	_path = p_path;
 	set_move_speed(0.4f);
 	set_wait_time(450);
-	_movement_type = Entity_movement::errant;
 }
 
-void NPC::save(std::fstream& file)
+NPC::NPC(jgl::String p_path) : Entity(Entity_type::NPC, "Unnamed", -1, 0)
 {
-	Entity::save(file);
+	_path = p_path;
+	std::fstream tmp_file = jgl::open_file(p_path, std::ios_base::in);
+
+	_name = jgl::get_str(tmp_file);
+	jgl::Array<jgl::String> tab = jgl::get_strsplit(tmp_file, ";", 2);
+	_sprite = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	set_move_speed(0.4f);
+	set_wait_time(450);
 }
 
-void NPC::load(std::fstream& file)
+
+NPC* NPC::clone()
 {
-	jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
-	size_t i = Entity::load_from_line(tab);
-	if (i < tab.size())
-	{
-		size_t nb_interact = jgl::stoi(tab[i]);
-		i++;
-		for (size_t j = 0; j < nb_interact; j++)
-		{
-			Interaction_type type = static_cast<Interaction_type>(jgl::stoi(tab[i]));
-			Interaction inter = Interaction(type);
-			I_funct funct = interact_parse_tab[static_cast<size_t>(type)];
-			i++;
-			i += (inter.*funct)(tab, i);
-			_interaction.push_back(inter);
-		}
-	}
+	NPC* result = new NPC(_path, _name, _sprite);
+	for (size_t i = 0; i < _interaction.size(); i++)
+		result->add_interaction(_interaction[i]);
+
+	return (result);
 }

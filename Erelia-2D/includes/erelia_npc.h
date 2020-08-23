@@ -7,11 +7,14 @@
 class NPC : public Entity
 {
 private:
-public:
-	NPC(jgl::String p_name = "", jgl::Vector2 p_pos = 0, jgl::Vector2 p_sprite = 0);
+	jgl::String _path;
 
-	void save(std::fstream& file);
-	void load(std::fstream& file);
+public:
+	NPC(jgl::String p_path, jgl::String p_name, jgl::Vector2 p_sprite);
+	NPC(jgl::String p_path);
+	jgl::String path(){ return (_path);}
+
+	NPC* clone();
 };
 
 #endif

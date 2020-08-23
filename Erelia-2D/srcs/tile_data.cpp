@@ -1,6 +1,7 @@
 #include "erelia.h"
 
 jgl::Array<Prefab*> prefab_array;
+jgl::Array<NPC*> NPC_array;
 
 jgl::Array<Tile*> tile_array = {
 	new Tile(0, jgl::Vector2(0, 0), WALKABLE),

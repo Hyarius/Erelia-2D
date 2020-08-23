@@ -192,7 +192,7 @@ bool Game_engine::handle_mouse()
 
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	int tmp = g_application->size().x / 30;
+	float tmp = g_application->size().x / 30;
 	_editor_inventory->set_geometry(tmp, p_area - tmp * 2);
 	_editor_interacter->set_geometry(0, p_area);
 

@@ -2,7 +2,7 @@
 
 Entity::Entity() : Entity(Entity_type::entity, "Unnamed", 0, 0)
 {
-
+	
 }
 
 Entity::Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Vector2 p_sprite)
@@ -19,36 +19,12 @@ Entity::Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::
 	_move_tick = 150;
 	_move_speed = 1.0f;
 	_total_tick = _move_tick / _move_speed;
-
+	_movement_range = 5;
 	_starting_pos = p_pos;
 	_road_index = 0;
 	_check_point_index = 1;
 	_check_point.push_back(_pos);
-	_look_dir = Entity_direction::south;
-}
-
-bool Entity::can_move(jgl::Vector2 delta)
-{
-	Node* tmp = engine->board()->node((this->pos() + delta).round());
-	
-	if (tmp != nullptr && tmp->occuped() == false &&
-		engine->board()->can_acces(this->pos(), delta) == true)
-		return (true);
-	return (false);
-}
-
-void Entity::place(jgl::Vector2 p_pos)
-{
-	if (engine->board()->node(_pos.round()) != nullptr)
-		engine->board()->node(_pos.round())->set_occupant(nullptr);
-	_pos = p_pos.round();
-	if (engine->board()->node(_pos.round()) != nullptr)
-		engine->board()->node(_pos.round())->set_occupant(this);
-	_did_tp = true;
-	_in_motion = true;
-	_total_tick = 0;
-	_last_tick = static_cast<float>(g_time);
-	_actual_tick = _last_tick;
+	_movement_type = Entity_movement::controled;
 }
 
 void Entity::update()
@@ -77,18 +53,19 @@ void Entity::update()
 				size_t x = static_cast<size_t>(_starting_pos.x);
 				size_t y = static_cast<size_t>(_starting_pos.y);
 				jgl::Vector2 dest = jgl::Vector2(
-					jgl::generate_nbr(x - 5, x + 5),
-					jgl::generate_nbr(y - 5, y + 5)
+					jgl::generate_nbr(x - _movement_range, x + _movement_range),
+					jgl::generate_nbr(y - _movement_range, y + _movement_range)
 				);
 				size_t i = 0;
 				while (engine->board()->node(dest)->tile()->type == OBSTACLE || engine->board()->node(dest)->tile()->type == JUMPING && i < 20)
 				{
 					dest = jgl::Vector2(
-						jgl::generate_nbr(x - 5, x + 5),
-						jgl::generate_nbr(y - 5, y + 5)
+						jgl::generate_nbr(x - _movement_range, x + _movement_range),
+						jgl::generate_nbr(y - _movement_range, y + _movement_range)
 					);
 					i++;
 				}
+
 				calc_road_to(dest);
 			}
 			else if (_movement_type == Entity_movement::controled)
@@ -98,6 +75,20 @@ void Entity::update()
 			}
 		}
 	}
+}
+
+void Entity::place(jgl::Vector2 p_pos)
+{
+	if (engine->board() != nullptr && engine->board()->node(_pos.round()) != nullptr && engine->board()->node(_pos.round())->occupant() == this)
+		engine->board()->node(_pos.round())->set_occupant(nullptr);
+	_pos = p_pos.round();
+	if (engine->board() != nullptr && engine->board()->node(_pos.round()) != nullptr)
+		engine->board()->node(_pos.round())->set_occupant(this);
+	_did_tp = true;
+	_in_motion = true;
+	_total_tick = 0;
+	_last_tick = static_cast<float>(g_time);
+	_actual_tick = _last_tick;
 }
 
 void Entity::move(jgl::Vector2 delta)
@@ -216,6 +207,16 @@ void Entity::render(jgl::Viewport* p_viewport)
 		jgl::draw_centred_text(_name, pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::white);
 }
 
+bool Entity::can_move(jgl::Vector2 delta)
+{
+	Node* tmp = engine->board()->node((this->pos() + delta).round());
+
+	if (tmp != nullptr && tmp->occuped() == false &&
+		engine->board()->can_acces(this->pos(), delta) == true)
+		return (true);
+	return (false);
+}
+
 void Entity::remove_check_point(jgl::Vector2 pos)
 {
 	if (pos == _starting_pos)
@@ -245,61 +246,4 @@ void Entity::return_starting_position()
 {
 	_road = engine->board()->pathfinding(_pos.round(), _starting_pos.round());
 	_road_index = 1;
-}
-
-void Entity::load(std::fstream& file)
-{
-	jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
-	load_from_line(tab);
-}
-
-size_t Entity::load_from_line(jgl::Array<jgl::String> tab)
-{
-	_name = tab[0];
-	_starting_pos = jgl::Vector2(jgl::stoi(tab[1]), jgl::stoi(tab[2]));
-	_pos = _starting_pos;
-	_sprite = jgl::Vector2(jgl::stoi(tab[3]), jgl::stoi(tab[4]));
-	_movement_type = static_cast<Entity_movement>(jgl::stoi(tab[5]));
-	if (_movement_type == Entity_movement::errant)
-	{
-		set_wait_time(1050);
-		return (6);
-	}
-	else if(_movement_type == Entity_movement::controled)
-	{
-		int nb_check_point = jgl::stoi(tab[6]);
-		_check_point.clear();
-		int i = 0;
-		for (; i < nb_check_point; i++)
-		{
-			jgl::Vector2 tmp = jgl::Vector2(jgl::stoi(tab[7 + i * 2]), jgl::stoi(tab[8 + i * 2]));
-			add_check_point(tmp);
-		}
-		return (7 + i * 2);
-	}
-	else
-	{
-		_movement_type = Entity_movement::fix;
-		return (6);
-	}
-
-}
-
-void Entity::save(std::fstream& file)
-{
-	file << _name << ";";
-	file << static_cast<int>(_starting_pos.x) << ";" << static_cast<int>(_starting_pos.y) << ";";
-	file << static_cast<int>(_sprite.x) << ";" << static_cast<int>(_sprite.y) << ";";
-	file << static_cast<int>(_movement_type) << ";";
-	if (_movement_type == Entity_movement::controled)
-	{
-		file << _check_point.size() << ";";
-		for (size_t i = 0; i < _check_point.size(); i++)
-		{
-			if (i != 0)
-				file << ";";
-			file << static_cast<int>(_check_point[i].x) << ";" << static_cast<int>(_check_point[i].y);
-		}
-	}
-	file << std::endl;
 }

@@ -35,7 +35,7 @@ Editor_inventory::Editor_inventory(jgl::Widget* p_parent) : jgl::Widget(p_parent
 	for (size_t i = 0; i < nb_part; i++)
 	{
 		Editor_inventory_tab* result = new Editor_inventory_tab(19, _background);
-		for (size_t k = 0; k < part; k++)
+		for (size_t k = 0; k < part - (i != nb_part - 1 ? 1 : 0) * 19; k++)
 			result->add_item_slot(item_array[0]->operator[](k + i * part));
 		_tab.push_back(result);
 	}

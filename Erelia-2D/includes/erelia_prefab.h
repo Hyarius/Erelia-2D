@@ -19,5 +19,6 @@ public:
 };
 
 extern jgl::Array<Prefab*> prefab_array;
+extern jgl::Array<NPC*> NPC_array;
 
 #endif
