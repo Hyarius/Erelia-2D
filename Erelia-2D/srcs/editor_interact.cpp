@@ -84,6 +84,13 @@ bool Editor_interact::handle_mouse()
 				handle_remove_multi_pos();
 			else if (tmp == interact_item_list[3] && _selected_entity != nullptr)
 				_selected_entity->remove_check_point(screen_to_tile(g_mouse->pos));
+			else if (tmp->item_type() == Item_type::npc && engine->board()->node(screen_to_tile(g_mouse->pos))->occupant() != nullptr)
+			{
+				if (engine->board()->node(screen_to_tile(g_mouse->pos))->occupant()->type() == Entity_type::NPC)
+				{
+					engine->board()->remove_npc(engine->board()->node(screen_to_tile(g_mouse->pos))->occupant());
+				}
+			}
 			return (true);
 		}
 
@@ -102,7 +109,7 @@ bool Editor_interact::handle_mouse()
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 			tmp->use(nullptr);
 	}
-	else if (tmp->item_type() == Item_type::prefab)
+	else if (tmp->item_type() == Item_type::prefab || tmp->item_type() == Item_type::npc)
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 		{

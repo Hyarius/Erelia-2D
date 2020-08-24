@@ -39,6 +39,7 @@ public:
 	void remove_link(jgl::Vector2 pos);
 	void remove_warp(jgl::String name);
 	void remove_npc(jgl::String name);
+	void remove_npc(Entity* old);
 	jgl::Vector2 chunk_pos(jgl::Vector2 node_pos);
 	jgl::Vector2 rel_node_pos(jgl::Vector2 node_pos);
 	void place(jgl::Vector2 node_pos, size_t index, bool need_bake = false);

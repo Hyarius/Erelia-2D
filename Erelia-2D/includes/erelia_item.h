@@ -11,6 +11,7 @@ enum class Item_type
 	tile = 0,
 	interact = 1,
 	prefab = 2,
+	npc = 3,
 	count
 };
 
@@ -93,7 +94,7 @@ class NPC_item : public Item
 private:
 	NPC* _npc;
 public:
-	NPC_item(NPC* p_prefab) : Item(Item_type::prefab, jgl::Vector2(18, 71))
+	NPC_item(NPC* p_prefab) : Item(Item_type::npc, jgl::Vector2(18, 71))
 	{
 		_npc = p_prefab;
 	}

@@ -25,7 +25,7 @@ private:
 	Entity* _source;
 	Entity* _target;
 
-	size_t _index;
+	int _index;
 
 	Dialogue_frame* _dialogue_frame;
 
@@ -42,12 +42,12 @@ public:
 		_index = 0;
 	}
 
-	void action_dialogue(Interaction_data param);
-	void action_tp(Interaction_data param);
-	void action_give_object(Interaction_data param);
-	void action_move_both(Interaction_data param);
-	void action_move_target(Interaction_data param);
-	void action_move_source(Interaction_data param);
+	int action_dialogue(Interaction_data param);
+	int action_tp(Interaction_data param);
+	int action_give_object(Interaction_data param);
+	int action_move_both(Interaction_data param);
+	int action_move_target(Interaction_data param);
+	int action_move_source(Interaction_data param);
 
 	void run_action();
 
@@ -60,7 +60,7 @@ public:
 	void render();
 };
 
-typedef 			void (Interacter::* M_funct)(Interaction_data param);
+typedef 			int (Interacter::* M_funct)(Interaction_data param);
 
 extern jgl::Array<M_funct> action_tab;
 

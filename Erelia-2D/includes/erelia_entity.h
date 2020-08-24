@@ -52,7 +52,7 @@ protected:
 	jgl::Array<jgl::Vector2> _road;
 	size_t _road_index;
 
-	jgl::Array<Interaction> _interaction;
+	std::map<int, Interaction> _interaction;
 
 public:
 	Entity();
@@ -61,9 +61,9 @@ public:
 	void set_name(jgl::String p_name) { _name = p_name; }
 	void place(jgl::Vector2 p_pos);
 
-	void add_interaction(Interaction p_interaction) { _interaction.push_back(p_interaction); }
-	jgl::Array<Interaction>& interaction() { return (_interaction); }
-	Interaction interaction(size_t index) { return (_interaction[index]); }
+	void add_interaction(int index, Interaction p_interaction) { _interaction[index] = p_interaction; }
+	std::map<int, Interaction>& interaction() { return (_interaction); }
+	Interaction interaction(int index) { if (_interaction.count(index) == 0)return (Interaction(Interaction_type::none)); return (_interaction[index]); }
 
 	jgl::Vector2 sprite() { return (_sprite); }
 	Entity_type type(){ return (_type); }

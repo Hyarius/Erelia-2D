@@ -202,7 +202,8 @@ void Entity::render(jgl::Viewport* p_viewport)
 	else if (_look_dir == Entity_direction::north || _look_dir == Entity_direction::south)
 		value += 1;
 	delta.x += value;
-	engine->charset()->draw(_sprite + delta + dir_delta, pos, node_size, 1.0f, p_viewport);
+	if (_sprite.y >= 0)
+		engine->charset()->draw(_sprite + delta + dir_delta, pos, node_size, 1.0f, p_viewport);
 	if (_type != Entity_type::Player && is_pointed(_pos) == true)
 		jgl::draw_centred_text(_name, pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::white);
 }

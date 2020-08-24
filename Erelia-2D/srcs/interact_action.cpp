@@ -1,21 +1,23 @@
 #include "erelia.h"
 
-void Interacter::action_dialogue(Interaction_data param)
+int Interacter::action_dialogue(Interaction_data param)
 {
 	_dialogue_frame->activate();
 	_dialogue_frame->set_text(param.text);
 	_automatic = false;
 	_waiting = false;
+	return (param.next_interaction);
 }
 
-void Interacter::action_tp(Interaction_data param)
+int Interacter::action_tp(Interaction_data param)
 {
 	_target->place(param.tp_destination);
 	_automatic = true;
 	_waiting = false;
+	return (param.next_interaction);
 }
 
-void Interacter::action_move_both(Interaction_data param)
+int Interacter::action_move_both(Interaction_data param)
 {
 	jgl::Vector2 delta = param.delta_pos;
 	if (_target->can_move(delta) && _source->can_move(delta) == true)
@@ -28,9 +30,10 @@ void Interacter::action_move_both(Interaction_data param)
 		_reset = true;
 	_automatic = true;
 	_waiting = true;
+	return (param.next_interaction);
 }
 
-void Interacter::action_move_target(Interaction_data param)
+int Interacter::action_move_target(Interaction_data param)
 {
 	jgl::Vector2 delta = param.delta_pos;
 	if (_target->can_move(delta))
@@ -42,9 +45,10 @@ void Interacter::action_move_target(Interaction_data param)
 		_reset = true;
 	_automatic = true;
 	_waiting = true;
+	return (param.next_interaction);
 }
 
-void Interacter::action_move_source(Interaction_data param)
+int Interacter::action_move_source(Interaction_data param)
 {
 	jgl::Vector2 delta = param.delta_pos;
 	if (_source->can_move(delta))
@@ -56,12 +60,14 @@ void Interacter::action_move_source(Interaction_data param)
 		_reset = true;
 	_automatic = true;
 	_waiting = true;
+	return (param.next_interaction);
 }
 
-void Interacter::action_give_object(Interaction_data param)
+int Interacter::action_give_object(Interaction_data param)
 {
 	_automatic = true;
 	_waiting = false;
+	return (param.next_interaction);
 }
 
 jgl::Array<M_funct> action_tab =

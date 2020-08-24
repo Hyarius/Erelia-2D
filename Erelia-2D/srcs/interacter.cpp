@@ -13,13 +13,13 @@ Interacter::Interacter(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 
 void Interacter::run_action()
 {
-	if (_source->interaction().size() == 0 || _source->interaction(_index).type() == Interaction_type::none)
+	if (_source->interaction(_index).type() == Interaction_type::none)
 		return;
 	Interaction tmp_interact = _source->interaction(_index);
 	size_t tmp_index = static_cast<size_t>(tmp_interact.type());
 
 	M_funct tmp = action_tab[tmp_index];
-	(this->*tmp)(tmp_interact.param());
+	_index = (this->*tmp)(tmp_interact.param());
 }
 
 void Interacter::update()
@@ -51,18 +51,17 @@ void Interacter::increment()
 	_reset = false;
 	_waiting = false;
 	_automatic = false;
-	_index++;
 	_dialogue_frame->desactivate();
-	if (_index >= _source->interaction().size())
+	if (_source->interaction(_index).type() == Interaction_type::none)
 	{
-		if (_source->check_point().size() == 1)
+		/*if (_source->check_point().size() == 1)
 			_source->return_starting_position();
 		else 
 			_source->calc_next_road();
 		if (_target->check_point().size() == 1)
 			_target->return_starting_position();
 		else
-			_target->calc_next_road();
+			_target->calc_next_road();*/
 		engine->desactive_interacter();
 	}
 	else

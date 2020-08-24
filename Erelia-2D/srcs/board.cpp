@@ -272,6 +272,22 @@ void Board::remove_npc(jgl::String p_name)
 	}
 }
 
+void Board::remove_npc(Entity* old)
+{
+	if (old->type() == Entity_type::Player)
+		return ;
+
+	for (size_t i = 0; i < _npc_array.size(); i++)
+	{
+		if (_npc_array[i] == old)
+		{
+			node(old->pos())->set_occupant(nullptr);
+			delete _npc_array[i];
+			_npc_array.erase(i);
+		}
+	}
+}
+
 
 void Board::remove_link(jgl::Vector2 pos)
 {
