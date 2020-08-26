@@ -56,6 +56,7 @@ bool Player_controller::handle_keyboard()
 
 void Player_controller::update()
 {
+	engine->player()->update();
 	Node* actual = engine->board()->node((engine->player()->pos()).round());
 	if (engine->player()->is_static() == true && actual != nullptr && actual->link() != nullptr)
 	{

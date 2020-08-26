@@ -91,7 +91,7 @@ void Chunk::update()
 {
 	for (size_t i = 0; i < CHUNK_SIZE; i++)
 		for (size_t j = 0; j < CHUNK_SIZE; j++)
-			if (_content[i][j]->occupant() != nullptr)
+			if (_content[i][j]->occupant() != nullptr && _content[i][j]->occupant()->type() != Entity_type::Player)
 				_content[i][j]->occupant()->update();
 }
 
