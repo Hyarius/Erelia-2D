@@ -14,20 +14,12 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_player_controller = new Player_controller(this);
 	_player_controller->activate();
 
-	_editor_contener = new jgl::Contener(this);
-	_editor_contener->activate();
-
-	_editor_inventory = new Editor_inventory(_editor_contener);
-	_editor_inventory->activate();
-
-	_editor_interacter = new Editor_interact(_editor_contener);
-	_editor_interacter->activate();
+	_modes[0] = new Editor_mode(this);
+	_modes[0]->activate();
 
 	_console = new Console(this);
 
 	_interacter = new Interacter(this);
-
-	_editor_inventory->send_front();
 }
 
 extern jgl::Array<Item*> node_item_list;
@@ -96,7 +88,7 @@ void Game_engine::interact_between(Entity* source, Entity* target)
 
 void Game_engine::active_interacter()
 {
-	_editor_contener->desactivate();
+	static_cast<Editor_mode*>(_modes[0])->contener()->desactivate();
 	_player_controller->set_frozen(true);
 	_interacter->activate();
 	_interacter->run_action();
@@ -104,7 +96,7 @@ void Game_engine::active_interacter()
 
 void Game_engine::desactive_interacter()
 {
-	_editor_contener->activate();
+	static_cast<Editor_mode*>(_modes[0])->contener()->activate();
 	_player_controller->set_frozen(false);
 	_interacter->activate();
 	_interacter->set_entity(nullptr, nullptr);
@@ -112,36 +104,34 @@ void Game_engine::desactive_interacter()
 
 void Game_engine::active_console()
 {
-	_editor_contener->set_frozen(true);
+	static_cast<Editor_mode*>(_modes[0])->contener()->set_frozen(true);
 	_console->start();
 	_player_controller->set_frozen(true);
-	_editor_interacter->set_frozen(true);
-	_editor_inventory->desactivate();
+	static_cast<Editor_mode*>(_modes[0])->interacter()->set_frozen(true);
+	static_cast<Editor_mode*>(_modes[0])->inventory()->desactivate();
 }
 
 void Game_engine::desactive_console()
 {
-	_editor_contener->set_frozen(false);
+	static_cast<Editor_mode*>(_modes[0])->contener()->set_frozen(false);
 	_console->desactivate();
 	_console->entry()->select();
 	_player_controller->set_frozen(false);
-	_editor_interacter->set_frozen(false);
-	_editor_inventory->activate();
+	static_cast<Editor_mode*>(_modes[0])->interacter()->set_frozen(false);
+	static_cast<Editor_mode*>(_modes[0])->inventory()->activate();
 	desactive_inventory();
 }
 
 void Game_engine::active_inventory()
 {
 	_player_controller->set_frozen(true);
-	_editor_interacter->set_frozen(true);
-	_editor_inventory->enable();
+	_modes[0]->enable();
 }
 
 void Game_engine::desactive_inventory()
 {
 	_player_controller->set_frozen(false);
-	_editor_interacter->set_frozen(false);
-	_editor_inventory->disable();
+	_modes[0]->disable();
 }
 
 void Game_engine::update()
@@ -171,16 +161,6 @@ bool Game_engine::handle_keyboard()
 	}
 	if (_console->is_active() == true && _console->complete() == true)
 		desactive_console();
-	if (jgl::get_key(jgl::key::tab) == jgl::key_state::release || (_editor_inventory->status() == true && jgl::get_key(jgl::key::escape) == jgl::key_state::release))
-	{
-		if (_editor_contener->is_frozen() == false)
-		{
-			if (_editor_inventory->status() == false)
-				active_inventory();
-			else
-				desactive_inventory();
-		}
-	}
 	return (false);
 }
 
@@ -192,10 +172,7 @@ bool Game_engine::handle_mouse()
 
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	float tmp = g_application->size().x / 30;
-	_editor_inventory->set_geometry(tmp, p_area - tmp * 2);
-	_editor_interacter->set_geometry(0, p_area);
-
+	_modes[0]->set_geometry(p_anchor, p_area);
 	_console->set_geometry(0, g_application->size());
 	_interacter->set_geometry(0, g_application->size());
 }

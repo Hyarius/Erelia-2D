@@ -14,6 +14,10 @@ extern int node_size;
 
 #include "Erelia_interacter.h"
 
+#include "erelia_battler.h"
+
+#include "erelia_game_mode.h"
+
 extern std::string custom_texture_shader_vert;
 extern std::string custom_texture_shader_frag;
 
@@ -25,25 +29,21 @@ private:
 	Board* _board;
 	Player* _player;
 
-	jgl::Contener* _editor_contener;
 	Player_controller* _player_controller;
-	Editor_inventory* _editor_inventory;
-	Editor_interact* _editor_interacter;
-
 	Console* _console;
-
 	Interacter* _interacter;
+
+	Game_mode* _modes[1];
 
 public:
 	jgl::Sprite_sheet* tileset() { return (_tileset);}
 	jgl::Sprite_sheet* charset() { return (_charset); }
 	Board* board() { return (_board); }
 	Player* player() { return (_player); }
-
-	jgl::Contener* editor_contener() { return (_editor_contener); }
+	Editor_mode* editor_mode() { return (static_cast<Editor_mode *>(_modes[0])); }
+	Game_mode** modes() { return (_modes); }
+	Game_mode* modes(size_t index) { if (index >= 1) return (nullptr); return (_modes[index]); }
 	Player_controller* player_controller() { return (_player_controller); }
-	Editor_inventory* editor_inventory() { return (_editor_inventory); }
-	Editor_interact* editor_interacter() { return (_editor_interacter); }
 	Console* console() { return (_console); }
 	Interacter* interacter() { return (_interacter); }
 

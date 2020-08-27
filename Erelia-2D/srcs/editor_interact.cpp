@@ -66,7 +66,7 @@ extern jgl::Array<Item*> node_item_list;
 
 bool Editor_interact::handle_mouse()
 {
-	Item* tmp = engine->editor_inventory()->select_item();
+	Item* tmp = engine->editor_mode()->inventory()->select_item();
 
 	if (jgl::get_button(jgl::mouse_button::center) == jgl::mouse_state::release)
 	{
@@ -74,7 +74,7 @@ bool Editor_interact::handle_mouse()
 		Tile* target_node = engine->board()->tile(target);
 		if (target_node == nullptr)
 			return false;
-		engine->editor_inventory()->selected_slot()->set_item(node_item_list[target_node->index]);
+		engine->editor_mode()->inventory()->selected_slot()->set_item(node_item_list[target_node->index]);
 	}
 	
 	if (jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::pressed ||
@@ -122,7 +122,7 @@ bool Editor_interact::handle_mouse()
 
 void Editor_interact::update()
 {
-	Item* tmp = engine->editor_inventory()->select_item();
+	Item* tmp = engine->editor_mode()->inventory()->select_item();
 
 	if (tmp == nullptr)
 		return;
@@ -137,7 +137,7 @@ void Editor_interact::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_are
 
 void Editor_interact::render()
 {
-	Item* tmp = engine->editor_inventory()->select_item();
+	Item* tmp = engine->editor_mode()->inventory()->select_item();
 
 	if (tmp == nullptr)
 		return;

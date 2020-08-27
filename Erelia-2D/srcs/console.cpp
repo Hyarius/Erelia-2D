@@ -172,8 +172,8 @@ bool Console::handle_generate_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 2)
 	{
-		jgl::Vector2 start = jgl::compose_smaller(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
-		jgl::Vector2 end = jgl::compose_biggest(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
+		jgl::Vector2 start = jgl::compose_smaller(engine->editor_mode()->interacter()->pink_flag(), engine->editor_mode()->interacter()->blue_flag());
+		jgl::Vector2 end = jgl::compose_biggest(engine->editor_mode()->interacter()->pink_flag(), engine->editor_mode()->interacter()->blue_flag());
 		
 		jgl::Array<size_t> elem = parse_regex_percent(tab[1]);
 		if (elem.size() == 0)
@@ -207,8 +207,8 @@ bool Console::handle_replace_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 3)
 	{
-		jgl::Vector2 start = jgl::compose_smaller(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
-		jgl::Vector2 end = jgl::compose_biggest(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
+		jgl::Vector2 start = jgl::compose_smaller(engine->editor_mode()->interacter()->pink_flag(), engine->editor_mode()->interacter()->blue_flag());
+		jgl::Vector2 end = jgl::compose_biggest(engine->editor_mode()->interacter()->pink_flag(), engine->editor_mode()->interacter()->blue_flag());
 
 		jgl::Array<size_t> elem_base = parse_regex_simple(tab[1]);
 		jgl::Array<size_t> elem_next = parse_regex_percent(tab[2]);
@@ -248,13 +248,13 @@ bool Console::handle_prefab_command(jgl::Array<jgl::String>& tab)
 	if (tab.size() == 2 && tab[1].size() <= 4)
 	{
 		Prefab* new_prefab = new Prefab();
-		new_prefab->save(tab[1], engine->board(), engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag());
+		new_prefab->save(tab[1], engine->board(), engine->editor_mode()->interacter()->pink_flag(), engine->editor_mode()->interacter()->blue_flag());
 		new_prefab->save_to_file("ressources/prefab/" + tab[1] + ".prefab");
 		prefab_array.push_back(new_prefab);
 		Prefab_item* new_item = new Prefab_item(new_prefab);
 		prefab_item_list.push_back(new_item);
-		engine->editor_inventory()->tab(9)->add_item_slot(new_item);
-		engine->editor_inventory()->tab(9)->set_geometry(engine->editor_inventory()->tab(7)->viewport()->anchor(), engine->editor_inventory()->tab(7)->area());
+		engine->editor_mode()->inventory()->tab(9)->add_item_slot(new_item);
+		engine->editor_mode()->inventory()->tab(9)->set_geometry(engine->editor_mode()->inventory()->tab(7)->viewport()->anchor(), engine->editor_mode()->inventory()->tab(7)->area());
 		return (return_funct("Prefab [" + tab[1] + "] succesfully created"));
 	}
 	else
@@ -307,12 +307,12 @@ bool Console::handle_link_command(jgl::Array<jgl::String>& tab)
 				tmp = true;
 			else if (tab.size() == 3)
 				return (return_funct("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link"));
-			engine->board()->add_link(engine->editor_interacter()->pink_flag(), engine->editor_interacter()->blue_flag(), tmp);
-			return (return_funct("Creating link from " + engine->editor_interacter()->pink_flag().str() + " to " + engine->editor_interacter()->blue_flag().str()));
+			engine->board()->add_link(engine->editor_mode()->interacter()->pink_flag(), engine->editor_mode()->interacter()->blue_flag(), tmp);
+			return (return_funct("Creating link from " + engine->editor_mode()->interacter()->pink_flag().str() + " to " + engine->editor_mode()->interacter()->blue_flag().str()));
 		}
 		else if (tab[1] == "delete")
 		{
-			Node* a = engine->board()->node(engine->editor_interacter()->pink_flag());
+			Node* a = engine->board()->node(engine->editor_mode()->interacter()->pink_flag());
 			if (a != nullptr && a->link() != nullptr)
 			{
 				Link* link = a->link();
@@ -333,7 +333,7 @@ bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() >= 2)
 	{
-		if (engine->editor_interacter()->selected_entity() == nullptr)
+		if (engine->editor_mode()->interacter()->selected_entity() == nullptr)
 			return (return_funct("No entity selected"));
 		if (tab[1] == "movement")
 		{
@@ -343,19 +343,19 @@ bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 				if (tmp == -1 || tmp == 0 || tmp == 1)
 				{
 					Entity_movement type = static_cast<Entity_movement>(tmp);
-					if (engine->editor_interacter()->selected_entity() != nullptr && engine->editor_interacter()->selected_entity()->movement_type() != type)
+					if (engine->editor_mode()->interacter()->selected_entity() != nullptr && engine->editor_mode()->interacter()->selected_entity()->movement_type() != type)
 					{
-						engine->editor_interacter()->selected_entity()->set_movement_type(type);
+						engine->editor_mode()->interacter()->selected_entity()->set_movement_type(type);
 						if (type == Entity_movement::errant)
-							engine->editor_interacter()->selected_entity()->set_movement_range(5);
+							engine->editor_mode()->interacter()->selected_entity()->set_movement_range(5);
 						else if (type == Entity_movement::controled)
 						{
-							engine->editor_interacter()->selected_entity()->check_point().clear();
-							engine->editor_interacter()->selected_entity()->add_check_point(engine->editor_interacter()->selected_entity()->starting_pos());
+							engine->editor_mode()->interacter()->selected_entity()->check_point().clear();
+							engine->editor_mode()->interacter()->selected_entity()->add_check_point(engine->editor_mode()->interacter()->selected_entity()->starting_pos());
 						}
-						return (return_funct(engine->editor_interacter()->selected_entity()->name() + " movement type set to " + (tmp == -1 ? "Errant" : (tmp == 0 ? "Immobile" : "Defined path"))));
+						return (return_funct(engine->editor_mode()->interacter()->selected_entity()->name() + " movement type set to " + (tmp == -1 ? "Errant" : (tmp == 0 ? "Immobile" : "Defined path"))));
 					}
-					else if (engine->editor_interacter()->selected_entity()->movement_type() == type)
+					else if (engine->editor_mode()->interacter()->selected_entity()->movement_type() == type)
 						return (return_funct(jgl::String("Selected entity movement type already defined to ") + (tmp == -1 ? "Errant" : (tmp == 0 ? "Immobile" : "Defined path"))));
 					else
 						return (return_funct("No selected entity to edit : command ignored"));
@@ -368,24 +368,24 @@ bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 		}
 		if (tab[1] == "range")
 		{
-			if (engine->editor_interacter()->selected_entity()->movement_type() != Entity_movement::errant)
+			if (engine->editor_mode()->interacter()->selected_entity()->movement_type() != Entity_movement::errant)
 				return (return_funct("Entity movement type isn't errant. Use [npc movement 0] to set it"));
 			int tmp = jgl::stoi(tab[2]);
 			if (tmp <= 0)
 				return (return_funct("Entity movement range can't be negative or null"));
-			engine->editor_interacter()->selected_entity()->set_movement_range(tmp);
+			engine->editor_mode()->interacter()->selected_entity()->set_movement_range(tmp);
 			return (return_funct("Entity movement range set to " + jgl::itoa(tmp)));
 		}
 		if (tab[1] == "reset")
 		{
-			if (engine->editor_interacter()->selected_entity()->movement_type() == Entity_movement::errant)
-				engine->editor_interacter()->selected_entity()->set_movement_range(5);
-			else if (engine->editor_interacter()->selected_entity()->movement_type() == Entity_movement::controled)
+			if (engine->editor_mode()->interacter()->selected_entity()->movement_type() == Entity_movement::errant)
+				engine->editor_mode()->interacter()->selected_entity()->set_movement_range(5);
+			else if (engine->editor_mode()->interacter()->selected_entity()->movement_type() == Entity_movement::controled)
 			{
-				engine->editor_interacter()->selected_entity()->check_point().clear();
-				engine->editor_interacter()->selected_entity()->add_check_point(engine->editor_interacter()->selected_entity()->starting_pos());
+				engine->editor_mode()->interacter()->selected_entity()->check_point().clear();
+				engine->editor_mode()->interacter()->selected_entity()->add_check_point(engine->editor_mode()->interacter()->selected_entity()->starting_pos());
 			}
-			engine->editor_interacter()->selected_entity()->calc_road_to(engine->editor_interacter()->selected_entity()->starting_pos());
+			engine->editor_mode()->interacter()->selected_entity()->calc_road_to(engine->editor_mode()->interacter()->selected_entity()->starting_pos());
 			return (return_funct("Entity reseted"));
 		}
 		else
