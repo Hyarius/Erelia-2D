@@ -66,6 +66,6 @@ void Item_slot::render()
 	{
 		_item->draw(_box.anchor() + _box.border(), _box.area() - _box.border() * 2, _viewport);
 		if (_item->item_type() == Item_type::tile && jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::down)
-			jgl::draw_text(jgl::itoa((static_cast<Node_item*>(_item))->node_index()), _box.anchor() + _box.border() * 2, 12, 1, jgl::text_color::light_green);
+			jgl::draw_text(jgl::itoa((static_cast<Node_item*>(_item))->node_index()), _box.anchor() + _box.border() * 2, 12, 1, 1.0f, jgl::text_color::light_green);
 	}
 }

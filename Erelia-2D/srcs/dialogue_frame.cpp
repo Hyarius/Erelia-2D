@@ -24,7 +24,7 @@ void Dialogue_frame::render()
 			pos.x = static_cast<float>(_box.border());
 			pos.y += text_size;
 		}
-		jgl::draw_text(_tokens[i], pos, text_size, 0, jgl::text_color::black, jgl::text_style::normal, _viewport);
+		jgl::draw_text(_tokens[i], pos, text_size, 0, 1.0f, jgl::text_color::black, jgl::text_style::normal, _viewport);
 		pos.x += static_cast<float>(len + text_size);
 	}
 }

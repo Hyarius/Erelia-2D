@@ -20,6 +20,8 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_console = new Console(this);
 
 	_interacter = new Interacter(this);
+
+	_console->send_front();
 }
 
 extern jgl::Array<Item*> node_item_list;
@@ -105,7 +107,7 @@ void Game_engine::desactive_interacter()
 void Game_engine::active_console()
 {
 	static_cast<Editor_mode*>(_modes[0])->contener()->set_frozen(true);
-	_console->start();
+	_console->enable();
 	_player_controller->set_frozen(true);
 	static_cast<Editor_mode*>(_modes[0])->interacter()->set_frozen(true);
 	static_cast<Editor_mode*>(_modes[0])->inventory()->desactivate();
@@ -114,8 +116,7 @@ void Game_engine::active_console()
 void Game_engine::desactive_console()
 {
 	static_cast<Editor_mode*>(_modes[0])->contener()->set_frozen(false);
-	_console->desactivate();
-	_console->entry()->select();
+	_console->disable();
 	_player_controller->set_frozen(false);
 	static_cast<Editor_mode*>(_modes[0])->interacter()->set_frozen(false);
 	static_cast<Editor_mode*>(_modes[0])->inventory()->activate();
@@ -144,7 +145,7 @@ bool Game_engine::handle_keyboard()
 	if (jgl::get_key(jgl::key::F2) == jgl::key_state::release ||
 		(jgl::get_key(jgl::key::escape) == jgl::key_state::release && _console->is_active() == true))
 	{
-		if (_console->is_active() == false)
+		if (_console->entry()->is_active() == false)
 			active_console();
 		else
 			desactive_console();
@@ -173,13 +174,13 @@ bool Game_engine::handle_mouse()
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
 	_modes[0]->set_geometry(p_anchor, p_area);
-	_console->set_geometry(0, g_application->size());
 	_interacter->set_geometry(0, g_application->size());
+	_console->set_geometry(0, g_application->size());
 }
 
 void Game_engine::render()
 {
 	_board->render(_viewport);
 	_player->render(_viewport);
-	jgl::draw_text("Fps : " + jgl::itoa(print_fps), 50, 16, 1, jgl::text_color::white, jgl::text_style::normal, _viewport);
+	jgl::draw_text("Fps : " + jgl::itoa(print_fps), 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

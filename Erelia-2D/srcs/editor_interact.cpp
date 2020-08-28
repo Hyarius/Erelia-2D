@@ -165,13 +165,13 @@ void Editor_interact::render()
 
 	if (_selected_entity != nullptr)
 	{
-		jgl::draw_centred_text(_selected_entity->name(), tile_to_screen(_selected_entity->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
+		jgl::draw_centred_text(_selected_entity->name(), tile_to_screen(_selected_entity->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::green, jgl::text_style::normal);
 		if (_selected_entity->check_point().size() > 1)
 		{
 			for (size_t i = 0; i < _selected_entity->check_point().size(); i++)
 			{
 				jgl::Vector2 pos = tile_to_screen(_selected_entity->check_point(i));
-				jgl::draw_centred_text(jgl::itoa(i), pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, jgl::text_color::green, jgl::text_style::normal);
+				jgl::draw_centred_text(jgl::itoa(i), pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::green, jgl::text_style::normal);
 				jgl::draw_rectangle(pos, node_size, 1, jgl::Color(0, 255, 0));
 			}
 		}

@@ -403,7 +403,7 @@ void Board::render(jgl::Viewport* viewport)
 	{
 		jgl::Vector2 pos = tile_to_screen(tmp.second) + node_size / 2;
 		jgl::draw_centred_rectangle(pos, node_size, 1, jgl::Color(146, 235, 52));
-		jgl::draw_centred_text(tmp.first, pos - jgl::Vector2(0, 30), 16, 1, jgl::text_color::green);
+		jgl::draw_centred_text(tmp.first, pos - jgl::Vector2(0, 30), 16, 1, 1.0f, jgl::text_color::green);
 	}
 }
 
