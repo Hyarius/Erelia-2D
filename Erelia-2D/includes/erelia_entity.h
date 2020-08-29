@@ -33,6 +33,8 @@ protected:
 	Entity_direction _look_dir;
 	jgl::Vector2 _sprite;
 	jgl::Vector2 _pos;
+	jgl::Vector2 _old_pos;
+	jgl::Vector2 _destination;
 	jgl::Vector2 _direction;
 	float _move_speed;
 
@@ -71,10 +73,10 @@ public:
 	void set_wait_time(Uint32 p_time) { _wait_time = p_time; }
 	Uint32 wait_time() { return (_wait_time); }
 
-	void set_move_speed(float p_state) { _move_speed = p_state; }
+	void set_move_speed(float p_state) { _move_speed = p_state; _total_tick = _move_tick / _move_speed; }
 	float move_speed() { return (_move_speed); }
 
-	void set_move_tick(float p_state) { _move_tick = p_state; }
+	void set_move_tick(float p_state) { _move_tick = p_state; _total_tick = _move_tick / _move_speed;}
 	float move_tick() { return (_move_tick); }
 
 	void set_look_dir(Entity_direction p_look_dir) { _look_dir = p_look_dir; }

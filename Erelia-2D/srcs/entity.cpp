@@ -13,6 +13,8 @@ Entity::Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::
 	_wait_time = 50;
 	_sprite = p_sprite;
 	_pos = p_pos;
+	_old_pos = _pos;
+	_destination = _pos;
 	_direction = 0;
 	_did_tp = false;
 	_in_motion = false;
@@ -112,6 +114,8 @@ void Entity::move(jgl::Vector2 delta)
 		_did_tp = false;
 		return;
 	}
+	_destination = _pos + delta;
+	_old_pos = _pos;
 	_in_motion = true;
 	_did_tp = false;
 	_total_tick = 0;
@@ -203,7 +207,43 @@ void Entity::render(jgl::Viewport* p_viewport)
 		value += 1;
 	delta.x += value;
 	if (_sprite.y >= 0)
+	{
 		engine->charset()->draw(_sprite + delta + dir_delta, pos, node_size, 1.0f, p_viewport);
+		if (_direction.x != 0)
+		{
+			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_destination.round()), node_size, 1.0f, p_viewport);
+			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_old_pos.round()), node_size, 1.0f, p_viewport);
+		}
+		else if (_direction.y != 0)
+		{
+			if (_direction.y > 0)
+			{
+				jgl::Vector2 start = _destination;
+				while (start.y > _pos.y)
+				{
+					engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(start), node_size, 1.0f, p_viewport);
+					start.y -= 0.5f;
+				}
+			}
+			else if (_direction.y < 0)
+			{
+				jgl::Vector2 start = _old_pos;
+				while (start.y > _pos.y)
+				{
+					engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(start), node_size, 1.0f, p_viewport);
+					start.y -= 0.5f;
+				}
+			}
+		}
+		else
+		{
+			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_pos.round()), node_size, 1.0f, p_viewport);
+		}
+
+		//if (_direction.y >= 0 && engine->board()->node(_destination) != nullptr && (engine->board()->node(_destination)->tile()->type & GRASS_TILE) == GRASS_TILE)
+		//	engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_destination.round()), node_size, 1.0f, p_viewport);
+	}
+
 	if (_type != Entity_type::Player && is_pointed(_pos) == true)
 		jgl::draw_centred_text(_name, pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::white);
 }

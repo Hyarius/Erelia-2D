@@ -4,7 +4,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
 	engine = this;
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 72));
-	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 41));
+	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 42));
 	create_item_list(_tileset);
 	_board = new Board("ressources/maps/world.map");
 	_player = new Player();
@@ -15,7 +15,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_player_controller->activate();
 
 	_modes[0] = new Editor_mode(this);
-	_modes[0]->activate();
+	//_modes[0]->activate();
 
 	_console = new Console(this);
 
@@ -54,7 +54,7 @@ void Game_engine::save(jgl::String path)
 	std::fstream file = jgl::open_file(path, std::ios_base::out | std::ios_base::trunc);
 
 	file << _player->name() << std::endl;
-	file << _player->pos().x << ";" << _player->pos().y << std::endl;
+	file << _player->pos().round().x << ";" << _player->pos().round().y << std::endl;
 }
 
 void Game_engine::load(jgl::String path)
@@ -159,6 +159,10 @@ bool Game_engine::handle_keyboard()
 	{
 		node_size *= 2;
 		_board->bake();
+	}
+	else if (jgl::get_key(jgl::key::F10) == jgl::key_state::release)
+	{
+		_modes[0]->set_active(!(_modes[0]->is_active()));
 	}
 	if (_console->is_active() == true && _console->complete() == true)
 		desactive_console();

@@ -442,6 +442,7 @@ void Console::enable()
 	activate();
 	entry()->activate();
 	entry()->select();
+	entry()->set_text("");
 	_complete = false;
 }
 void Console::disable()
