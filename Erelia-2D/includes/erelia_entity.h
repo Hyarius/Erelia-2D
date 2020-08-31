@@ -94,6 +94,7 @@ public:
 
 	bool is_pointed(jgl::Vector2 target);
 
+	void render_grass(jgl::Viewport* p_viewport);
 	void render(jgl::Viewport* p_viewport);
 	void move(jgl::Vector2 delta);
 	void update_pos();

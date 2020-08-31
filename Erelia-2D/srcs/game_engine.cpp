@@ -3,7 +3,7 @@
 Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
 	engine = this;
-	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 72));
+	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 143));
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 42));
 	create_item_list(_tileset);
 	_board = new Board("ressources/maps/world.map");

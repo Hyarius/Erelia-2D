@@ -194,6 +194,32 @@ bool Entity::is_pointed(jgl::Vector2 target)
 	return (false);
 }
 
+void Entity::render_grass(jgl::Viewport* p_viewport)
+{
+	if (_direction.x != 0)
+	{
+		if (engine->board()->node(_destination) != nullptr && engine->board()->node(_destination)->tile() != nullptr && (engine->board()->node(_destination)->tile()->type & GRASS_TILE) == GRASS_TILE)
+			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_destination.round()), node_size, 1.0f, p_viewport);
+		if (engine->board()->node(_old_pos) != nullptr && engine->board()->node(_old_pos)->tile() != nullptr && (engine->board()->node(_old_pos)->tile()->type & GRASS_TILE) == GRASS_TILE)
+			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_old_pos.round()), node_size, 1.0f, p_viewport);
+	}
+	else if (_direction.y != 0)
+	{
+		jgl::Vector2 start = (_direction.y > 0 ? _destination : _old_pos);
+		while (start.y > _pos.y)
+		{
+			if (engine->board()->node(start + jgl::Vector2(0.0f, 0.1f)) != nullptr && engine->board()->node(start + jgl::Vector2(0.0f, 0.1f))->tile() != nullptr && (engine->board()->node(start + jgl::Vector2(0.0f, 0.1f))->tile()->type & GRASS_TILE) == GRASS_TILE)
+				engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(start), node_size, 1.0f, p_viewport);
+			start.y -= 0.5f;
+		}
+	}
+	else
+	{
+		if (engine->board()->node(_pos) != nullptr && engine->board()->node(_pos)->tile() != nullptr && (engine->board()->node(_pos)->tile()->type & GRASS_TILE) == GRASS_TILE)
+			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_pos.round()), node_size, 1.0f, p_viewport);
+	}
+}
+
 void Entity::render(jgl::Viewport* p_viewport)
 {
 	jgl::Vector2 pos = tile_to_screen(_pos);
@@ -209,39 +235,7 @@ void Entity::render(jgl::Viewport* p_viewport)
 	if (_sprite.y >= 0)
 	{
 		engine->charset()->draw(_sprite + delta + dir_delta, pos, node_size, 1.0f, p_viewport);
-		if (_direction.x != 0)
-		{
-			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_destination.round()), node_size, 1.0f, p_viewport);
-			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_old_pos.round()), node_size, 1.0f, p_viewport);
-		}
-		else if (_direction.y != 0)
-		{
-			if (_direction.y > 0)
-			{
-				jgl::Vector2 start = _destination;
-				while (start.y > _pos.y)
-				{
-					engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(start), node_size, 1.0f, p_viewport);
-					start.y -= 0.5f;
-				}
-			}
-			else if (_direction.y < 0)
-			{
-				jgl::Vector2 start = _old_pos;
-				while (start.y > _pos.y)
-				{
-					engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(start), node_size, 1.0f, p_viewport);
-					start.y -= 0.5f;
-				}
-			}
-		}
-		else
-		{
-			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_pos.round()), node_size, 1.0f, p_viewport);
-		}
-
-		//if (_direction.y >= 0 && engine->board()->node(_destination) != nullptr && (engine->board()->node(_destination)->tile()->type & GRASS_TILE) == GRASS_TILE)
-		//	engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_destination.round()), node_size, 1.0f, p_viewport);
+		render_grass(p_viewport);
 	}
 
 	if (_type != Entity_type::Player && is_pointed(_pos) == true)

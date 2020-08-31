@@ -24,6 +24,7 @@ Chunk::Chunk(jgl::Vector2 p_pos)
 {
 	_pos = p_pos;
 	glGenBuffers(1, &_uvs_buffer);
+	glGenBuffers(1, &_uvs_buffer2);
 
 	for (size_t i = 0; i < CHUNK_SIZE; i++)
 		for (size_t j = 0; j < CHUNK_SIZE; j++)
@@ -40,6 +41,7 @@ void Chunk::place(jgl::Vector2 coord, Tile* p_tile, bool need_bake)
 void Chunk::bake()
 {
 	_uvs.clear();
+	_uvs2.clear();
 	if (points.size() == 0)
 	{
 		glGenBuffers(1, &vertex_buffer);
@@ -80,11 +82,35 @@ void Chunk::bake()
 				for (size_t h = 0; h < 6; h++)
 					_uvs.push_back(-1);
 			}
+	for (int i = 0; i < CHUNK_SIZE; i++)
+		for (int j = 0; j < CHUNK_SIZE; j++)
+			if (_content[i][j]->tile() != nullptr)
+			{
+				jgl::Vector2 unit = engine->tileset()->unit();
+				jgl::Vector2 tmp_sprite = engine->tileset()->sprite(_content[i][j]->tile()->sprite + jgl::Vector2(0, 72));
 
-	const jgl::Vector2* tmp2 = _uvs.all();
+				_uvs2.push_back(tmp_sprite + jgl::Vector2(0.0f, 0.0f));
+				_uvs2.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
+				_uvs2.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
+				_uvs2.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
+				_uvs2.push_back(tmp_sprite + unit);
+				_uvs2.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
+			}
+			else
+			{
+				for (size_t h = 0; h < 6; h++)
+					_uvs2.push_back(-1);
+			}
+
+	const jgl::Vector2* tmp_uvs = _uvs.all();
 
 	glBindBuffer(GL_ARRAY_BUFFER, _uvs_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * points.size() * 2, static_cast<const float*>(&(tmp2[0].x)), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)* points.size() * 2, static_cast<const float*>(&(tmp_uvs[0].x)), GL_STATIC_DRAW);
+
+	const jgl::Vector2* tmp_uvs2 = _uvs2.all();
+
+	glBindBuffer(GL_ARRAY_BUFFER, _uvs_buffer2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * points.size() * 2, static_cast<const float*>(&(tmp_uvs2[0].x)), GL_STATIC_DRAW);
 }
 
 void Chunk::update()
@@ -113,7 +139,7 @@ void Chunk::render(jgl::Viewport* viewport)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, _uvs_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, (jgl::get_frame_state(2) == 0 ? _uvs_buffer : _uvs_buffer2));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

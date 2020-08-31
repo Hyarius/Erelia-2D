@@ -11,8 +11,10 @@ private:
 	Node* _content[CHUNK_SIZE][CHUNK_SIZE];
 
 	jgl::Array<jgl::Vector2> _uvs;
+	jgl::Array<jgl::Vector2> _uvs2;
 
 	GLuint _uvs_buffer;
+	GLuint _uvs_buffer2;
 
 public:
 	bool is_border(int x, int y);

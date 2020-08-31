@@ -58,6 +58,7 @@ void Item_slot::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 
 void Item_slot::render()
 {
+	static bool state = true;
 	if (is_active() == false)
 		return;
 
@@ -65,7 +66,7 @@ void Item_slot::render()
 	if (_item != nullptr)
 	{
 		_item->draw(_box.anchor() + _box.border(), _box.area() - _box.border() * 2, _viewport);
-		if (_item->item_type() == Item_type::tile && jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::down)
+		if (_item->item_type() == Item_type::tile && tile_array[(static_cast<Node_item*>(_item))->node_index()]->type == WALKABLE && state == true)
 			jgl::draw_text(jgl::itoa((static_cast<Node_item*>(_item))->node_index()), _box.anchor() + _box.border() * 2, 12, 1, 1.0f, jgl::text_color::light_green);
 	}
 }
