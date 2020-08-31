@@ -295,7 +295,7 @@ bool Console::handle_ghost_command(jgl::Array<jgl::String>& tab)
 bool Console::handle_coord_command(jgl::Array<jgl::String>& tab)
 {
 	if (tab.size() == 1)
-		return (return_funct("Player coord : " + jgl::itoa(static_cast<int>(engine->player()->pos().x)) + " / " + jgl::itoa(static_cast<int>(engine->player()->pos().y)), false));
+		return (return_funct("Player coord : " + jgl::itoa(jgl::round(engine->player()->pos().x)) + " / " + jgl::itoa(jgl::round(engine->player()->pos().y)), false));
 	else
 		return (return_funct("Usage : coord", false));
 }

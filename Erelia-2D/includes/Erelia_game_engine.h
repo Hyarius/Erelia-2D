@@ -58,6 +58,8 @@ public:
 	void active_inventory();
 	void desactive_inventory();
 
+	void move_player(jgl::Vector2 delta);
+
 	void save(jgl::String path);
 	void load(jgl::String path);
 

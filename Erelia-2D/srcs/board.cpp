@@ -105,6 +105,16 @@ void Board::save(jgl::String path)
 		else
 			file << "0" << std::endl;
 	}
+	file << "area;" << _area_array.size() << std::endl;
+	for (size_t i = 0; i < _area_array.size(); i++)
+	{
+		if (_area_array[i]->tile_array().size() == 0)
+			jgl::error_exit(1, "Bad battle area size");
+		file << _area_array[i]->tile_array()[0].x << ";" << _area_array[i]->tile_array()[0].y;
+		for (size_t j = 0; j < _area_array[i]->encounter_array().size(); j++)
+			file << ";" << _area_array[i]->encounter_array()[j].id << ";" << _area_array[i]->encounter_array()[j].probability;
+		file << std::endl;
+	}
 }
 
 void Board::load_warp(std::fstream& file, jgl::Array<jgl::String> tab)
@@ -150,10 +160,13 @@ void Board::load_chunk(std::fstream& file, jgl::Array<jgl::String> tab)
 				{
 					jgl::Vector2 node_pos = jgl::Vector2(i, nb_line) + chunk_pos * CHUNK_SIZE;
 					place(node_pos, tile_array[type]);
+					if ((tile_array[type]->type & ENCOUNTER_TILE) == ENCOUNTER_TILE)
+						_encounter_tile.push_back(node_pos);
 				}
 			}
 		}
 	}
+	calc_battle_area();
 }
 
 void Board::load_npc(std::fstream& file, jgl::Array<jgl::String> tab)
@@ -199,6 +212,24 @@ void Board::load_link(std::fstream& file, jgl::Array<jgl::String> tab)
 	}
 }
 
+void Board::load_area(std::fstream& file, jgl::Array<jgl::String> tab)
+{
+	size_t nb_link = jgl::stoi(tab[1]);
+	for (size_t t = 0; t < nb_link; t++)
+	{
+		jgl::String line = jgl::get_str(file);
+		jgl::Array<jgl::String> tab = line.split(";");
+		if (tab.size() % 2 != 0)
+			jgl::error_exit(1, "Bad battle area format");
+		jgl::Vector2 pos = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+		Battle_area* tmp = find_area(pos);
+		for (size_t j = 2; j < tab.size(); j += 2)
+		{
+			tmp->add_encouter(Encounter_data(jgl::stoi(tab[j]), jgl::stoi(tab[j + 1])));
+		}
+	}
+}
+
 void Board::load(jgl::String path)
 {
 	clear();
@@ -211,21 +242,15 @@ void Board::load(jgl::String path)
 			break;
 		jgl::Array<jgl::String> tab = line.split(";");
 		if (tab[0] == "npc")
-		{
 			load_npc(file, tab);
-		}
 		else if (tab[0] == "chunks")
-		{
 			load_chunk(file, tab);
-		}
 		else if (tab[0] == "warp")
-		{
 			load_warp(file, tab);
-		}
 		else if (tab[0] == "link")
-		{
 			load_link(file, tab);
-		}
+		else if (tab[0] == "area")
+			load_link(file, tab);
 		else
 			jgl::error_exit(1, "Error in map file - Line [" + line + "]");
 	}
@@ -355,6 +380,65 @@ void Board::bake()
 	points.clear();
 	for (auto tmp : _chunks)
 		tmp.second->bake();
+}
+void Board::parse_encounter_area(Battle_area* area, jgl::Vector2 start)
+{
+	static jgl::Vector2 neightbour[4] = {
+		jgl::Vector2(1, 0),
+		jgl::Vector2(0, 1),
+		jgl::Vector2(-1, 0),
+		jgl::Vector2(0, -1)
+	};
+	jgl::Array<jgl::Vector2> to_calc = {start};
+	node(start)->set_encounter_area(area);
+	for (size_t i = 0; i < to_calc.size(); i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			if (node(to_calc[i] + neightbour[j]) != nullptr && node(to_calc[i] + neightbour[j])->tile() != nullptr &&
+				(node(to_calc[i] + neightbour[j])->tile()->type & ENCOUNTER_TILE) == ENCOUNTER_TILE &&
+				node(to_calc[i] + neightbour[j])->encounter_area() == nullptr)
+			{
+				node(to_calc[i] + neightbour[j])->set_encounter_area(area);
+				area->add_tile(to_calc[i] + neightbour[j]);
+				to_calc.push_back(to_calc[i] + neightbour[j]);
+			}
+		}
+	}
+}
+
+Battle_area* Board::find_area(jgl::Vector2 pos)
+{
+	for (size_t i = 0; i < _area_array.size(); i++)
+	{
+		if (_area_array[i]->is_inside(pos) == true)
+			return (_area_array[i]);
+	}
+	return (nullptr);
+}
+
+void Board::calc_battle_area()
+{
+	static jgl::Color color[6] = {
+		jgl::Color(255, 0, 0, 150),
+		jgl::Color(0, 255, 0, 150),
+		jgl::Color(0, 0, 255, 150),
+		jgl::Color(255, 255, 0, 150),
+		jgl::Color(255, 0, 255, 150),
+		jgl::Color(0, 255, 255, 150)
+	};
+	_area_array.clear();
+	for (size_t i = 0; i < _encounter_tile.size(); i++)
+	{
+		if (node(_encounter_tile[i])->encounter_area() == nullptr)
+		{
+			Battle_area* tmp = new Battle_area();
+			tmp->set_color(color[i % 6]);
+			parse_encounter_area(tmp, _encounter_tile[i]);
+			_area_array.push_back(tmp);
+			
+		}
+	}
 }
 void Board::bake_chunk(jgl::Vector2 pos)
 {

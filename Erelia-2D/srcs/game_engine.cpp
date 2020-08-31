@@ -15,7 +15,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_player_controller->activate();
 
 	_modes[0] = new Editor_mode(this);
-	//_modes[0]->activate();
+	_modes[0]->activate();
 
 	_console = new Console(this);
 
@@ -86,6 +86,20 @@ void Game_engine::interact_between(Entity* source, Entity* target)
 	_interacter->set_entity(source, target);
 
 	active_interacter();
+}
+
+void Game_engine::move_player(jgl::Vector2 delta)
+{
+	_player->move(delta);
+	if (_board->node(_player->pos() + delta) != nullptr && _board->node(_player->pos() + delta)->tile() != nullptr &&
+		_board->node(_player->pos() + delta)->encounter_area() != nullptr)
+	{
+		Battle_area* tmp = _board->node(_player->pos() + delta)->encounter_area();
+		if (tmp->ask() != Encounter_data::null())
+		{
+			std::cout << "BOUM ! COMBAT !" << std::endl;
+		}
+	}
 }
 
 void Game_engine::active_interacter()

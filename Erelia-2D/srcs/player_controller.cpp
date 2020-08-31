@@ -20,14 +20,14 @@ bool Player_controller::handle_keyboard()
 				Node* tmp = engine->board()->node((engine->player()->pos() + move_delta[i]).round());
 				Node* actual = engine->board()->node((engine->player()->pos()).round());
 				if (engine->player()->ghost() == true)
-					engine->player()->move(move_delta[i]);
+					engine->move_player(move_delta[i]);
 				else if (engine->player()->can_move(move_delta[i]) == true)
 				{
 					jgl::Vector2 tmp_pos = move_delta[i];
 					while ((engine->board()->node(engine->player()->pos().round() + tmp_pos)->tile()->type & JUMPING) == JUMPING)
 						tmp_pos += move_delta[i];
 					engine->board()->node(engine->player()->pos().round() + tmp_pos)->set_occupant(engine->player());
-					engine->player()->move(tmp_pos);
+					engine->move_player(tmp_pos);
 				}
 				else
 					engine->player()->set_look_dir(look_dir_value[i]);

@@ -3,6 +3,7 @@
 
 #include "erelia_chunk.h"
 #include "erelia_npc.h"
+#include "erelia_battler.h"
 
 class Board
 {
@@ -11,6 +12,9 @@ private:
 
 	std::map<jgl::String, NPC*> _npc_map;
 	jgl::Array<NPC*> _npc_array;
+
+	jgl::Array<jgl::Vector2> _encounter_tile;
+	jgl::Array<Battle_area *> _area_array;
 
 	std::map<std::string, jgl::Vector2> _warps;
 
@@ -30,6 +34,7 @@ public:
 	void load_chunk(std::fstream& file, jgl::Array<jgl::String> tab);
 	void load_npc(std::fstream& file, jgl::Array<jgl::String> tab);
 	void load_link(std::fstream& file, jgl::Array<jgl::String> tab);
+	void load_area(std::fstream& file, jgl::Array<jgl::String> tab);
 	void load(jgl::String path);
 	std::map<std::string, jgl::Vector2>& warps() { return (_warps); }
 	jgl::Vector2 warp(jgl::String name) { if (_warps.contains(name.std()) == 0)return (-1); return (_warps[name.std()]); }
@@ -44,6 +49,9 @@ public:
 	jgl::Vector2 rel_node_pos(jgl::Vector2 node_pos);
 	void place(jgl::Vector2 node_pos, size_t index, bool need_bake = false);
 	void place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake = false);
+	Battle_area *find_area(jgl::Vector2 pos);
+	void calc_battle_area();
+	void parse_encounter_area(Battle_area* area, jgl::Vector2 start);
 	void bake();
 	void bake_chunk(jgl::Vector2 pos);
 	void update();

@@ -25,7 +25,6 @@ Entity::Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::
 	_starting_pos = p_pos;
 	_road_index = 0;
 	_check_point_index = 1;
-	_check_point.push_back(_pos);
 	_movement_type = Entity_movement::controled;
 }
 
