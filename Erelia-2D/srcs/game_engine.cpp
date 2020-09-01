@@ -95,9 +95,10 @@ void Game_engine::move_player(jgl::Vector2 delta)
 		_board->node(_player->pos() + delta)->encounter_area() != nullptr)
 	{
 		Battle_area* tmp = _board->node(_player->pos() + delta)->encounter_area();
-		if (tmp->ask() != Encounter_data::null())
+		Encounter_data result = tmp->ask();
+		if (result != Encounter_data::null())
 		{
-			std::cout << "BOUM ! COMBAT !" << std::endl;
+			std::cout << "BOUM ! COMBAT WITH ENTITY " << result.id << " !" << std::endl;
 		}
 	}
 }

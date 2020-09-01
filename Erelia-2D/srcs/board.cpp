@@ -110,7 +110,7 @@ void Board::save(jgl::String path)
 	{
 		if (_area_array[i]->tile_array().size() == 0)
 			jgl::error_exit(1, "Bad battle area size");
-		file << _area_array[i]->tile_array()[0].x << ";" << _area_array[i]->tile_array()[0].y;
+		file << _area_array[i]->tile_array()[0].x << ";" << _area_array[i]->tile_array()[0].y << ";" << _area_array[i]->probability();
 		for (size_t j = 0; j < _area_array[i]->encounter_array().size(); j++)
 			file << ";" << _area_array[i]->encounter_array()[j].id << ";" << _area_array[i]->encounter_array()[j].probability;
 		file << std::endl;
@@ -219,11 +219,14 @@ void Board::load_area(std::fstream& file, jgl::Array<jgl::String> tab)
 	{
 		jgl::String line = jgl::get_str(file);
 		jgl::Array<jgl::String> tab = line.split(";");
-		if (tab.size() % 2 != 0)
+		if (tab.size() % 2 == 0)
 			jgl::error_exit(1, "Bad battle area format");
 		jgl::Vector2 pos = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
 		Battle_area* tmp = find_area(pos);
-		for (size_t j = 2; j < tab.size(); j += 2)
+		if (tmp == nullptr)
+			jgl::error_exit(1, "Error in map file - Line [" + line + "]");
+		tmp->set_probability(jgl::stoi(tab[2]));
+		for (size_t j = 3; j < tab.size(); j += 2)
 		{
 			tmp->add_encouter(Encounter_data(jgl::stoi(tab[j]), jgl::stoi(tab[j + 1])));
 		}

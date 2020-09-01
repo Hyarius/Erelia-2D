@@ -103,6 +103,7 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_component.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_entry_component.cpp" />
     <ClCompile Include="srcs\basic_function.cpp" />
+    <ClCompile Include="srcs\battle_area.cpp" />
     <ClCompile Include="srcs\chunk.cpp" />
     <ClCompile Include="srcs\dialogue_frame.cpp" />
     <ClCompile Include="srcs\editor.cpp" />
