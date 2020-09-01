@@ -43,8 +43,8 @@ public:
 	void set_probability(int p_probability) { _probability = p_probability; }
 	int probability() { return (_probability); }
 	jgl::Color color() { return (_color); }
-	jgl::Array<jgl::Vector2> tile_array() { return (_tile_array); }
-	jgl::Array<Encounter_data> encounter_array() { return (_encounter_array); }
+	jgl::Array<jgl::Vector2>& tile_array() { return (_tile_array); }
+	jgl::Array<Encounter_data>& encounter_array() { return (_encounter_array); }
 	void add_tile(jgl::Vector2 pos);
 	void add_encouter(Encounter_data data);
 	bool is_inside(jgl::Vector2 pos);

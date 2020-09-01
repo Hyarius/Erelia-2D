@@ -69,6 +69,7 @@ public:
 	bool handle_coord_command(jgl::Array<jgl::String>& tab);
 	bool handle_link_command(jgl::Array<jgl::String>& tab);
 	bool handle_npc_command(jgl::Array<jgl::String>& tab);
+	bool handle_area_command(jgl::Array<jgl::String>& tab);
 
 	bool handle_unknow_command(jgl::String cmd);
 

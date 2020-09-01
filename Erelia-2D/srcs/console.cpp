@@ -398,6 +398,56 @@ bool Console::handle_npc_command(jgl::Array<jgl::String>& tab)
 		return (return_funct("Usage : npc [movement / range / reset]", false));
 }
 
+bool Console::handle_area_command(jgl::Array<jgl::String>& tab)
+{
+	if (tab.size() >= 3)
+	{
+		if (tab[1] == "define" && tab.size() == 4)
+		{
+			jgl::Vector2 pos = engine->editor_mode()->interacter()->pink_flag();
+			if (engine->board()->node(pos) == nullptr || engine->board()->node(pos)->encounter_area() == nullptr)
+				return (return_funct("Invalid position", true));
+			Battle_area* tmp = engine->board()->node(pos)->encounter_area();
+			if (tab[2] == "encounter")
+			{
+				tmp->encounter_array().clear();
+				tab = tab[3].split(";");
+				for (size_t i = 0; i < tab.size(); i += 2)
+				{
+					Encounter_data result = Encounter_data(jgl::stoi(tab[i]), jgl::stoi(tab[i + 1]));
+					tmp->add_encouter(result);
+				}
+				jgl::String text = " Area encounter set to [";
+				if (tmp->encounter_array().size() != 0)
+				{
+					for (size_t i = 0; i < tmp->encounter_array().size(); i++)
+					{
+						if (i != 0)
+							text += " - ";
+						text += jgl::itoa(tmp->encounter_array()[i].id) + "(" + jgl::itoa(tmp->encounter_array()[i].probability) + ")";
+					}
+				}
+				else
+					text += "No encounter";
+				text += "]";
+				return (return_funct(text, false));
+			}
+			else if (tab[2] == "probability")
+			{
+				tmp->set_probability(jgl::stoi(tab[3]));
+				return (return_funct("Area event probability set to " + jgl::itoa(tmp->probability()), false));
+			}
+			else
+				return (return_funct("Usage : npc define [encounter / probability] [param]", false));
+			
+		}
+		else
+			return (return_funct("Usage : npc [define] [param]", false));
+	}
+	else
+		return (return_funct("Usage : npc [define] [param]", false));
+}
+
 bool Console::handle_unknow_command(jgl::String cmd)
 {
 	return (return_funct(cmd, false));
@@ -433,6 +483,8 @@ bool Console::handle_console_entry(jgl::String cmd)
 		return (handle_link_command(tab));
 	else if (tab[0] == "npc")
 		return (handle_npc_command(tab));
+	else if (tab[0] == "area")
+		return (handle_area_command(tab));
 	else
 		return (handle_unknow_command(cmd));
 }

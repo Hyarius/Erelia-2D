@@ -105,6 +105,7 @@
     <ClCompile Include="srcs\basic_function.cpp" />
     <ClCompile Include="srcs\battle_area.cpp" />
     <ClCompile Include="srcs\chunk.cpp" />
+    <ClCompile Include="srcs\creature_list.cpp" />
     <ClCompile Include="srcs\dialogue_frame.cpp" />
     <ClCompile Include="srcs\editor.cpp" />
     <ClCompile Include="srcs\console.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="includes\Erelia_board.h" />
     <ClInclude Include="includes\Erelia_chunk.h" />
     <ClInclude Include="includes\erelia_console.h" />
+    <ClInclude Include="includes\erelia_creature.h" />
     <ClInclude Include="includes\erelia_define.h" />
     <ClInclude Include="includes\Erelia_editor.h" />
     <ClInclude Include="includes\erelia_game_mode.h" />

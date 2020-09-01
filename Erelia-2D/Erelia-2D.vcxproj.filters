@@ -277,6 +277,9 @@
     <ClCompile Include="srcs\battle_area.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\creature_list.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
@@ -496,6 +499,9 @@
       <Filter>Includes</Filter>
     </ClInclude>
     <ClInclude Include="includes\erelia_game_mode.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_creature.h">
       <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>

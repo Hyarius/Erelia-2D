@@ -50,9 +50,9 @@ void create_item_list(jgl::Sprite_sheet* tileset)
 	{
 		node_item_list.push_back( new Node_item(i, tile_array[i]->sprite) );
 	}
-	for (size_t i = 0; i < 18; i++)
+	for (int i = 0; i < 18; i++)
 	{
-		jgl::Vector2 sprite = jgl::Vector2(static_cast<float>(i), tileset->size().y - 1);
+		jgl::Vector2 sprite = jgl::Vector2(i, 71);
 		interact_item_list.push_back( new Editor_item(funct_array[i], sprite) );
 	}
 	create_prefab_list();

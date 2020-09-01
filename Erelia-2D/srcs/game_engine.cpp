@@ -5,7 +5,9 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	engine = this;
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 143));
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 42));
+	_faceset = new jgl::Sprite_sheet("ressources/texture/face.png", jgl::Vector2(16, 10));
 	create_item_list(_tileset);
+	create_creature_list(_faceset);
 	_board = new Board("ressources/maps/world.map");
 	_player = new Player();
 	if (jgl::check_file_exist("ressources/save/Player.sav") == true)

@@ -253,7 +253,7 @@ void Board::load(jgl::String path)
 		else if (tab[0] == "link")
 			load_link(file, tab);
 		else if (tab[0] == "area")
-			load_link(file, tab);
+			load_area(file, tab);
 		else
 			jgl::error_exit(1, "Error in map file - Line [" + line + "]");
 	}

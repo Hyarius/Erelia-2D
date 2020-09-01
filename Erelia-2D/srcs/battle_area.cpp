@@ -35,12 +35,12 @@ Encounter_data Battle_area::ask()
 {
 	int value = jgl::generate_nbr(0, 100);
 
-	if (value > _probability)
+	if (value < _probability)
 	{
 		value = jgl::generate_nbr(0, 100);
 		for (size_t i = 0; i < _encounter_array.size(); i++)
 		{
-			if (_encounter_array[i].probability <= value)
+			if (value < _encounter_array[i].probability)
 				return (_encounter_array[i]);
 			value -= _encounter_array[i].probability;
 		}
