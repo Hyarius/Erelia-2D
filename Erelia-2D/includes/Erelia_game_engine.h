@@ -5,6 +5,7 @@ extern int node_size;
 
 #include "erelia_board.h"
 #include "erelia_player.h"
+#include "erelia_creature.h"
 
 #include "erelia_player_controller.h"
 #include "erelia_editor.h"

@@ -40,23 +40,31 @@ void Chunk::place(jgl::Vector2 coord, Tile* p_tile, bool need_bake)
 
 void Chunk::bake()
 {
+	static jgl::Vector2 neightbour[6] = {
+		jgl::Vector2(0, 0),
+		jgl::Vector2(0, 1),
+		jgl::Vector2(1, 0),
+		jgl::Vector2(0, 1),
+		jgl::Vector2(1, 1),
+		jgl::Vector2(1, 0),
+	};
 	_uvs.clear();
 	_uvs2.clear();
 	if (points.size() == 0)
 	{
+		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / g_application->size());
+		std::cout << std::endl << "------" << std::endl << std::endl;
+		if (vertex_buffer != 0)
+			glDeleteBuffers(1, &vertex_buffer);
 		glGenBuffers(1, &vertex_buffer);
 		for (int i = 0; i < CHUNK_SIZE; i++)
 			for (int j = 0; j < CHUNK_SIZE; j++)
+			{
+				for (size_t h = 0; h < 6; h++)
 				{
-					jgl::Vector2 tmp = (jgl::Vector2(i, j)) * node_size;
-
-					points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(0, 0) * node_size));
-					points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(0, 1) * node_size));
-					points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(1, 0) * node_size));
-					points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(0, 1) * node_size));
-					points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(1, 1) * node_size));
-					points.push_back(jgl::convert_screen_to_opengl(tmp + jgl::Vector2(1, 0) * node_size));
+					points.push_back((jgl::Vector3(i, j, 0) + neightbour[h]) * vtmp);
 				}
+			}
 
 		const jgl::Vector3* tmp = points.all();
 
@@ -70,12 +78,8 @@ void Chunk::bake()
 				jgl::Vector2 unit = engine->tileset()->unit();
 				jgl::Vector2 tmp_sprite = engine->tileset()->sprite(_content[i][j]->tile()->sprite);
 
-				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, 0.0f));
-				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
-				_uvs.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
-				_uvs.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
-				_uvs.push_back(tmp_sprite + unit);
-				_uvs.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
+				for (size_t h = 0; h < 6; h++)
+					_uvs.push_back(tmp_sprite + unit * neightbour[h]);
 			}
 			else
 			{
@@ -89,12 +93,8 @@ void Chunk::bake()
 				jgl::Vector2 unit = engine->tileset()->unit();
 				jgl::Vector2 tmp_sprite = engine->tileset()->sprite(_content[i][j]->tile()->sprite + jgl::Vector2(0, 72));
 
-				_uvs2.push_back(tmp_sprite + jgl::Vector2(0.0f, 0.0f));
-				_uvs2.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
-				_uvs2.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
-				_uvs2.push_back(tmp_sprite + jgl::Vector2(0.0f, unit.y));
-				_uvs2.push_back(tmp_sprite + unit);
-				_uvs2.push_back(tmp_sprite + jgl::Vector2(unit.x, 0.0f));
+				for (size_t h = 0; h < 6; h++)
+					_uvs2.push_back(tmp_sprite + unit * neightbour[h]);
 			}
 			else
 			{
@@ -123,7 +123,8 @@ void Chunk::update()
 
 void Chunk::render(jgl::Viewport* viewport)
 {
-	jgl::Vector3 delta = jgl::convert_screen_to_opengl((_pos * CHUNK_SIZE - engine->player()->pos() - 0.5f) * jgl::Vector2(-1, -1) * node_size);
+	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(tile_to_screen(_pos * CHUNK_SIZE) + g_application->size() / 2);
+
 
 	glBindVertexArray(g_application->vertex_array());
 

@@ -11,7 +11,7 @@ std::string custom_texture_shader_vert = {
 	"out vec2 UV;"
 	"void main()"
 	"{"
-		"vec3 tmp = model_space - delta_pos;"// - vec3(-1, 1, 0);"
+		"vec3 tmp = model_space + delta_pos;"// - vec3(-1, 1, 0);"
 		"gl_Position = vec4(tmp, 1.0f);"
 		"UV = vertexUV;"
 	"}"
