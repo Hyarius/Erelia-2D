@@ -472,13 +472,13 @@ void Board::render(jgl::Viewport* viewport)
 	jgl::Vector2 end_node = screen_to_tile(g_application->size());
 	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
 	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
+	g_application->clear();
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
 				_chunks[tmp]->render(viewport);
-			jgl::draw_rectangle(tile_to_screen(tmp * CHUNK_SIZE), jgl::Vector2(CHUNK_SIZE * node_size), 1, jgl::Color(255, 0, 0));
 		}
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)

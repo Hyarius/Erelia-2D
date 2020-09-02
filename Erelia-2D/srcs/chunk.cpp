@@ -52,21 +52,24 @@ void Chunk::bake()
 	_uvs2.clear();
 	if (points.size() == 0)
 	{
-		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / g_application->size());
+		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
 		std::cout << std::endl << "------" << std::endl << std::endl;
-		if (vertex_buffer != 0)
+		std::cout << "Ratio over " << g_application->size() << " = " << jgl::Vector2(node_size) / g_application->size() << std::endl;
+ 		if (vertex_buffer != 0)
 			glDeleteBuffers(1, &vertex_buffer);
 		glGenBuffers(1, &vertex_buffer);
+
 		for (int i = 0; i < CHUNK_SIZE; i++)
 			for (int j = 0; j < CHUNK_SIZE; j++)
 			{
 				for (size_t h = 0; h < 6; h++)
 				{
-					points.push_back((jgl::Vector3(i, j, 0) + neightbour[h]) * vtmp);
+					jgl::Vector2 value = (jgl::Vector2(i, j) + neightbour[h]) * vtmp;
+					points.push_back(jgl::Vector3(value.x, value.y, 0.0f));
 				}
 			}
 
-		const jgl::Vector3* tmp = points.all();
+		const jgl::Vector3 *tmp = points.all();
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * points.size() * 3, static_cast<const float*>(&(tmp[0].x)), GL_STATIC_DRAW);
@@ -123,8 +126,8 @@ void Chunk::update()
 
 void Chunk::render(jgl::Viewport* viewport)
 {
-	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(tile_to_screen(_pos * CHUNK_SIZE) + g_application->size() / 2);
-
+	jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
+	jgl::Vector2 delta = vtmp.invert() / 2 + vtmp * (_pos * CHUNK_SIZE - engine->player()->pos());
 
 	glBindVertexArray(g_application->vertex_array());
 

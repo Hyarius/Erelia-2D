@@ -1,12 +1,12 @@
 #include "erelia.h"
 
 Game_engine* engine;
-int node_size = 32;
+int node_size = 80;
 
 int main(int argc, char **argv)
 {
 	jgl::Application app = jgl::Application("Erelia 2D", 0.8f);
-	//node_size = static_cast<int>(min(app.size().x / 19, app.size().y / 10));
+	node_size = static_cast<int>(min(app.size().x / 19, app.size().y / 10));
 	app.set_max_fps(12000);
 	jgl::set_font_path("ressources/font/karma suture.ttf");
 

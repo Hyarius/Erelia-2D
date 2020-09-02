@@ -152,7 +152,11 @@ void Entity::update_pos()
 	jgl::Vector2 delta_pos = _direction * delta;
 	_pos += delta_pos;
 	if (_total_tick >= (_move_tick / _move_speed))
+	{
+		if (_did_tp == false)
+			_pos = _destination;
 		_direction = 0;
+	}
 
 	if (rpos != _pos.round())
 	{
