@@ -3,6 +3,30 @@
 
 #include "jgl.h"
 
+enum class Creature_family
+{
+	Vegetaux,
+	Dragon,
+	Bete,
+	Insecte,
+	Aerien,
+	Reptile,
+	Mystique,
+	Humanoide,
+	Elementaire,
+	Objet,
+	Fossile,
+	Parasite,
+	Legendaire
+};
+
+enum class Creature_type
+{
+
+};
+
+using Attack_type = Creature_type;
+
 class Creature
 {
 private:

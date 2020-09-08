@@ -53,8 +53,6 @@ void Chunk::bake()
 	if (points.size() == 0)
 	{
 		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-		std::cout << std::endl << "------" << std::endl << std::endl;
-		std::cout << "Ratio over " << g_application->size() << " = " << jgl::Vector2(node_size) / g_application->size() << std::endl;
  		if (vertex_buffer != 0)
 			glDeleteBuffers(1, &vertex_buffer);
 		glGenBuffers(1, &vertex_buffer);
