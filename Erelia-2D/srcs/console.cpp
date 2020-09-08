@@ -407,7 +407,7 @@ bool Console::handle_area_command(jgl::Array<jgl::String>& tab)
 			jgl::Vector2 pos = engine->editor_mode()->interacter()->pink_flag();
 			if (engine->board()->node(pos) == nullptr || engine->board()->node(pos)->encounter_area() == nullptr)
 				return (return_funct("Invalid position", true));
-			Battle_area* tmp = engine->board()->node(pos)->encounter_area();
+			Battle_data* tmp = engine->board()->node(pos)->encounter_area();
 			if (tab[2] == "encounter")
 			{
 				tmp->encounter_array().clear();

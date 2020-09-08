@@ -30,6 +30,15 @@ struct Encounter_data
 class Battle_area
 {
 private:
+	jgl::Vector2 _pos;
+	static jgl::Vector2 _size;
+public:
+	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
+};
+
+class Battle_data
+{
+private:
 	jgl::Color _color;
 	jgl::Vector2 _min;
 	jgl::Vector2 _max;
@@ -38,7 +47,7 @@ private:
 	int _probability;
 
 public:
-	Battle_area();
+	Battle_data();
 	void set_color(jgl::Color p_color) { _color = p_color; }
 	void set_probability(int p_probability) { _probability = p_probability; }
 	int probability() { return (_probability); }

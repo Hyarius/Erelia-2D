@@ -23,7 +23,7 @@ private:
 	Tile* _tile;
 	Link* _link;
 	class Entity* _occupant;
-	class Battle_area* _encounter_area;
+	class Battle_data* _encounter_area;
 
 	bool _calculated;
 	size_t _s_cost;
@@ -48,7 +48,7 @@ public:
 	Tile* tile() { return (_tile); }
 	Link* link() { return (_link); }
 	class Entity* occupant() { return (_occupant); }
-	class Battle_area* encounter_area() { return (_encounter_area); }
+	class Battle_data* encounter_area() { return (_encounter_area); }
 	bool occuped() { return (_occupant != nullptr); }
 	void set_calculated(bool p_state) { _calculated = p_state; }
 	bool calculated() { return (_calculated); }
@@ -76,7 +76,7 @@ public:
 	void set_tile(Tile* p_tile) { _tile = p_tile; }
 	void set_link(Link* p_link) { _link = p_link; }
 	void set_occupant(class Entity* p_occupant) { _occupant = p_occupant; }
-	void set_encounter_area(class Battle_area* p_encounter_area) { _encounter_area = p_encounter_area; }
+	void set_encounter_area(class Battle_data* p_encounter_area) { _encounter_area = p_encounter_area; }
 };
 
 #endif

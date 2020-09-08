@@ -274,10 +274,13 @@
     <ClCompile Include="srcs\editor_mode.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="srcs\battle_area.cpp">
+    <ClCompile Include="srcs\creature_list.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="srcs\creature_list.cpp">
+    <ClCompile Include="srcs\battle_data.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\battle_area.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

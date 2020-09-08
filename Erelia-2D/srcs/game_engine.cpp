@@ -96,7 +96,7 @@ void Game_engine::move_player(jgl::Vector2 delta)
 	if (_board->node(_player->pos() + delta) != nullptr && _board->node(_player->pos() + delta)->tile() != nullptr &&
 		_board->node(_player->pos() + delta)->encounter_area() != nullptr)
 	{
-		Battle_area* tmp = _board->node(_player->pos() + delta)->encounter_area();
+		Battle_data* tmp = _board->node(_player->pos() + delta)->encounter_area();
 		Encounter_data result = tmp->ask();
 		if (result != Encounter_data::null())
 		{

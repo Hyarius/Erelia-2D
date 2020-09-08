@@ -14,7 +14,7 @@ private:
 	jgl::Array<NPC*> _npc_array;
 
 	jgl::Array<jgl::Vector2> _encounter_tile;
-	jgl::Array<Battle_area *> _area_array;
+	jgl::Array<Battle_data *> _battle_data_array;
 
 	std::map<std::string, jgl::Vector2> _warps;
 
@@ -49,9 +49,9 @@ public:
 	jgl::Vector2 rel_node_pos(jgl::Vector2 node_pos);
 	void place(jgl::Vector2 node_pos, size_t index, bool need_bake = false);
 	void place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake = false);
-	Battle_area *find_area(jgl::Vector2 pos);
-	void calc_battle_area();
-	void parse_encounter_area(Battle_area* area, jgl::Vector2 start);
+	Battle_data *find_area(jgl::Vector2 pos);
+	void calc_Battle_data();
+	void parse_encounter_area(Battle_data* area, jgl::Vector2 start);
 	void bake();
 	void bake_chunk(jgl::Vector2 pos);
 	void update();

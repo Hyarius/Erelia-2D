@@ -105,14 +105,14 @@ void Board::save(jgl::String path)
 		else
 			file << "0" << std::endl;
 	}
-	file << "area;" << _area_array.size() << std::endl;
-	for (size_t i = 0; i < _area_array.size(); i++)
+	file << "area;" << _battle_data_array.size() << std::endl;
+	for (size_t i = 0; i < _battle_data_array.size(); i++)
 	{
-		if (_area_array[i]->tile_array().size() == 0)
+		if (_battle_data_array[i]->tile_array().size() == 0)
 			jgl::error_exit(1, "Bad battle area size");
-		file << _area_array[i]->tile_array()[0].x << ";" << _area_array[i]->tile_array()[0].y << ";" << _area_array[i]->probability();
-		for (size_t j = 0; j < _area_array[i]->encounter_array().size(); j++)
-			file << ";" << _area_array[i]->encounter_array()[j].id << ";" << _area_array[i]->encounter_array()[j].probability;
+		file << _battle_data_array[i]->tile_array()[0].x << ";" << _battle_data_array[i]->tile_array()[0].y << ";" << _battle_data_array[i]->probability();
+		for (size_t j = 0; j < _battle_data_array[i]->encounter_array().size(); j++)
+			file << ";" << _battle_data_array[i]->encounter_array()[j].id << ";" << _battle_data_array[i]->encounter_array()[j].probability;
 		file << std::endl;
 	}
 }
@@ -166,7 +166,7 @@ void Board::load_chunk(std::fstream& file, jgl::Array<jgl::String> tab)
 			}
 		}
 	}
-	calc_battle_area();
+	calc_Battle_data();
 }
 
 void Board::load_npc(std::fstream& file, jgl::Array<jgl::String> tab)
@@ -222,7 +222,7 @@ void Board::load_area(std::fstream& file, jgl::Array<jgl::String> tab)
 		if (tab.size() % 2 == 0)
 			jgl::error_exit(1, "Bad battle area format");
 		jgl::Vector2 pos = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
-		Battle_area* tmp = find_area(pos);
+		Battle_data* tmp = find_area(pos);
 		if (tmp == nullptr)
 			jgl::error_exit(1, "Error in map file - Line [" + line + "]");
 		tmp->set_probability(jgl::stoi(tab[2]));
@@ -384,7 +384,7 @@ void Board::bake()
 	for (auto tmp : _chunks)
 		tmp.second->bake();
 }
-void Board::parse_encounter_area(Battle_area* area, jgl::Vector2 start)
+void Board::parse_encounter_area(Battle_data* area, jgl::Vector2 start)
 {
 	static jgl::Vector2 neightbour[4] = {
 		jgl::Vector2(1, 0),
@@ -410,17 +410,17 @@ void Board::parse_encounter_area(Battle_area* area, jgl::Vector2 start)
 	}
 }
 
-Battle_area* Board::find_area(jgl::Vector2 pos)
+Battle_data* Board::find_area(jgl::Vector2 pos)
 {
-	for (size_t i = 0; i < _area_array.size(); i++)
+	for (size_t i = 0; i < _battle_data_array.size(); i++)
 	{
-		if (_area_array[i]->is_inside(pos) == true)
-			return (_area_array[i]);
+		if (_battle_data_array[i]->is_inside(pos) == true)
+			return (_battle_data_array[i]);
 	}
 	return (nullptr);
 }
 
-void Board::calc_battle_area()
+void Board::calc_Battle_data()
 {
 	static jgl::Color color[6] = {
 		jgl::Color(255, 0, 0, 150),
@@ -430,15 +430,15 @@ void Board::calc_battle_area()
 		jgl::Color(255, 0, 255, 150),
 		jgl::Color(0, 255, 255, 150)
 	};
-	_area_array.clear();
+	_battle_data_array.clear();
 	for (size_t i = 0; i < _encounter_tile.size(); i++)
 	{
 		if (node(_encounter_tile[i])->encounter_area() == nullptr)
 		{
-			Battle_area* tmp = new Battle_area();
+			Battle_data* tmp = new Battle_data();
 			tmp->set_color(color[i % 6]);
 			parse_encounter_area(tmp, _encounter_tile[i]);
-			_area_array.push_back(tmp);
+			_battle_data_array.push_back(tmp);
 			
 		}
 	}
