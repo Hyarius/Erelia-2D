@@ -34,6 +34,8 @@ private:
 	static jgl::Vector2 _size;
 public:
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
+
+	void render();
 };
 
 class Battle_data
