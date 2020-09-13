@@ -31,34 +31,32 @@ private:
 	Board* _board;
 	Player* _player;
 
-	Player_controller* _player_controller;
 	Console* _console;
-	Interacter* _interacter;
 
-	Game_mode* _modes[1];
+	size_t _index_mode;
+	jgl::Array<Game_mode*> _modes;
 
 public:
 	jgl::Sprite_sheet* tileset() { return (_tileset);}
 	jgl::Sprite_sheet* charset() { return (_charset); }
 	Board* board() { return (_board); }
 	Player* player() { return (_player); }
-	Editor_mode* editor_mode() { return (static_cast<Editor_mode *>(_modes[0])); }
-	Game_mode** modes() { return (_modes); }
-	Game_mode* modes(size_t index) { if (index >= 1) return (nullptr); return (_modes[index]); }
-	Player_controller* player_controller() { return (_player_controller); }
+	Editor_mode* editor_mode() { return (static_cast<Editor_mode*>(_modes[0])); }
+	Adventure_mode* adventure_mode() { return (static_cast<Adventure_mode*>(_modes[1])); }
+	size_t index_mode() { return (_index_mode); }
+	jgl::Array<Game_mode*>& modes() { return (_modes); }
+	Game_mode* modes(size_t index) { if (index >= _modes.size()) return (nullptr); return (_modes[index]); }
+	Game_mode* active_mode() { return (_modes[_index_mode]); }
 	Console* console() { return (_console); }
-	Interacter* interacter() { return (_interacter); }
 
 	Game_engine(jgl::Widget* p_parent = nullptr);
 	~Game_engine();
 
+	void change_mode(game_mode new_mode);
+
 	void interact_between(Entity* source, Entity* target);
-	void active_interacter();
-	void desactive_interacter();
 	void active_console();
 	void desactive_console();
-	void active_inventory();
-	void desactive_inventory();
 
 	void move_player(jgl::Vector2 delta);
 

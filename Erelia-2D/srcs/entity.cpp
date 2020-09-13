@@ -184,7 +184,14 @@ jgl::Array<size_t> tmp_delta[9]
 
 bool Entity::is_interacting()
 {
-	return (engine->interacter()->source() == this || engine->interacter()->target() == this);
+	if (engine->active_mode() == nullptr)
+		return (false);
+	if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
+		return (engine->editor_mode()->interacter()->source() == this || engine->editor_mode()->interacter()->target() == this);
+	else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
+		return (false);// (engine->adventure_mode()->interacter()->source() == this || engine->adventure_mode()->interacter()->target() == this);
+	else
+		return (false);
 }
 
 bool Entity::is_pointed(jgl::Vector2 target)

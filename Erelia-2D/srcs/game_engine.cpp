@@ -13,15 +13,13 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	if (jgl::check_file_exist("ressources/save/Player.sav") == true)
 		load("ressources/save/Player.sav");
 
-	_player_controller = new Player_controller(this);
-	_player_controller->activate();
+	_index_mode = static_cast<size_t>(game_mode::editor);
+	_modes.push_back(new Editor_mode(this));
+	_modes.push_back(new Adventure_mode(this));
 
-	_modes[0] = new Editor_mode(this);
-	_modes[0]->activate();
+	change_mode(game_mode::adventure);
 
 	_console = new Console(this);
-
-	_interacter = new Interacter(this);
 
 	_console->send_front();
 }
@@ -69,31 +67,10 @@ void Game_engine::load(jgl::String path)
 	_player->place(jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
 }
 
-void Game_engine::interact_between(Entity* source, Entity* target)
-{
-	if (source == nullptr || target == nullptr)
-		return;
-	if (target->look_dir() == Entity_direction::south)
-		source->set_look_dir(Entity_direction::north);
-	else if (target->look_dir() == Entity_direction::north)
-		source->set_look_dir(Entity_direction::south);
-	else if (target->look_dir() == Entity_direction::east)
-		source->set_look_dir(Entity_direction::west);
-	else if (target->look_dir() == Entity_direction::west)
-		source->set_look_dir(Entity_direction::east);
-
-	if (source->interaction().size() == 0)
-		return ;
-	
-	_interacter->set_entity(source, target);
-
-	active_interacter();
-}
-
 void Game_engine::move_player(jgl::Vector2 delta)
 {
 	_player->move(delta);
-	if (_board->node(_player->pos() + delta) != nullptr && _board->node(_player->pos() + delta)->tile() != nullptr &&
+	if (_board->node(_player->pos() + delta) != nullptr &&
 		_board->node(_player->pos() + delta)->encounter_area() != nullptr)
 	{
 		Battle_data* tmp = _board->node(_player->pos() + delta)->encounter_area();
@@ -105,51 +82,32 @@ void Game_engine::move_player(jgl::Vector2 delta)
 	}
 }
 
-void Game_engine::active_interacter()
-{
-	static_cast<Editor_mode*>(_modes[0])->contener()->desactivate();
-	_player_controller->set_frozen(true);
-	_interacter->activate();
-	_interacter->run_action();
-}
-
-void Game_engine::desactive_interacter()
-{
-	static_cast<Editor_mode*>(_modes[0])->contener()->activate();
-	_player_controller->set_frozen(false);
-	_interacter->activate();
-	_interacter->set_entity(nullptr, nullptr);
-}
-
 void Game_engine::active_console()
 {
-	static_cast<Editor_mode*>(_modes[0])->contener()->set_frozen(true);
 	_console->enable();
-	_player_controller->set_frozen(true);
-	static_cast<Editor_mode*>(_modes[0])->interacter()->set_frozen(true);
-	static_cast<Editor_mode*>(_modes[0])->inventory()->desactivate();
+	_modes[_index_mode]->disable();
 }
 
 void Game_engine::desactive_console()
 {
-	static_cast<Editor_mode*>(_modes[0])->contener()->set_frozen(false);
 	_console->disable();
-	_player_controller->set_frozen(false);
-	static_cast<Editor_mode*>(_modes[0])->interacter()->set_frozen(false);
-	static_cast<Editor_mode*>(_modes[0])->inventory()->activate();
-	desactive_inventory();
+	_modes[_index_mode]->enable();
 }
 
-void Game_engine::active_inventory()
+void Game_engine::change_mode(game_mode new_mode)
 {
-	_player_controller->set_frozen(true);
-	_modes[0]->enable();
-}
-
-void Game_engine::desactive_inventory()
-{
-	_player_controller->set_frozen(false);
-	_modes[0]->disable();
+	size_t tmp = static_cast<size_t>(new_mode);
+	if (_modes.size() > tmp && _modes[tmp] != nullptr)
+	{
+		_index_mode = tmp;
+		for (size_t i = 0; i < static_cast<size_t>(game_mode::count); i++)
+		{
+			if (_modes.size() < i && _modes[i] != nullptr)
+				_modes[i]->desactivate();
+		}
+		_modes[_index_mode]->activate();
+	}
+	
 }
 
 void Game_engine::update()
@@ -195,13 +153,10 @@ bool Game_engine::handle_mouse()
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
 	_modes[0]->set_geometry(p_anchor, p_area);
-	_interacter->set_geometry(0, g_application->size());
 	_console->set_geometry(0, g_application->size());
 }
 
 void Game_engine::render()
 {
-	_board->render(_viewport);
-	_player->render(_viewport);
-	jgl::draw_text("Fps : " + jgl::itoa(print_fps), 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
+	
 }

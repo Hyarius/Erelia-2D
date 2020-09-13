@@ -3,6 +3,14 @@
 
 #include "jgl.h"
 
+enum class game_mode
+{
+	editor = 0,
+	adventure = 1,
+	battle = 2,
+	count
+};
+
 class Game_mode : public jgl::Widget
 {
 private:
@@ -11,27 +19,32 @@ public:
 	{
 
 	};
-
-	virtual void enable() = 0;
-	virtual void disable() = 0;
 };
 
 class Editor_mode : public Game_mode
 {
 private:
 	jgl::Contener* _contener;
+	Player_controller* _player_controller;
+	Interacter* _interacter;
 	Editor_inventory* _inventory;
-	Editor_interact* _interacter;
+	Editor_interact* _editor_interacter;
 
 public:
 	Editor_mode(jgl::Widget* parent = nullptr);
 
 	jgl::Widget* contener() { return (_contener); }
 	Editor_inventory* inventory() { return (_inventory); }
-	Editor_interact* interacter() { return (_interacter); }
+	Editor_interact* editor_interacter() { return (_editor_interacter); }
+	Player_controller* player_controler(){ return (_player_controller);}
+	Interacter* interacter(){ return (_interacter);}
 
-	void enable();
-	void disable();
+	void active_inventory();
+	void desactive_inventory();
+
+	void interact_between(Entity* source, Entity* target);
+	void active_interacter();
+	void desactive_interacter();
 
 	bool handle_keyboard();
 
@@ -39,5 +52,38 @@ public:
 	void render();
 };
 
+class Adventure_mode : public Game_mode
+{
+private:
+	jgl::Contener* _contener;
+	Player_controller* _player_controller;
+	Interacter* _interacter;
+public:
+	Adventure_mode(jgl::Widget* parent = nullptr);
+
+	jgl::Widget* contener() { return (_contener); }
+
+	bool handle_keyboard();
+
+	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
+	void render();
+};
+
+class Battle_mode : public Game_mode
+{
+private:
+	jgl::Contener* _contener;
+	Player_controller* _player_controller;
+	Interacter* _interacter;
+public:
+	Battle_mode(jgl::Widget* parent = nullptr);
+
+	jgl::Widget* contener() { return (_contener); }
+
+	bool handle_keyboard();
+
+	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
+	void render();
+};
 
 #endif

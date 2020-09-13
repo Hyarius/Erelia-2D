@@ -147,14 +147,10 @@ void Editor_interact::render()
 		if (_state == true)
 		{
 			jgl::Vector2 _third = screen_to_tile(g_mouse->pos);
-			jgl::Vector2 start = jgl::Vector2((_first.x < _third.x ? _first.x : _third.x), (_first.y < _third.y ? _first.y : _third.y));
-			jgl::Vector2 end = jgl::Vector2((_first.x > _third.x ? _first.x : _third.x), (_first.y > _third.y ? _first.y : _third.y));
-			for (float i = start.x; i <= end.x; i++)
-				for (float j = start.y; j <= end.y; j++)
-				{
-					jgl::Vector2 coord = tile_to_screen(jgl::Vector2(i, j));
-					jgl::draw_rectangle(coord, node_size, 1, jgl::Color(0, 0, 0), _viewport);
-				}
+			jgl::Vector2 start = tile_to_screen(jgl::Vector2((_first.x < _third.x ? _first.x : _third.x), (_first.y < _third.y ? _first.y : _third.y)));
+			jgl::Vector2 end = tile_to_screen(jgl::Vector2((_first.x > _third.x ? _first.x : _third.x), (_first.y > _third.y ? _first.y : _third.y)) + 1);
+			
+			jgl::draw_rectangle(start, end - start, 1, jgl::Color(0, 0, 0), _viewport);
 		}
 	}
 	else if (tmp->item_type() == Item_type::interact)

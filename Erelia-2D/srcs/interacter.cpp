@@ -54,15 +54,10 @@ void Interacter::increment()
 	_dialogue_frame->desactivate();
 	if (_source->interaction(_index).type() == Interaction_type::none)
 	{
-		/*if (_source->check_point().size() == 1)
-			_source->return_starting_position();
-		else 
-			_source->calc_next_road();
-		if (_target->check_point().size() == 1)
-			_target->return_starting_position();
-		else
-			_target->calc_next_road();*/
-		engine->desactive_interacter();
+		if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
+			engine->editor_mode()->desactive_interacter();
+		//else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
+		// (engine->adventure_mode()->interacter()->source() == this || engine->adventure_mode()->interacter()->target() == this);
 	}
 	else
 		run_action();

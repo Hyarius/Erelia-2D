@@ -26,15 +26,49 @@ struct Encounter_data
 		return (true);
 	}
 };
+enum class Battle_node_type
+{
+	clear = 0,
+	mouvement = 1,
+	range = 2,
+	ally = 3,
+	enemy = 4,
+	count
+};
+
+struct Battle_node
+{
+	jgl::Vector2 pos;
+	Battle_node_type type;
+
+	bool calculated;
+	size_t s_cost;
+	size_t e_cost;
+	size_t t_cost;
+	Node* parent;
+
+	Battle_node(jgl::Vector2 p_pos)
+	{
+		pos = p_pos;
+		type = Battle_node_type::clear;
+		calculated = false;
+	}
+};
 
 class Battle_area
 {
 private:
 	jgl::Vector2 _pos;
-	static jgl::Vector2 _size;
+	jgl::Vector2 _size;
+
+	GLuint _vertex_buffer;
+	jgl::Array<jgl::Vector3> _points_uvs;
+	jgl::Array<jgl::Vector3> _points_line;
+	jgl::Array<jgl::Vector2> _uvs;
+	GLuint _uvs_buffer;
 public:
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
-
+	void bake();
 	void render();
 };
 

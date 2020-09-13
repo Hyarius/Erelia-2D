@@ -1,0 +1,6 @@
+#ifndef ERELIA_BATTLE_MODE_H
+#define ERELIA_BATTLE_MODE_H
+
+
+
+#endif
