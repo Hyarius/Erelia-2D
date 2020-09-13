@@ -85,13 +85,13 @@ void Game_engine::move_player(jgl::Vector2 delta)
 void Game_engine::active_console()
 {
 	_console->enable();
-	_modes[_index_mode]->disable();
+	_modes[_index_mode]->set_frozen(true);
 }
 
 void Game_engine::desactive_console()
 {
 	_console->disable();
-	_modes[_index_mode]->enable();
+	_modes[_index_mode]->set_frozen(false);
 }
 
 void Game_engine::change_mode(game_mode new_mode)
