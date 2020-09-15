@@ -72,6 +72,9 @@ private:
 	jgl::Array<jgl::Vector2> _uvs;
 	GLuint _uvs_buffer;
 public:
+	jgl::Vector2 pos() { return (_pos); }
+	jgl::Vector2 size() { return (_size); }
+
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
 	void rebake();
 	void bake();

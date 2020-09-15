@@ -32,6 +32,7 @@ protected:
 	jgl::String _name;
 	Entity_direction _look_dir;
 	jgl::Vector2 _sprite;
+	jgl::Sprite_sheet* _tileset;
 	jgl::Vector2 _pos;
 	jgl::Vector2 _old_pos;
 	jgl::Vector2 _destination;
@@ -68,7 +69,13 @@ public:
 	Interaction interaction(int index) { if (_interaction.count(index) == 0)return (Interaction(Interaction_type::none)); return (_interaction[index]); }
 
 	jgl::Vector2 sprite() { return (_sprite); }
-	Entity_type type(){ return (_type); }
+	void set_sprite(jgl::Vector2 p_sprite) { _sprite = p_sprite; }
+
+	Entity_type type() { return (_type); }
+	void set_type(Entity_type p_type) { _type = p_type; }
+
+	jgl::Sprite_sheet* tileset() { return (_tileset); }
+	void set_tileset(jgl::Sprite_sheet* p_tileset) { _tileset = p_tileset; }
 
 	void set_wait_time(Uint32 p_time) { _wait_time = p_time; }
 	Uint32 wait_time() { return (_wait_time); }
@@ -96,8 +103,8 @@ public:
 
 	void render_grass(jgl::Viewport* p_viewport, jgl::Vector2 base_pos = -1);
 	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos = -1);
-	void move(jgl::Vector2 delta);
-	void update_pos();
+	void move(jgl::Vector2 delta, bool edit = true);
+	void update_pos(bool edit = true);
 
 	bool can_move(jgl::Vector2 delta);
 

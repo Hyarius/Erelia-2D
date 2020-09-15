@@ -2,9 +2,9 @@
 
 Battle_area::Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 {
-	_pos = p_pos;
 	_size = p_size;
-	jgl::Vector2 tmp_pos = (_pos - _size / 2.0f).ceiling();
+	_pos = (p_pos - _size / 2.0f).ceiling();
+	std::cout << "Starting pos : " << _pos << std::endl;
 	_content = new Battle_node **[static_cast<size_t>(_size.x)];
 	for (size_t i = 0; i < _size.x; i++)
 	{
@@ -12,7 +12,7 @@ Battle_area::Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 		for (size_t j = 0; j < _size.y; j++)
 		{
 			_content[i][j] = new Battle_node(jgl::Vector2(i, j));
-			jgl::Vector2 node_pos = tmp_pos + jgl::Vector2(i, j);
+			jgl::Vector2 node_pos = _pos + jgl::Vector2(i, j);
 			Node* tmp_node = engine->board()->node(node_pos);
 			if (tmp_node == nullptr || tmp_node->tile() == nullptr)
 				_content[i][j]->type = Battle_node_type::inexistant;
@@ -101,9 +101,8 @@ void Battle_area::render(jgl::Viewport *p_viewport, jgl::Vector2 base_pos)
 	if (p_viewport != nullptr)
 		p_viewport->use();
 
-
-	jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-	jgl::Vector2 delta = 0;// vtmp.invert() / 2 + vtmp * (_pos * CHUNK_SIZE - base_pos);
+	//jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
+	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(tile_to_screen(_pos, base_pos));// *vtmp;
 
 	glBindVertexArray(g_application->vertex_array());
 

@@ -7,6 +7,7 @@ Entity::Entity() : Entity(Entity_type::entity, "Unnamed", 0, 0)
 
 Entity::Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::Vector2 p_sprite)
 {
+	_tileset = nullptr;
 	_type = p_type;
 	_name = p_name;
 	_look_dir = Entity_direction::south;
@@ -25,7 +26,7 @@ Entity::Entity(Entity_type p_type, jgl::String p_name, jgl::Vector2 p_pos, jgl::
 	_starting_pos = p_pos;
 	_road_index = 0;
 	_check_point_index = 1;
-	_movement_type = Entity_movement::controled;
+	_movement_type = Entity_movement::fix;
 }
 
 void Entity::update()
@@ -80,11 +81,7 @@ void Entity::update()
 
 void Entity::place(jgl::Vector2 p_pos)
 {
-	if (engine->board() != nullptr && engine->board()->node(_pos.round()) != nullptr && engine->board()->node(_pos.round())->occupant() == this)
-		engine->board()->node(_pos.round())->set_occupant(nullptr);
 	_pos = p_pos.round();
-	if (engine->board() != nullptr && engine->board()->node(_pos.round()) != nullptr)
-		engine->board()->node(_pos.round())->set_occupant(this);
 	_did_tp = true;
 	_in_motion = true;
 	_total_tick = 0;
@@ -92,7 +89,7 @@ void Entity::place(jgl::Vector2 p_pos)
 	_actual_tick = _last_tick;
 }
 
-void Entity::move(jgl::Vector2 delta)
+void Entity::move(jgl::Vector2 delta, bool edit)
 {
 	if (is_active() == true)
 		return;
@@ -120,12 +117,15 @@ void Entity::move(jgl::Vector2 delta)
 	_total_tick = 0;
 	_last_tick = static_cast<float>(g_time);
 	_actual_tick = _last_tick;
-	Node* tmp1 = engine->board()->node(_pos + delta);
-	if (tmp1 != nullptr)
-		tmp1->set_occupant(this);
+	if (edit == true)
+	{
+		Node* tmp1 = engine->board()->node(_pos + delta);
+		if (tmp1 != nullptr)
+			tmp1->set_occupant(this);
+	}
 	_direction = delta / (_move_tick / _move_speed);
 }
-void Entity::update_pos()
+void Entity::update_pos(bool edit)
 {
 	jgl::Vector2 rpos = _pos.round();
 
@@ -158,7 +158,7 @@ void Entity::update_pos()
 		_direction = 0;
 	}
 
-	if (rpos != _pos.round())
+	if (rpos != _pos.round() && edit == true)
 	{
 		Node* tmp1 = engine->board()->node(rpos);
 		Node* tmp2 = engine->board()->node(_pos.round());
@@ -237,19 +237,27 @@ void Entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
 	jgl::Vector2 delta = 0;
 	size_t value = 0;
 	
-	if (is_moving() == true)
-		value += tmp_delta[static_cast<size_t>(_look_dir)][jgl::get_frame_state(tmp_delta[static_cast<size_t>(_look_dir)].size())];
-	else if (_look_dir == Entity_direction::north || _look_dir == Entity_direction::south)
-		value += 1;
-	delta.x += value;
-	if (_sprite.y >= 0)
+	if (_tileset != nullptr)
 	{
-		engine->charset()->draw(_sprite + delta + dir_delta, pos, node_size, 1.0f, p_viewport);
-		render_grass(p_viewport, base_pos);
+		_tileset->draw(_sprite, pos, node_size, 1.0f, p_viewport);
 	}
+	else
+	{
+		if (is_moving() == true)
+			value += tmp_delta[static_cast<size_t>(_look_dir)][jgl::get_frame_state(tmp_delta[static_cast<size_t>(_look_dir)].size())];
+		else if (_look_dir == Entity_direction::north || _look_dir == Entity_direction::south)
+			value += 1;
+		delta.x += value;
+		if (_sprite.y >= 0)
+		{
+			engine->charset()->draw(_sprite + delta + dir_delta, pos, node_size, 1.0f, p_viewport);
+			render_grass(p_viewport, base_pos);
+		}
 
-	if (_type != Entity_type::Player && is_pointed(_pos) == true)
-		jgl::draw_centred_text(_name, pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::white);
+		if (_type != Entity_type::Player && is_pointed(_pos) == true)
+			jgl::draw_centred_text(_name, pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::white);
+	}
+	
 }
 
 bool Entity::can_move(jgl::Vector2 delta)

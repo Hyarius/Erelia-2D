@@ -74,6 +74,7 @@ class Battle_mode : public Game_mode
 private:
 	jgl::Contener* _contener;
 	Battle_area* _arena;
+	Entity* _pointer;
 
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
@@ -82,6 +83,8 @@ public:
 
 	jgl::Widget* contener() { return (_contener); }
 	Battle_area* arena() { return (_arena); }
+
+	void update();
 
 	bool handle_keyboard();
 
