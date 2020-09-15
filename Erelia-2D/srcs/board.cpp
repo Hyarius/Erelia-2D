@@ -466,10 +466,10 @@ void Board::update()
 		}
 }
 
-void Board::render(jgl::Viewport* viewport)
+void Board::render(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 {
-	jgl::Vector2 start_node = screen_to_tile(0);
-	jgl::Vector2 end_node = screen_to_tile(g_application->size());
+	jgl::Vector2 start_node = screen_to_tile(0, base_pos);
+	jgl::Vector2 end_node = screen_to_tile(g_application->size(), base_pos);
 	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
 	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
 	g_application->clear();
@@ -478,18 +478,18 @@ void Board::render(jgl::Viewport* viewport)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->render(viewport);
+				_chunks[tmp]->render(viewport, base_pos);
 		}
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
 			jgl::Vector2 tmp = jgl::Vector2(i, j);
 			if (_chunks.contains(tmp) != 0)
-				_chunks[tmp]->render_entity(viewport);
+				_chunks[tmp]->render_entity(viewport, base_pos);
 		}
 	for (auto tmp : _warps)
 	{
-		jgl::Vector2 pos = tile_to_screen(tmp.second) + node_size / 2;
+		jgl::Vector2 pos = tile_to_screen(tmp.second, base_pos) + node_size / 2;
 		jgl::draw_centred_rectangle(pos, node_size, 1, jgl::Color(146, 235, 52));
 		jgl::draw_centred_text(tmp.first, pos - jgl::Vector2(0, 30), 16, 1, 1.0f, jgl::text_color::green);
 	}

@@ -29,8 +29,8 @@ public:
 	void place(jgl::Vector2 coord, Tile* p_tile, bool need_bake = false);
 	void bake();
 	void update();
-	void render(jgl::Viewport* viewport);
-	void render_entity(jgl::Viewport* viewport);
+	void render(jgl::Viewport* viewport, jgl::Vector2 base_pos);
+	void render_entity(jgl::Viewport* viewport, jgl::Vector2 base_pos);
 };
 
 #endif

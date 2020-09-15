@@ -55,7 +55,7 @@ public:
 	void bake();
 	void bake_chunk(jgl::Vector2 pos);
 	void update();
-	void render(jgl::Viewport* viewport);
+	void render(jgl::Viewport* viewport, jgl::Vector2 base_pos = -1);
 
 	bool can_acces(jgl::Vector2 pos, jgl::Vector2 delta);
 	Node* find_closest(jgl::Array<jgl::Vector2>& to_calc);

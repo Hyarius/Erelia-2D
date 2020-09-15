@@ -24,9 +24,9 @@ void Battle_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 }
 void Battle_mode::render()
 {
-	engine->board()->render(_viewport);
+	engine->board()->render(_viewport, 0);
 	if (_arena != nullptr)
-		_arena->render(_viewport);
+		_arena->render(_viewport, 0);
 	//engine->player()->render(_viewport);
 	jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);

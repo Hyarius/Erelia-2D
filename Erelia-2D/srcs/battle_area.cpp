@@ -46,8 +46,8 @@ void Battle_area::bake()
 	if (_points.size() == 0)
 	{
 		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-		for (int i = -_size.x / 2 - 1; i < _size.x / 2 + 1; i++)
-			for (int j = -_size.y / 2 - 1; j < _size.y / 2 + 1; j++)
+		for (int i = -1; i < _size.x + 1; i++)
+			for (int j = -1; j < _size.y + 1; j++)
 			{
 				jgl::Vector2 tmp_pos = jgl::Vector2(i, j) - 0.5f;
 				for (size_t h = 0; h < 6; h++)
@@ -96,13 +96,32 @@ void Battle_area::bake()
 			
 }
 
-void Battle_area::render(jgl::Viewport *p_viewport)
+void Battle_area::render(jgl::Viewport *p_viewport, jgl::Vector2 base_pos)
 {
 	if (p_viewport != nullptr)
 		p_viewport->use();
 
+
+	jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
+	jgl::Vector2 delta = 0;// vtmp.invert() / 2 + vtmp * (_pos * CHUNK_SIZE - base_pos);
+
+	glBindVertexArray(g_application->vertex_array());
+
+	glUseProgram(programID);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, engine->battle_tileset()->image()->texture_id());
 
-	jgl::draw_triangle_texture(_vertex_buffer, _uvs_buffer, 1, _points.size());
+	glUniform3f(delta_pos_uniform, delta.x, delta.y, 0.0f);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, _uvs_buffer);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(_points.size()));
 }

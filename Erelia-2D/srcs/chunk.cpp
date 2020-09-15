@@ -122,10 +122,12 @@ void Chunk::update()
 				_content[i][j]->occupant()->update();
 }
 
-void Chunk::render(jgl::Viewport* viewport)
+void Chunk::render(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 {
+	if (base_pos == -1)
+		base_pos = engine->player()->pos();
 	jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-	jgl::Vector2 delta = vtmp.invert() / 2 + vtmp * (_pos * CHUNK_SIZE - engine->player()->pos());
+	jgl::Vector2 delta = vtmp.invert() / 2 + vtmp * (_pos * CHUNK_SIZE - base_pos);
 
 	glBindVertexArray(g_application->vertex_array());
 
@@ -148,7 +150,7 @@ void Chunk::render(jgl::Viewport* viewport)
 	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(points.size()));
 }
 
-void Chunk::render_entity(jgl::Viewport* viewport)
+void Chunk::render_entity(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 {
 	for (size_t i = 0; i < CHUNK_SIZE; i++)
 		for (size_t j = 0; j < CHUNK_SIZE; j++)

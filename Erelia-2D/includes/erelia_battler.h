@@ -75,7 +75,7 @@ public:
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
 	void rebake();
 	void bake();
-	void render(jgl::Viewport* p_viewport);
+	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
 };
 
 class Battle_data
