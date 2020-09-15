@@ -28,12 +28,16 @@ struct Encounter_data
 };
 enum class Battle_node_type
 {
+	inexistant = -1,
 	clear = 0,
-	mouvement = 1,
-	range = 2,
+	obstacle = 1,
+	select = 2,
 	ally = 3,
 	enemy = 4,
-	count
+	mouvement = 5,
+	range = 6,
+	ally_pos = 7,
+	enemy_pos = 8
 };
 
 struct Battle_node
@@ -52,6 +56,7 @@ struct Battle_node
 		pos = p_pos;
 		type = Battle_node_type::clear;
 		calculated = false;
+		parent = nullptr;
 	}
 };
 
@@ -60,6 +65,7 @@ class Battle_area
 private:
 	jgl::Vector2 _pos;
 	jgl::Vector2 _size;
+	Battle_node*** _content;
 
 	GLuint _vertex_buffer;
 	jgl::Array<jgl::Vector3> _points;
@@ -67,6 +73,7 @@ private:
 	GLuint _uvs_buffer;
 public:
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
+	void rebake();
 	void bake();
 	void render(jgl::Viewport* p_viewport);
 };

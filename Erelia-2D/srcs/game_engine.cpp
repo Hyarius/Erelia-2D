@@ -4,6 +4,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
 	engine = this;
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 143));
+	_battle_tileset = new jgl::Sprite_sheet("ressources/texture/battle_tile.png", jgl::Vector2(16, 1));
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 42));
 	_faceset = new jgl::Sprite_sheet("ressources/texture/face.png", jgl::Vector2(16, 10));
 	create_item_list(_tileset);
@@ -18,7 +19,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_modes.push_back(new Adventure_mode(this));
 	_modes.push_back(new Battle_mode(this));
 
-	change_mode(game_mode::editor);
+	change_mode(game_mode::adventure);
 
 	_console = new Console(this);
 
@@ -70,7 +71,8 @@ void Game_engine::load(jgl::String path)
 
 void Game_engine::check_encounter()
 {
-	if (_board->node(_player->pos()) != nullptr &&
+	if (_index_mode == static_cast<size_t>(game_mode::adventure) &&
+		_board->node(_player->pos()) != nullptr &&
 		_board->node(_player->pos())->encounter_area() != nullptr)
 	{
 		Battle_data* tmp = _board->node(_player->pos())->encounter_area();
@@ -78,7 +80,7 @@ void Game_engine::check_encounter()
 		if (result != Encounter_data::null())
 		{
 			std::cout << "BOUM ! COMBAT WITH ENTITY " << result.id << " !" << std::endl;
-			Battle_area* new_area = new Battle_area(_player->pos(), jgl::Vector2(15, 7));
+			Battle_area* new_area = new Battle_area(_player->pos(), jgl::Vector2(23, 15));
 			new_area->bake();
 			change_mode(game_mode::battle);
 			battle_mode()->start(new_area);
@@ -139,11 +141,16 @@ bool Game_engine::handle_keyboard()
 	{
 		node_size /= 2;
 		_board->bake();
+		if (battle_mode()->arena() != nullptr)
+			battle_mode()->arena()->rebake();
+
 	}
 	else if (jgl::get_key(jgl::key::F3) == jgl::key_state::release)
 	{
 		node_size *= 2;
 		_board->bake();
+		if (battle_mode()->arena() != nullptr)
+			battle_mode()->arena()->rebake();
 	}
 	else if (jgl::get_key(jgl::key::F10) == jgl::key_state::release)
 	{
@@ -162,7 +169,8 @@ bool Game_engine::handle_mouse()
 
 void Game_engine::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-	_modes[0]->set_geometry(p_anchor, p_area);
+	for (size_t i = 0; i < _modes.size(); i++)
+		_modes[i]->set_geometry(p_anchor, p_area);
 	_console->set_geometry(0, g_application->size());
 }
 

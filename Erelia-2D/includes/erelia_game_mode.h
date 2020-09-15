@@ -73,14 +73,15 @@ class Battle_mode : public Game_mode
 {
 private:
 	jgl::Contener* _contener;
-	Battle_area* _area;
+	Battle_area* _arena;
 
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
 
-	void start(Battle_area* p_area);
+	void start(Battle_area* p_arena);
 
 	jgl::Widget* contener() { return (_contener); }
+	Battle_area* arena() { return (_arena); }
 
 	bool handle_keyboard();
 
