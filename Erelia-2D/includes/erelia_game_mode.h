@@ -73,10 +73,12 @@ class Battle_mode : public Game_mode
 {
 private:
 	jgl::Contener* _contener;
-	Player_controller* _player_controller;
-	Interacter* _interacter;
+	Battle_area* _area;
+
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
+
+	void start(Battle_area* p_area);
 
 	jgl::Widget* contener() { return (_contener); }
 
