@@ -490,7 +490,7 @@ bool Console::handle_gamemode_command(jgl::Array<jgl::String>& tab)
 
 		else if (tab[1] == "1")
 		{
-			engine->change_mode(static_cast<game_mode>(0));
+			engine->change_mode(static_cast<game_mode>(1));
 			return (return_funct("Gamemode set to adventure", true));
 		}
 		else
