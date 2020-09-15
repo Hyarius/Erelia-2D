@@ -454,9 +454,24 @@ bool Console::handle_unknow_command(jgl::String cmd)
 }
 
 jgl::Array<jgl::String> cmd_name = {
-	"Line 1",
-	"Line 2",
-	"Line 3"
+	"List of command (1/2) :",
+	"save",
+	"load",
+	"tp",
+	"speed",
+	"generate",
+	"replace",
+	"prefab",
+	"coord",
+	"ghost",
+	"List of command (2/2) :",
+	"clear",
+	"warp",
+	"link",
+	"npc",
+	"area",
+	"help",
+	"gamemode"
 };
 
 bool Console::handle_help_command(jgl::Array<jgl::String>& tab)
@@ -464,14 +479,62 @@ bool Console::handle_help_command(jgl::Array<jgl::String>& tab)
 	
 	if (tab.size() == 1)
 	{
-		for(size_t i = 0; i < cmd_name.size(); i++)
-			_printer->add_entry(cmd_name[i]);
-		return (false);
+		return (return_funct("Usage : help [1|2] -> Display the list of available commands", false));
 	}
-	else if(tab.size() == 2)
-		return (return_funct("Help duo", false));
+	else if (tab.size() == 2)
+	{
+		if (tab[1] == '1')
+		{
+			for (int i = 0; i < 10; i++)
+				_printer->add_entry(cmd_name[i]);
+			return (false);
+		}
+
+		if (tab[1] == '2')
+		{
+			for (int i = 10; i < cmd_name.size(); i++)
+				_printer->add_entry(cmd_name[i]);
+			return (false);
+		}
+
+		if (tab[1] == "save")
+			return (return_funct("Usage : Usage : save [map path]", false));
+		else if (tab[1] == "load")
+			return (return_funct("Usage : load [map path]", false));
+		else if (tab[1] == "tp")
+			return (return_funct("Usage : tp [coord X][coord Y]", false));
+		else if (tab[1] == "speed")
+			return (return_funct("Usage : speed [speed value]", false));
+		else if (tab[1] == "generate")
+		{
+			_printer->add_entry("Usage : generate [bloc regex]");
+			return (return_funct("Regex exemple : 1%50,2%12,3%13,4%25", false));
+		}			
+		else if (tab[1] == "replace")
+			return (return_funct("Usage : replace ?", false));
+		else if (tab[1] == "prefab")
+			return (return_funct("Usage : prefab [prefab name - 0-4 letters]", false));
+		else if (tab[1] == "coord")
+			return (return_funct("Usage : coord ?", false));
+		else if (tab[1] == "ghost")
+			return (return_funct("Usage : ghost [on / off]", false));
+		else if (tab[1] == "clear")
+			return (return_funct("Usage : clear", false));
+		else if (tab[1] == "warp")
+			return (return_funct("Usage : warp [optional : create / delete / empty to teleportation] [warp name]", false));
+		else if (tab[1] == "link")
+			return (return_funct("Usage : link [create / delete] - if creating a link, add \"dual\" after the create to create a double way link", false));
+		else if (tab[1] == "npc")
+			return (return_funct("Usage : npc movement [-1 : Errant / 0 : Fix / 1 : Defined path]", false));
+		else if (tab[1] == "area")
+			return (return_funct("Usage : npc define [encounter / probability] [param]", false));
+		else if (tab[1] == "gamemode")
+			return (return_funct("Usage : gamemode [0/1] (Editor / Adventure)", false));
+		else
+			return (return_funct("Usage : help [command] among available commands", false));
+	}
 	else 
-		return (return_funct("Usage : help [parametre]", false));
+		return (return_funct("Usage : help [parameter]", false));
 	//Draw une ligne et continuer la fonction : _printer->add_entry(le text);
 	//Fini la fonction et renvoi le bool voulu : return_funct(le text, est-ce qu'on doit ferme la console ?)
 	
@@ -494,11 +557,11 @@ bool Console::handle_gamemode_command(jgl::Array<jgl::String>& tab)
 			return (return_funct("Gamemode set to adventure", true));
 		}
 		else
-			return (return_funct("Usage : gamemode [0/1]", false));
+			return (return_funct("Usage : gamemode [0/1] (Editor / Adventure)", false));
 
 	}
 	else
-		return false;
+		return (return_funct("Usage : gamemode [0/1] (Editor / Adventure)", false));
 	
 
 }
