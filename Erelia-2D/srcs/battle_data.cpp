@@ -33,7 +33,7 @@ bool Battle_data::is_inside(jgl::Vector2 pos)
 
 Encounter_data Battle_data::ask()
 {
-	int value = jgl::generate_nbr(0, 100);
+	int value = 0; jgl::generate_nbr(0, 100);
 
 	if (value < _probability)
 	{

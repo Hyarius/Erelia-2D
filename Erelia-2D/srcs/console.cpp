@@ -453,11 +453,54 @@ bool Console::handle_unknow_command(jgl::String cmd)
 	return (return_funct(cmd, false));
 }
 
+jgl::Array<jgl::String> cmd_name = {
+	"Line 1",
+	"Line 2",
+	"Line 3"
+};
+
 bool Console::handle_help_command(jgl::Array<jgl::String>& tab)
 {
+	
+	if (tab.size() == 1)
+	{
+		for(size_t i = 0; i < cmd_name.size(); i++)
+			_printer->add_entry(cmd_name[i]);
+		return (false);
+	}
+	else if(tab.size() == 2)
+		return (return_funct("Help duo", false));
+	else 
+		return (return_funct("Usage : help [parametre]", false));
 	//Draw une ligne et continuer la fonction : _printer->add_entry(le text);
 	//Fini la fonction et renvoi le bool voulu : return_funct(le text, est-ce qu'on doit ferme la console ?)
-	return (return_funct("Help a faire", false));
+	
+}
+
+bool Console::handle_gamemode_command(jgl::Array<jgl::String>& tab)
+{
+	if (tab.size() == 2)
+	{
+
+		if (tab[1] == "0")
+		{
+			engine->change_mode(static_cast<game_mode>(0));
+			return (return_funct("Gamemode set to editor", true));
+		}
+
+		else if (tab[1] == "1")
+		{
+			engine->change_mode(static_cast<game_mode>(0));
+			return (return_funct("Gamemode set to adventure", true));
+		}
+		else
+			return (return_funct("Usage : gamemode [0/1]", false));
+
+	}
+	else
+		return false;
+	
+
 }
 
 bool Console::handle_console_entry(jgl::String cmd)
@@ -494,6 +537,8 @@ bool Console::handle_console_entry(jgl::String cmd)
 		return (handle_area_command(tab));
 	else if (tab[0] == "help")
 		return (handle_help_command(tab));
+	else if (tab[0] == "gamemode")
+		return (handle_gamemode_command(tab));
 	else
 		return (handle_unknow_command(cmd));
 }

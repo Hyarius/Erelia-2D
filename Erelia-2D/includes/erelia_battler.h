@@ -62,14 +62,13 @@ private:
 	jgl::Vector2 _size;
 
 	GLuint _vertex_buffer;
-	jgl::Array<jgl::Vector3> _points_uvs;
-	jgl::Array<jgl::Vector3> _points_line;
+	jgl::Array<jgl::Vector3> _points;
 	jgl::Array<jgl::Vector2> _uvs;
 	GLuint _uvs_buffer;
 public:
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
 	void bake();
-	void render();
+	void render(jgl::Viewport* p_viewport);
 };
 
 class Battle_data

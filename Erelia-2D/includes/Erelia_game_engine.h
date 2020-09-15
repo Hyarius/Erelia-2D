@@ -43,6 +43,7 @@ public:
 	Player* player() { return (_player); }
 	Editor_mode* editor_mode() { return (static_cast<Editor_mode*>(_modes[0])); }
 	Adventure_mode* adventure_mode() { return (static_cast<Adventure_mode*>(_modes[1])); }
+	Battle_mode* battle_mode() { return (static_cast<Battle_mode*>(_modes[2])); }
 	size_t index_mode() { return (_index_mode); }
 	jgl::Array<Game_mode*>& modes() { return (_modes); }
 	Game_mode* modes(size_t index) { if (index >= _modes.size()) return (nullptr); return (_modes[index]); }
@@ -54,10 +55,10 @@ public:
 
 	void change_mode(game_mode new_mode);
 
-	void interact_between(Entity* source, Entity* target);
 	void active_console();
 	void desactive_console();
 
+	void check_encounter();
 	void move_player(jgl::Vector2 delta);
 
 	void save(jgl::String path);

@@ -69,6 +69,8 @@ void Player_controller::update()
 			actual->link()->use(engine->board(), engine->player());
 		}
 	}
+	if (engine->player()->is_active() == false)
+		engine->check_encounter();
 
 }
 

@@ -16,8 +16,9 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_index_mode = static_cast<size_t>(game_mode::editor);
 	_modes.push_back(new Editor_mode(this));
 	_modes.push_back(new Adventure_mode(this));
+	_modes.push_back(new Battle_mode(this));
 
-	change_mode(game_mode::adventure);
+	change_mode(game_mode::editor);
 
 	_console = new Console(this);
 
@@ -67,19 +68,28 @@ void Game_engine::load(jgl::String path)
 	_player->place(jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
 }
 
-void Game_engine::move_player(jgl::Vector2 delta)
+void Game_engine::check_encounter()
 {
-	_player->move(delta);
-	if (_board->node(_player->pos() + delta) != nullptr &&
-		_board->node(_player->pos() + delta)->encounter_area() != nullptr)
+	if (_board->node(_player->pos()) != nullptr &&
+		_board->node(_player->pos())->encounter_area() != nullptr)
 	{
-		Battle_data* tmp = _board->node(_player->pos() + delta)->encounter_area();
+		Battle_data* tmp = _board->node(_player->pos())->encounter_area();
 		Encounter_data result = tmp->ask();
 		if (result != Encounter_data::null())
 		{
 			std::cout << "BOUM ! COMBAT WITH ENTITY " << result.id << " !" << std::endl;
+			Battle_area* new_area = new Battle_area(_player->pos(), jgl::Vector2(15, 7));
+			new_area->bake();
+			change_mode(game_mode::battle);
+			battle_mode()->start(new_area);
+			_player->place(_player->pos());
 		}
 	}
+}
+
+void Game_engine::move_player(jgl::Vector2 delta)
+{
+	_player->move(delta);
 }
 
 void Game_engine::active_console()
@@ -100,9 +110,9 @@ void Game_engine::change_mode(game_mode new_mode)
 	if (_modes.size() > tmp && _modes[tmp] != nullptr)
 	{
 		_index_mode = tmp;
-		for (size_t i = 0; i < static_cast<size_t>(game_mode::count); i++)
+		for (size_t i = 0; i < _modes.size(); i++)
 		{
-			if (_modes.size() < i && _modes[i] != nullptr)
+			if (_modes[i] != nullptr)
 				_modes[i]->desactivate();
 		}
 		_modes[_index_mode]->activate();
