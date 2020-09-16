@@ -6,15 +6,25 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 	_contener->activate();
 
 	_pointer = new Entity(Entity_type::entity, "", 0, -1);
-	_pointer->set_sprite(jgl::Vector2(2, 0));
+	_pointer->set_sprite(jgl::Vector2(static_cast<int>(Battle_node_type::select), 0));
 	_pointer->set_tileset(engine->battle_tileset());
 	_arena = nullptr;
 }
+
+uint32_t tmp_time;
 
 void Battle_mode::start(Battle_area* p_arena)
 {
 	_arena = p_arena;
 	_pointer->place(engine->player()->pos());
+	tmp_time = g_time + 5000;
+}
+
+void Battle_mode::exit()
+{
+	engine->player()->place(_pointer->pos());
+	engine->change_mode(game_mode::adventure);
+	delete _arena;
 }
 
 void Battle_mode::update()
@@ -27,20 +37,25 @@ bool Battle_mode::handle_keyboard()
 	static jgl::key key_value[4] = { jgl::key::s, jgl::key::w, jgl::key::a, jgl::key::d };
 	static jgl::Vector2 move_delta[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
 
-	if (_pointer->is_static() == true)
+	
+	for (size_t i = 0; i < 4; i++)
 	{
-		for (size_t i = 0; i < 4; i++)
+		if (jgl::get_key(key_value[i]) == jgl::key_state::down)
 		{
-			if (jgl::get_key(key_value[i]) == jgl::key_state::down)
+			if (_pointer->is_static() == true)
 			{
 				_pointer->move(move_delta[i], false);
 				return (true);
 			}
 		}
 	}
+	if (jgl::get_key(jgl::key::space) == jgl::key_state::release)
+	{
+		exit();
+		return (true);
+	}
 	else
 		return (false);
-	return (false);
 }
 
 void Battle_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)

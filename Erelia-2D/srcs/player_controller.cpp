@@ -2,7 +2,7 @@
 
 Player_controller::Player_controller(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
-
+	_moved = false;
 }
 
 bool Player_controller::handle_keyboard()
@@ -31,6 +31,7 @@ bool Player_controller::handle_keyboard()
 				}
 				else
 					engine->player()->set_look_dir(look_dir_value[i]);
+				_moved = true;
 				return (true);
 			}
 			else
@@ -69,8 +70,11 @@ void Player_controller::update()
 			actual->link()->use(engine->board(), engine->player());
 		}
 	}
-	if (engine->player()->is_active() == false)
+	if (engine->player()->is_active() == false && _moved == true)
+	{
 		engine->check_encounter();
+		_moved = false;
+	}
 
 }
 

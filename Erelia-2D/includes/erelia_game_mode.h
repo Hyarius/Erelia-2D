@@ -80,6 +80,7 @@ public:
 	Battle_mode(jgl::Widget* parent = nullptr);
 
 	void start(Battle_area* p_arena);
+	void exit();
 
 	jgl::Widget* contener() { return (_contener); }
 	Battle_area* arena() { return (_arena); }

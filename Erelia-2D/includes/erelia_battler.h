@@ -31,13 +31,14 @@ enum class Battle_node_type
 	inexistant = -1,
 	clear = 0,
 	obstacle = 1,
-	select = 2,
-	ally = 3,
-	enemy = 4,
-	mouvement = 5,
-	range = 6,
-	ally_pos = 7,
-	enemy_pos = 8
+	border = 2,
+	select = 3,
+	ally = 4,
+	enemy = 5,
+	mouvement = 6,
+	range = 7,
+	ally_pos = 8,
+	enemy_pos = 9
 };
 
 struct Battle_node

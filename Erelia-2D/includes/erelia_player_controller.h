@@ -7,6 +7,7 @@
 class Player_controller : public jgl::Widget
 {
 private:
+	bool _moved;
 
 public:
 	Player_controller(jgl::Widget* p_parent = nullptr);

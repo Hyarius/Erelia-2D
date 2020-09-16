@@ -4,7 +4,6 @@ Battle_area::Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 {
 	_size = p_size;
 	_pos = (p_pos - _size / 2.0f).ceiling();
-	std::cout << "Starting pos : " << _pos << std::endl;
 	_content = new Battle_node **[static_cast<size_t>(_size.x)];
 	for (size_t i = 0; i < _size.x; i++)
 	{
@@ -76,7 +75,7 @@ void Battle_area::bake()
 			}
 			else if (i == -1 || j == -1 || i == _size.x || j == _size.y)
 			{
-				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(1, 0));
+				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(Battle_node_type::border), 0));
 				for (size_t h = 0; h < 6; h++)
 				{
 					jgl::Vector2 tmp_value = tmp_sprite + unit * neightbour[h];
