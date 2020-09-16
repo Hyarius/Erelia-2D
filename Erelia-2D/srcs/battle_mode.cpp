@@ -25,6 +25,7 @@ void Battle_mode::exit()
 	engine->player()->place(_pointer->pos());
 	engine->change_mode(game_mode::adventure);
 	delete _arena;
+	_arena = nullptr;
 }
 
 void Battle_mode::update()
@@ -42,7 +43,10 @@ bool Battle_mode::handle_keyboard()
 	{
 		if (jgl::get_key(key_value[i]) == jgl::key_state::down)
 		{
-			if (_pointer->is_static() == true)
+			jgl::Vector2 actual_pos = _pointer->pos() - _arena->pos() + move_delta[i];
+			if (_pointer->is_static() == true && _arena->content().count(actual_pos) != 0 &&
+				_arena->content()[actual_pos]->type != Battle_node_type::border)// &&
+				// _arena->content()[actual_pos]->type != Battle_node_type::obstacle)
 			{
 				_pointer->move(move_delta[i], false);
 				return (true);
@@ -66,7 +70,15 @@ void Battle_mode::render()
 {
 	engine->board()->render(_viewport, _pointer->pos());
 	if (_arena != nullptr)
+	{
 		_arena->render(_viewport, _pointer->pos() - 0.5f);
+		jgl::Vector2 start_pos = tile_to_screen(_arena->pos() - 1, _pointer->pos());
+		jgl::Vector2 end_pos = tile_to_screen(_arena->pos() + _arena->size() + 1, _pointer->pos());
+		jgl::fill_rectangle(0, jgl::Vector2(g_application->size().x, start_pos.y), jgl::Color(0, 0, 0, 200));
+		jgl::fill_rectangle(jgl::Vector2(0.0f, end_pos.y) , jgl::Vector2(g_application->size().x, g_application->size().y - end_pos.y), jgl::Color(0, 0, 0, 200));
+		jgl::fill_rectangle(jgl::Vector2(0.0f, start_pos.y), jgl::Vector2(start_pos.x, end_pos.y - start_pos.y), jgl::Color(0, 0, 0, 200));
+		jgl::fill_rectangle(jgl::Vector2(end_pos.x, start_pos.y), jgl::Vector2(g_application->size().x - end_pos.x, end_pos.y - start_pos.y), jgl::Color(0, 0, 0, 200));
+	}
 	_pointer->render(_viewport, _pointer->pos());
 	jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);

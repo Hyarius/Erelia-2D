@@ -32,13 +32,14 @@ enum class Battle_node_type
 	clear = 0,
 	obstacle = 1,
 	border = 2,
-	select = 3,
-	ally = 4,
-	enemy = 5,
-	mouvement = 6,
-	range = 7,
-	ally_pos = 8,
-	enemy_pos = 9
+	swimable = 3,
+	select = 4,
+	ally = 5,
+	enemy = 6,
+	mouvement = 7,
+	range = 8,
+	ally_pos = 9,
+	enemy_pos = 10
 };
 
 struct Battle_node
@@ -66,7 +67,7 @@ class Battle_area
 private:
 	jgl::Vector2 _pos;
 	jgl::Vector2 _size;
-	Battle_node*** _content;
+	std::map<jgl::Vector2, Battle_node*> _content;
 
 	GLuint _vertex_buffer;
 	jgl::Array<jgl::Vector3> _points;
@@ -76,7 +77,10 @@ public:
 	jgl::Vector2 pos() { return (_pos); }
 	jgl::Vector2 size() { return (_size); }
 
+	std::map<jgl::Vector2, Battle_node*>& content() {return (_content);}
+
 	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
+	void parse_area(jgl::Vector2 start);
 	void rebake();
 	void bake();
 	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);

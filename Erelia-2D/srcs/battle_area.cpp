@@ -4,26 +4,65 @@ Battle_area::Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 {
 	_size = p_size;
 	_pos = (p_pos - _size / 2.0f).ceiling();
-	_content = new Battle_node **[static_cast<size_t>(_size.x)];
-	for (size_t i = 0; i < _size.x; i++)
+	for (int i = -1; i < _size.x + 1; i++)
 	{
-		_content[i] = new Battle_node *[static_cast<size_t>(_size.y)];
-		for (size_t j = 0; j < _size.y; j++)
+		for (int j = -1; j < _size.y + 1; j++)
 		{
-			_content[i][j] = new Battle_node(jgl::Vector2(i, j));
-			jgl::Vector2 node_pos = _pos + jgl::Vector2(i, j);
-			Node* tmp_node = engine->board()->node(node_pos);
-			if (tmp_node == nullptr || tmp_node->tile() == nullptr)
-				_content[i][j]->type = Battle_node_type::inexistant;
-			else if (tmp_node->tile()->type == OBSTACLE || tmp_node->tile()->type == SWIMABLE || tmp_node->link() != nullptr)
-				_content[i][j]->type = Battle_node_type::obstacle;
-			else
-				_content[i][j]->type = Battle_node_type::clear;
+			jgl::Vector2 tmp = jgl::Vector2(i, j);
+			_content[tmp] = new Battle_node(tmp);
+			_content[tmp]->type = Battle_node_type::inexistant;
 		}
 	}
+	parse_area(p_pos);
 	glGenBuffers(1, &_vertex_buffer);
 	glGenBuffers(1, &_uvs_buffer);
 	_points.clear();
+}
+
+void Battle_area::parse_area(jgl::Vector2 start)
+{
+	jgl::Array<jgl::Vector2> to_calc;
+
+	for (auto it : _content)
+	{
+		jgl::Vector2 tmp = it.first;
+		jgl::Vector2 target = tmp + _pos;
+		Node* tmp_node = engine->board()->node(target);
+		if (_content.count(tmp) != 0)
+		{
+			Battle_node* tmp_bnode = _content[tmp];
+			if (is_middle(0, tmp, _size - 1) == true)
+			{
+				if (tmp_node == nullptr || tmp_node->tile() == nullptr)
+				{
+					tmp_bnode->type = Battle_node_type::inexistant;
+				}
+				else if ((tmp_node->tile()->type & SWIMABLE) == SWIMABLE)
+				{
+					tmp_bnode->calculated = true;
+					tmp_bnode->type = Battle_node_type::swimable;
+				}
+				else if ((tmp_node->tile()->type & WALKABLE) == OBSTACLE || tmp_node->link() != nullptr)
+				{
+					tmp_bnode->calculated = true;
+					tmp_bnode->type = Battle_node_type::obstacle;
+				}
+				else if (tmp_node->link() == nullptr && tmp_bnode->calculated == false)
+				{
+					tmp_bnode->calculated = true;
+					tmp_bnode->type = Battle_node_type::clear;
+				}
+			}
+			else if (tmp_bnode != nullptr)
+			{
+				tmp_bnode->calculated = true;
+				tmp_bnode->type = Battle_node_type::border;
+			}
+		}
+		
+	}
+
+	
 }
 
 void Battle_area::rebake()
@@ -45,37 +84,28 @@ void Battle_area::bake()
 	if (_points.size() == 0)
 	{
 		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-		for (int i = -1; i < _size.x + 1; i++)
-			for (int j = -1; j < _size.y + 1; j++)
+		for (auto it : _content)
+		{
+			jgl::Vector2 tmp_pos = it.first - 0.5f;
+			for (size_t h = 0; h < 6; h++)
 			{
-				jgl::Vector2 tmp_pos = jgl::Vector2(i, j) - 0.5f;
-				for (size_t h = 0; h < 6; h++)
-				{
-					jgl::Vector2 value = (tmp_pos + neightbour[h]) * vtmp;
-					_points.push_back(jgl::Vector3(value.x, value.y, 0.0f));
-				}
+				jgl::Vector2 value = (tmp_pos + neightbour[h]) * vtmp;
+				_points.push_back(jgl::Vector3(value.x, value.y, 0.0f));
 			}
+		}
 		const jgl::Vector3* tmp = _points.all();
 		glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * _points.size() * 3, static_cast<const float*>(&(tmp[0].x)), GL_STATIC_DRAW);
 	}
 	_uvs.clear();
 	jgl::Vector2 unit = engine->battle_tileset()->unit();
-	for (int i = -1; i < _size.x + 1; i++)
-		for (int j = -1; j < _size.y + 1; j++)
+	for (auto it : _content)
+	{
+		if (it.second != nullptr)
 		{
-			if (i != -1 && j != -1 && i < _size.x && j < _size.y && _content[i][j]->type != Battle_node_type::inexistant)
+			if (it.second->type != Battle_node_type::inexistant)
 			{
-				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(_content[i][j]->type), 0));
-				for (size_t h = 0; h < 6; h++)
-				{
-					jgl::Vector2 tmp_value = tmp_sprite + unit * neightbour[h];
-					_uvs.push_back(tmp_value);
-				}
-			}
-			else if (i == -1 || j == -1 || i == _size.x || j == _size.y)
-			{
-				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(Battle_node_type::border), 0));
+				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(it.second->type), 0));
 				for (size_t h = 0; h < 6; h++)
 				{
 					jgl::Vector2 tmp_value = tmp_sprite + unit * neightbour[h];
@@ -88,6 +118,7 @@ void Battle_area::bake()
 					_uvs.push_back(-1);
 			}
 		}
+	}
 	const jgl::Vector2* tmp_uvs = _uvs.all();
 
 	glBindBuffer(GL_ARRAY_BUFFER, _uvs_buffer);
