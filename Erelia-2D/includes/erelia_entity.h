@@ -8,6 +8,7 @@ enum class Entity_type
 	entity = 0,
 	NPC = 1,
 	Player = 2,
+	Creature = 3
 };
 
 enum class Entity_direction
@@ -99,7 +100,7 @@ public:
 	bool is_active() { return (_direction != 0); }
 	bool is_interacting();
 
-	bool is_pointed(jgl::Vector2 target);
+	bool is_pointed(jgl::Vector2 base_pos);
 
 	void render_grass(jgl::Viewport* p_viewport, jgl::Vector2 base_pos = -1);
 	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos = -1);

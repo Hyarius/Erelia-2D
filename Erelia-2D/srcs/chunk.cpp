@@ -155,5 +155,5 @@ void Chunk::render_entity(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 	for (size_t i = 0; i < CHUNK_SIZE; i++)
 		for (size_t j = 0; j < CHUNK_SIZE; j++)
 			if (_content[i][j]->occupant() != nullptr && _content[i][j]->occupant()->type() != Entity_type::Player)
-				_content[i][j]->occupant()->render(viewport);
+				_content[i][j]->occupant()->render(viewport, base_pos);
 }

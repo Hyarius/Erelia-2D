@@ -80,10 +80,18 @@ void Game_engine::check_encounter()
 		if (result != Encounter_data::null())
 		{
 			std::cout << "BOUM ! COMBAT WITH ENTITY " << result.id << " !" << std::endl;
-			Battle_area* new_area = new Battle_area(_player->pos(), jgl::Vector2(23, 15));
+			Battle_arena* new_area = new Battle_arena(_player->pos(), jgl::Vector2(17, 9));
+			new_area->bake_background();
 			new_area->bake();
 			change_mode(game_mode::battle);
-			battle_mode()->start(new_area);
+			Team_comp ally = Team_comp({});
+			for (size_t i = 0; i < 3; i++)
+				ally.define(i, new Creature_entity(creature_list[0], Team::ally));
+			Team_comp enemy = Team_comp({});
+			for (size_t i = 0; i < 6; i++)
+				enemy.define(i, new Creature_entity(creature_list[result.id], Team::enemy));
+			battle_mode()->start(new_area, ally, enemy);
+			_board->node(_player->pos())->set_occupant(nullptr);
 			_player->place(_player->pos());
 		}
 	}

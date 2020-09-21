@@ -45,45 +45,83 @@ enum class Battle_node_type
 struct Battle_node
 {
 	jgl::Vector2 pos;
+	Battle_node_type type_background;
 	Battle_node_type type;
+	class Creature_entity* occupant;
 
 	bool calculated;
 	size_t s_cost;
 	size_t e_cost;
 	size_t t_cost;
-	Node* parent;
+	Battle_node* parent;
 
 	Battle_node(jgl::Vector2 p_pos)
 	{
 		pos = p_pos;
 		type = Battle_node_type::clear;
+		type_background = Battle_node_type::clear;
 		calculated = false;
+		s_cost = 0;
+		e_cost = 0;
+		t_cost = 0;
 		parent = nullptr;
+		occupant = nullptr;
+	}
+	void calc_cost(size_t start_cost, jgl::Vector2 end)
+	{
+		size_t e = static_cast<int>(std::abs(pos.x - end.x)) + static_cast<int>(std::abs(pos.y - end.y));
+
+		s_cost = start_cost;
+		e_cost = e;
+		t_cost = start_cost + e;
 	}
 };
 
-class Battle_area
+class Battle_arena
 {
 private:
 	jgl::Vector2 _pos;
 	jgl::Vector2 _size;
 	std::map<jgl::Vector2, Battle_node*> _content;
+	jgl::Array<jgl::Vector2> _accessible_node;
 
 	GLuint _vertex_buffer;
 	jgl::Array<jgl::Vector3> _points;
-	jgl::Array<jgl::Vector2> _uvs;
+
 	GLuint _uvs_buffer;
+	jgl::Array<jgl::Vector2> _uvs;
+
+	GLuint _uvs_background_buffer;
+	jgl::Array<jgl::Vector2> _uvs_background;
 public:
 	jgl::Vector2 pos() { return (_pos); }
 	jgl::Vector2 size() { return (_size); }
+	jgl::Array<jgl::Vector2> accessible_node() { return (_accessible_node); }
+
+	void define_node_type(jgl::Vector2 pos, Battle_node_type type, bool state);
+	void define_background_node_type(jgl::Vector2 pos, Battle_node_type type, bool state);
+	Node* board_node(jgl::Vector2 tmp);
+	Battle_node* battle_node(jgl::Vector2 tmp);
+	Battle_node* absolute_battle_node(jgl::Vector2 tmp);
 
 	std::map<jgl::Vector2, Battle_node*>& content() {return (_content);}
 
-	Battle_area(jgl::Vector2 p_pos, jgl::Vector2 p_size);
-	void parse_area(jgl::Vector2 start);
+	Battle_arena(jgl::Vector2 p_pos, jgl::Vector2 p_size);
+
+	void place(Creature_entity* entity, jgl::Vector2 pos);
+	void move(Creature_entity* entity, jgl::Vector2 delta);
+
+	jgl::Array<jgl::Vector2> parse_area(jgl::Vector2 start);
 	void rebake();
+	void bake_background();
 	void bake();
+	void render_background(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
+	void render_front(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
 	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
+
+	bool can_acces(jgl::Vector2 pos, jgl::Vector2 delta);
+	Battle_node* find_closest(jgl::Array<jgl::Vector2>& to_calc);
+	jgl::Array<jgl::Vector2> pathfinding(jgl::Vector2 start, jgl::Vector2 end);
 };
 
 class Battle_data

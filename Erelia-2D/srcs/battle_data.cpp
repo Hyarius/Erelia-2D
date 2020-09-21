@@ -35,7 +35,6 @@ Encounter_data Battle_data::ask()
 {
 	int value = jgl::generate_nbr(0, 100);
 
-	std::cout << "Probability : " << _probability << " vs " << value << std::endl;
 	if (value < _probability)
 	{
 		value = jgl::generate_nbr(0, 100);

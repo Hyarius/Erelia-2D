@@ -3,6 +3,8 @@
 
 #include "jgl.h"
 
+#include "erelia_creature.h"
+
 enum class game_mode
 {
 	editor = 0,
@@ -69,25 +71,55 @@ public:
 	void render();
 };
 
+enum class Battle_phase
+{
+	placement = 0,
+	fight = 1,
+	exit = 2,
+	count
+};
+
 class Battle_mode : public Game_mode
 {
 private:
 	jgl::Contener* _contener;
-	Battle_area* _arena;
+	Battle_arena* _arena;
 	Entity* _pointer;
+
+	Battle_phase _phase;
+	jgl::Array<jgl::Vector2> _ally_start_pos;
+	jgl::Array<jgl::Vector2> _enemy_start_pos;
+
+	jgl::Array<Creature_entity*> _turn_order;
+
+	jgl::Array<Creature_entity*> _allies;
+	jgl::Array<Creature_entity*> _enemies;
+	jgl::Array<Creature_entity*> _neutrals;
+
 
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
 
-	void start(Battle_area* p_arena);
+	void add_creature(Creature_entity* to_add);
+	void start(Battle_arena* p_arena, Team_comp first, Team_comp second);
 	void exit();
 
+	void place(Creature_entity* entity, jgl::Vector2 pos);
+
 	jgl::Widget* contener() { return (_contener); }
-	Battle_area* arena() { return (_arena); }
+	Battle_arena* arena() { return (_arena); }
+
+	void change_phase();
 
 	void update();
 
+	bool handle_keyboard_placement();
+	bool handle_keyboard_fight();
 	bool handle_keyboard();
+
+	bool handle_mouse_placement();
+	bool handle_mouse_fight();
+	bool handle_mouse();
 
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
 	void render();

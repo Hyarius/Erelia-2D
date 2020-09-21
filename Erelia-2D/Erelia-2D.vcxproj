@@ -108,6 +108,7 @@
     <ClCompile Include="srcs\battle_data.cpp" />
     <ClCompile Include="srcs\battle_mode.cpp" />
     <ClCompile Include="srcs\chunk.cpp" />
+    <ClCompile Include="srcs\creature.cpp" />
     <ClCompile Include="srcs\creature_list.cpp" />
     <ClCompile Include="srcs\dialogue_frame.cpp" />
     <ClCompile Include="srcs\editor.cpp" />

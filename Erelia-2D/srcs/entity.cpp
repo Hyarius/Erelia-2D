@@ -194,9 +194,9 @@ bool Entity::is_interacting()
 		return (false);
 }
 
-bool Entity::is_pointed(jgl::Vector2 target)
+bool Entity::is_pointed(jgl::Vector2 base_pos)
 {
-	jgl::Vector2 pos = tile_to_screen(target);
+	jgl::Vector2 pos = tile_to_screen(_pos, base_pos);
 
 	if (jgl::is_middle(pos.x, g_mouse->pos.x, pos.x + node_size) == true &&
 		jgl::is_middle(pos.y, g_mouse->pos.y, pos.y + node_size) == true)
@@ -239,7 +239,8 @@ void Entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
 	
 	if (_tileset != nullptr)
 	{
-		_tileset->draw(_sprite, pos, node_size, 1.0f, p_viewport);
+		if (_sprite != -1)
+			_tileset->draw(_sprite, pos, node_size, 1.0f, p_viewport);
 	}
 	else
 	{
@@ -254,7 +255,7 @@ void Entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
 			render_grass(p_viewport, base_pos);
 		}
 
-		if (_type != Entity_type::Player && is_pointed(_pos) == true)
+		if (_type != Entity_type::Player && is_pointed(base_pos) == true)
 			jgl::draw_centred_text(_name, pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::white);
 	}
 	
