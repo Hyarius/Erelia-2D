@@ -38,11 +38,13 @@ std::ostream& operator<<(std::ostream& os, const Creature value)
 	return (os);
 }
 
-void Creature_entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
+void Creature_entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos, bool selected)
 {
 	Entity::render(p_viewport, base_pos);
 	jgl::Vector2 tmp_pos = tile_to_screen(_pos, base_pos);
-	if (_team == Team::ally)
+	if (selected == true)
+		engine->battle_tileset()->draw(jgl::Vector2(static_cast<int>(Battle_node_type::select), 0), tmp_pos, node_size, 1.0f, p_viewport);
+	else if (_team == Team::ally)
 		engine->battle_tileset()->draw(jgl::Vector2(static_cast<int>(Battle_node_type::ally), 0), tmp_pos, node_size, 1.0f, p_viewport);
 	else if (_team == Team::enemy)
 		engine->battle_tileset()->draw(jgl::Vector2(static_cast<int>(Battle_node_type::enemy), 0), tmp_pos, node_size, 1.0f, p_viewport);

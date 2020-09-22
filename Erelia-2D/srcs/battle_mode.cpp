@@ -6,7 +6,7 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 	_contener->activate();
 
 	_pointer = new Entity(Entity_type::Player, "", 0, -1);
-	_pointer->set_sprite(jgl::Vector2(-1, -1));
+	_pointer->set_sprite(jgl::Vector2(static_cast<int>(Battle_node_type::cursor), 0));
 	_pointer->set_tileset(engine->battle_tileset());
 	_arena = nullptr;
 
@@ -56,6 +56,7 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 			add_creature(second.unit[i]);
 		}
 
+	_turn_index = -1;
 	_turn_order.push_back(_allies[0]);
 	_turn_order.push_back(_enemies[0]);
 
@@ -77,6 +78,7 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 
 	size_t index = jgl::generate_nbr(0, _enemy_start_pos.size());
 	place(_enemies[0], _enemy_start_pos[index] + _arena->pos());
+	place(_allies[0], _ally_start_pos[0] + _arena->pos());
 
 	_arena->rebake();
 }
@@ -104,6 +106,12 @@ void Battle_mode::update()
 	_pointer->update_pos(false);
 }
 
+void Battle_mode::end_turn()
+{
+	_turn_index += 1;
+	_turn_index = _turn_index % _turn_order.size();
+}
+
 void Battle_mode::change_phase()
 {
 	if (_phase == Battle_phase::placement)
@@ -114,6 +122,7 @@ void Battle_mode::change_phase()
 			_arena->define_node_type(_enemy_start_pos[i], Battle_node_type::clear, false);
 		_phase = Battle_phase::fight;
 		_arena->bake();
+		end_turn();
 	}
 	else if (_phase == Battle_phase::fight)
 		_phase = Battle_phase::exit;
@@ -139,7 +148,15 @@ bool Battle_mode::handle_keyboard_placement()
 	}
 	if (jgl::get_key(jgl::key::space) == jgl::key_state::release)
 	{
-		change_phase();
+		Battle_node* node = _arena->absolute_battle_node(_pointer->pos());
+		if (node != nullptr && node->type == Battle_node_type::ally_pos && node->occupant == nullptr)
+		{
+			place(_allies[0], _pointer->pos());
+		}
+		else
+		{
+			change_phase();
+		}
 		return (true);
 	}
 	else
@@ -167,7 +184,7 @@ bool Battle_mode::handle_keyboard_fight()
 	}
 	if (jgl::get_key(jgl::key::space) == jgl::key_state::release)
 	{
-		change_phase();
+		end_turn();
 		return (true);
 	}
 	else
@@ -207,19 +224,6 @@ bool Battle_mode::handle_mouse_fight()
 	{
 		jgl::Vector2 pos = screen_to_tile(g_mouse->pos, _pointer->pos());
 		jgl::Array<jgl::Vector2> path = _arena->pathfinding(_allies[0]->pos(), pos);
-		std::cout << "Path : ";
-		if (path.size() == 0)
-			std::cout << "No path" << std::endl;
-		else
-		{
-			for (size_t i = 0; i < path.size(); i++)
-			{
-				if (i != 0)
-					std::cout << " - ";
-				std::cout << path[i];
-			}
-			std::cout << std::endl;
-		}
 	}
 	return (false);
 }
@@ -251,9 +255,11 @@ void Battle_mode::render()
 		jgl::fill_rectangle(jgl::Vector2(0.0f, start_pos.y), jgl::Vector2(start_pos.x, end_pos.y - start_pos.y), jgl::Color(0, 0, 0, 200));
 		jgl::fill_rectangle(jgl::Vector2(end_pos.x, start_pos.y), jgl::Vector2(g_application->size().x - end_pos.x, end_pos.y - start_pos.y), jgl::Color(0, 0, 0, 200));
 	}
-	_pointer->render(_viewport, _pointer->pos());
-	for (size_t i = 0; i < _turn_order.size(); i++)
-		_turn_order[i]->render(_viewport, _pointer->pos());
+	for (int i = 0; i < _turn_order.size(); i++)
+	{
+		_turn_order[i]->render(_viewport, _pointer->pos(), i == _turn_index);
+	}
+	//_pointer->render(_viewport, _pointer->pos());
 	jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

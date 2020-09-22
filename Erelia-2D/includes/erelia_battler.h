@@ -33,13 +33,14 @@ enum class Battle_node_type
 	obstacle = 1,
 	border = 2,
 	swimable = 3,
-	select = 4,
-	ally = 5,
-	enemy = 6,
-	mouvement = 7,
-	range = 8,
-	ally_pos = 9,
-	enemy_pos = 10
+	cursor = 4,
+	select = 5,
+	ally = 6,
+	enemy = 7,
+	mouvement = 8,
+	range = 9,
+	ally_pos = 10,
+	enemy_pos = 11
 };
 
 struct Battle_node

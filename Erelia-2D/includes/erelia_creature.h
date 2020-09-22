@@ -42,7 +42,7 @@ public:
 		_species = base;
 		_team = p_team;
 	}
-	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
+	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos, bool selected);
 	Creature* species() { return (_species); }
 	Team team() { return (_team); }
 };

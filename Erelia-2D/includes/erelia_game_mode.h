@@ -90,6 +90,7 @@ private:
 	jgl::Array<jgl::Vector2> _ally_start_pos;
 	jgl::Array<jgl::Vector2> _enemy_start_pos;
 
+	int _turn_index;
 	jgl::Array<Creature_entity*> _turn_order;
 
 	jgl::Array<Creature_entity*> _allies;
@@ -109,6 +110,7 @@ public:
 	jgl::Widget* contener() { return (_contener); }
 	Battle_arena* arena() { return (_arena); }
 
+	void end_turn();
 	void change_phase();
 
 	void update();
