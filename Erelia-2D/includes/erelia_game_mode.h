@@ -87,11 +87,11 @@ private:
 	Entity* _pointer;
 
 	Battle_phase _phase;
-	jgl::Array<jgl::Vector2> _ally_start_pos;
-	jgl::Array<jgl::Vector2> _enemy_start_pos;
 
 	int _turn_index;
 	jgl::Array<Creature_entity*> _turn_order;
+	Creature_entity* _active_ally;
+	Creature_entity* _active_enemy;
 
 	jgl::Array<Creature_entity*> _allies;
 	jgl::Array<Creature_entity*> _enemies;

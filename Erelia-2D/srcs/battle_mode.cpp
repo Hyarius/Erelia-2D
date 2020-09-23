@@ -10,6 +10,9 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 	_pointer->set_tileset(engine->battle_tileset());
 	_arena = nullptr;
 
+	_active_ally = nullptr;
+	_active_enemy = nullptr;
+
 	_allies.clear();
 	_enemies.clear();
 	_neutrals.clear();
@@ -39,8 +42,6 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 	_pointer->place(engine->player()->pos());
 	
 	_turn_order.clear();
-	_ally_start_pos.clear();
-	_enemy_start_pos.clear();
 	_allies.clear();
 	_enemies.clear();
 	_neutrals.clear();
@@ -60,25 +61,11 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 	_turn_order.push_back(_allies[0]);
 	_turn_order.push_back(_enemies[0]);
 
-	jgl::Array<jgl::Vector2> accessible_node = _arena->accessible_node();
-	for (size_t i = 0; i < 10; i++)
-	{
-		size_t index = jgl::generate_nbr(0, accessible_node.size());
-		_ally_start_pos.push_back(accessible_node[index]);
-		_arena->define_node_type(accessible_node[index], Battle_node_type::ally_pos, false);
-		accessible_node.erase(index);
-	}
-	for (size_t i = 0; i < 10; i++)
-	{
-		size_t index = jgl::generate_nbr(0, accessible_node.size());
-		_enemy_start_pos.push_back(accessible_node[index]);
-		_arena->define_node_type(accessible_node[index], Battle_node_type::enemy_pos, false);
-		accessible_node.erase(index);
-	}
+	_arena->generate_random_start();
 
-	size_t index = jgl::generate_nbr(0, _enemy_start_pos.size());
-	place(_enemies[0], _enemy_start_pos[index] + _arena->pos());
-	place(_allies[0], _ally_start_pos[0] + _arena->pos());
+	size_t index = jgl::generate_nbr(0, _arena->enemy_start_pos().size());
+	place(_enemies[0], _arena->enemy_start_pos()[index] + _arena->pos());
+	//place(_allies[0], _arena->ally_start_pos()[0] + _arena->pos());
 
 	_arena->rebake();
 }
@@ -96,6 +83,10 @@ void Battle_mode::place(Creature_entity* entity, jgl::Vector2 pos)
 	Battle_node* node = _arena->absolute_battle_node(pos);
 	if (node != nullptr)
 	{
+		if (entity->team() == Team::ally)
+			_active_ally = entity;
+		else
+			_active_enemy = entity;
 		entity->place(pos);
 		node->occupant = entity;
 	}
@@ -115,12 +106,9 @@ void Battle_mode::end_turn()
 void Battle_mode::change_phase()
 {
 	if (_phase == Battle_phase::placement)
-	{
-		for (size_t i = 0; i < _ally_start_pos.size(); i++)
-			_arena->define_node_type(_ally_start_pos[i], Battle_node_type::clear, false);
-		for (size_t i = 0; i < _enemy_start_pos.size(); i++)
-			_arena->define_node_type(_enemy_start_pos[i], Battle_node_type::clear, false);
+	{	
 		_phase = Battle_phase::fight;
+		_arena->reset();
 		_arena->bake();
 		end_turn();
 	}
@@ -148,12 +136,7 @@ bool Battle_mode::handle_keyboard_placement()
 	}
 	if (jgl::get_key(jgl::key::space) == jgl::key_state::release)
 	{
-		Battle_node* node = _arena->absolute_battle_node(_pointer->pos());
-		if (node != nullptr && node->type == Battle_node_type::ally_pos && node->occupant == nullptr)
-		{
-			place(_allies[0], _pointer->pos());
-		}
-		else
+		if (_active_ally != nullptr)
 		{
 			change_phase();
 		}
@@ -174,8 +157,7 @@ bool Battle_mode::handle_keyboard_fight()
 		{
 			jgl::Vector2 actual_pos = _pointer->pos() - _arena->pos() + move_delta[i];
 			if (_pointer->is_static() == true && _arena->content().count(actual_pos) != 0 &&
-				_arena->content()[actual_pos]->type != Battle_node_type::border &&
-				_arena->content()[actual_pos]->type != Battle_node_type::obstacle)
+				_arena->content()[actual_pos]->type != Battle_node_type::border)
 			{
 				_pointer->move(move_delta[i], false);
 				return (true);

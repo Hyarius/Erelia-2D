@@ -68,6 +68,35 @@ Battle_node* Battle_arena::absolute_battle_node(jgl::Vector2 tmp)
 	return (_content[tmp - _pos]);
 }
 
+void Battle_arena::reset()
+{
+	for (size_t i = 0; i < _ally_start_pos.size(); i++)
+		define_node_type(_ally_start_pos[i], Battle_node_type::clear, false);
+	for (size_t i = 0; i < _enemy_start_pos.size(); i++)
+		define_node_type(_enemy_start_pos[i], Battle_node_type::clear, false);
+}
+
+void Battle_arena::generate_random_start()
+{
+	jgl::Array<jgl::Vector2> tmp_accessible_node = jgl::Array<jgl::Vector2>(accessible_node());
+	
+	for (size_t i = 0; i < 10; i++)
+	{
+		size_t index = jgl::generate_nbr(0, tmp_accessible_node.size());
+		_ally_start_pos.push_back(tmp_accessible_node[index]);
+		define_node_type(tmp_accessible_node[index], Battle_node_type::ally_pos, false);
+		tmp_accessible_node.erase(index);
+	}
+	for (size_t i = 0; i < 10; i++)
+	{
+		size_t index = jgl::generate_nbr(0, tmp_accessible_node.size());
+		_enemy_start_pos.push_back(tmp_accessible_node[index]);
+		define_node_type(tmp_accessible_node[index], Battle_node_type::enemy_pos, false);
+		tmp_accessible_node.erase(index);
+	}
+	std::cout << tmp_accessible_node.size() << " vs " << accessible_node().size() << std::endl;
+}
+
 jgl::Array<jgl::Vector2> Battle_arena::parse_area(jgl::Vector2 start)
 {
 	static jgl::Vector2 neightbour[4] = {

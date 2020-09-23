@@ -19,7 +19,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_modes.push_back(new Adventure_mode(this));
 	_modes.push_back(new Battle_mode(this));
 
-	change_mode(game_mode::adventure);
+	change_mode(game_mode::editor);
 
 	_console = new Console(this);
 

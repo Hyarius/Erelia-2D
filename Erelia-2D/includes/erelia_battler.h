@@ -85,6 +85,8 @@ private:
 	jgl::Vector2 _size;
 	std::map<jgl::Vector2, Battle_node*> _content;
 	jgl::Array<jgl::Vector2> _accessible_node;
+	jgl::Array<jgl::Vector2> _ally_start_pos;
+	jgl::Array<jgl::Vector2> _enemy_start_pos;
 
 	GLuint _vertex_buffer;
 	jgl::Array<jgl::Vector3> _points;
@@ -97,7 +99,9 @@ private:
 public:
 	jgl::Vector2 pos() { return (_pos); }
 	jgl::Vector2 size() { return (_size); }
-	jgl::Array<jgl::Vector2> accessible_node() { return (_accessible_node); }
+	jgl::Array<jgl::Vector2>& accessible_node() { return (_accessible_node); }
+	jgl::Array<jgl::Vector2>& ally_start_pos() { return (_ally_start_pos); }
+	jgl::Array<jgl::Vector2>& enemy_start_pos() { return (_enemy_start_pos); }
 
 	void define_node_type(jgl::Vector2 pos, Battle_node_type type, bool state);
 	void define_background_node_type(jgl::Vector2 pos, Battle_node_type type, bool state);
@@ -112,6 +116,8 @@ public:
 	void place(Creature_entity* entity, jgl::Vector2 pos);
 	void move(Creature_entity* entity, jgl::Vector2 delta);
 
+	void reset();
+	void generate_random_start();
 	jgl::Array<jgl::Vector2> parse_area(jgl::Vector2 start);
 	void rebake();
 	void bake_background();

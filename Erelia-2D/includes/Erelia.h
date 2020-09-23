@@ -24,4 +24,6 @@ extern jgl::Array<Item*> interact_item_list;
 extern jgl::Array<Item*> prefab_item_list;
 extern jgl::Array<Item*> npc_item_list;
 
+void generate_creature_data();
+
 #endif
