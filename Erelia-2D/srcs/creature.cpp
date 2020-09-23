@@ -30,12 +30,21 @@ Creature::Creature(jgl::String path)
 
 	tab = jgl::get_strsplit(file, ";", 2);
 	_sprite = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	_PA = Stat(jgl::stoi(jgl::get_str(file)));
+	_PM = Stat(jgl::stoi(jgl::get_str(file)));
 }
 
 std::ostream& operator<<(std::ostream& os, const Creature value)
 {
 	os << value.name() << "(" << value.id() << ")";
 	return (os);
+}
+
+void Creature_entity::reset_stat()
+{
+	_PA.reset();
+	_PM.reset();
 }
 
 void Creature_entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos, bool selected)

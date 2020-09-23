@@ -14,17 +14,17 @@ Battle_arena::Battle_arena(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 			if (node == nullptr)
 			{
 				_content[tmp]->type_background = Battle_node_type::inexistant;
-				_content[tmp]->type = Battle_node_type::clear;
+				_content[tmp]->type = Battle_node_type::inexistant;
 			}
 			else if (is_middle(0, tmp, _size - 1) == true)
 			{
 				_content[tmp]->type_background = Battle_node_type::obstacle;
-				_content[tmp]->type = Battle_node_type::clear;
+				_content[tmp]->type = Battle_node_type::obstacle;
 			}
 			else
 			{
 				_content[tmp]->type_background = Battle_node_type::border;
-				_content[tmp]->type = Battle_node_type::clear;
+				_content[tmp]->type = Battle_node_type::border;
 			}
 		}
 	}
@@ -70,10 +70,17 @@ Battle_node* Battle_arena::absolute_battle_node(jgl::Vector2 tmp)
 
 void Battle_arena::reset()
 {
-	for (size_t i = 0; i < _ally_start_pos.size(); i++)
-		define_node_type(_ally_start_pos[i], Battle_node_type::clear, false);
-	for (size_t i = 0; i < _enemy_start_pos.size(); i++)
-		define_node_type(_enemy_start_pos[i], Battle_node_type::clear, false);
+	for (auto it : _content)
+	{
+		if (it.second->type != Battle_node_type::border && it.second->type != Battle_node_type::obstacle && it.second->type != Battle_node_type::inexistant)
+			define_node_type(it.first, Battle_node_type::clear, false);
+		it.second->calculated = false;
+		it.second->distance = 0;
+		it.second->s_cost = 0;
+		it.second->e_cost = 0;
+		it.second->t_cost = 0;
+	}
+	bake();
 }
 
 void Battle_arena::generate_random_start()
@@ -390,10 +397,18 @@ jgl::Array<jgl::Vector2> Battle_arena::pathfinding(jgl::Vector2 start, jgl::Vect
 	start = start - _pos;
 	end = end - _pos;
 
+	std::cout << "Accessing from " << start << " to " << end << std::endl;
+
+	Battle_node* start_node = battle_node(start);
+	Battle_node* end_node = battle_node(end);
+
+	std::cout << static_cast<int>(start_node->type) << " - " << static_cast<int>(end_node->type) << std::endl;
 	if (start == end ||
-		battle_node(start) == nullptr || battle_node(start)->type != Battle_node_type::clear ||
-		battle_node(end) == nullptr || battle_node(end)->type != Battle_node_type::clear)
+		start_node == nullptr || start_node->type != Battle_node_type::clear ||
+		end_node == nullptr || end_node->type != Battle_node_type::clear)
 		return (jgl::Array<jgl::Vector2>());
+
+	std::cout << "Accessible" << std::endl;
 
 	for (auto it : _content)
 		it.second->calculated = false;
@@ -406,6 +421,9 @@ jgl::Array<jgl::Vector2> Battle_arena::pathfinding(jgl::Vector2 start, jgl::Vect
 	battle_node(start)->calc_cost(0, end);
 	if (battle_node(start)->t_cost >= 30)
 		return (jgl::Array<jgl::Vector2>());
+
+	std::cout << "Distance to reach shorter than 30" << std::endl;
+	
 	to_calc.push_back(start);
 	Battle_node* target_node = battle_node(start);
 	target_node->parent = nullptr;
@@ -438,9 +456,10 @@ jgl::Array<jgl::Vector2> Battle_arena::pathfinding(jgl::Vector2 start, jgl::Vect
 	target_node = battle_node(end);
 	while (target_node != nullptr)
 	{
-		result.push_back(target_node->pos);
+		result.push_back(target_node->pos + _pos);
 		target_node = target_node->parent;
 	}
 	result.reverse();
+
 	return (result);
 }

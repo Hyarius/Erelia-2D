@@ -95,12 +95,61 @@ void Battle_mode::place(Creature_entity* entity, jgl::Vector2 pos)
 void Battle_mode::update()
 {
 	_pointer->update_pos(false);
+	for (size_t i = 0; i < _turn_order.size(); i++)
+	{
+		//std::cout << "Entity " << i << std::boolalpha << " Road size : " << _turn_order[i]->road().size() << " Moving : " << _turn_order[i]->is_moving() << "/" << " active : " << _turn_order[i]->is_active() << "/" << " static : " << _turn_order[i]->is_static() << "/" << std::endl;
+		_turn_order[i]->update();
+	}
 }
 
 void Battle_mode::end_turn()
 {
+	if (_turn_index != -1)
+		_turn_order[_turn_index]->reset_stat();
 	_turn_index += 1;
 	_turn_index = _turn_index % _turn_order.size();
+	check_movement();
+}
+
+void Battle_mode::check_movement()
+{
+	static jgl::Vector2 neightbour[4] = {
+		   jgl::Vector2(0, 1),
+		   jgl::Vector2(1, 0),
+		   jgl::Vector2(0, -1),
+		   jgl::Vector2(-1, 0),
+	};
+
+	_arena->reset();
+
+	jgl::Array<jgl::Vector2> to_calc;
+
+	Creature_entity* entity = _turn_order[_turn_index];
+	to_calc.push_back(entity->pos() - _arena->pos());
+	_arena->battle_node(entity->pos() - _arena->pos())->distance = 0;
+	_arena->battle_node(entity->pos() - _arena->pos())->calculated = true;
+	for (size_t i = 0; i < to_calc.size(); i++)
+	{
+		Battle_node* actual = _arena->battle_node(to_calc[i]);
+		if (actual->distance < entity->PM().actual)
+		{
+			for (size_t j = 0; j < 4; j++)
+			{
+				jgl::Vector2 tmp = to_calc[i] + neightbour[j];
+				Battle_node* node = _arena->battle_node(tmp);
+				if (node != nullptr)
+				{
+					if (node->type == Battle_node_type::clear && node->calculated == false)
+					{
+						_arena->define_node_type(tmp, Battle_node_type::mouvement, true);
+						node->distance = actual->distance + 1;
+						to_calc.push_back(tmp);
+					}
+				}
+			}
+		}
+	}
+	_arena->bake();
 }
 
 void Battle_mode::change_phase()
@@ -200,12 +249,40 @@ bool Battle_mode::handle_mouse_placement()
 	return (false);
 }
 
+void Battle_mode::launch_movement(jgl::Vector2 pos)
+{
+	Battle_node* node = _arena->absolute_battle_node(pos);
+	if (node != nullptr && node->type == Battle_node_type::mouvement)
+	{
+		_arena->reset();
+		Creature_entity* entity = _turn_order[_turn_index];
+		jgl::Array<jgl::Vector2> path = _arena->pathfinding(entity->pos(), pos);
+		std::cout << "Path : ";
+		if (path.size() == 0)
+			std::cout << "No path";
+		else
+		{
+			for (size_t i = 0; i < path.size(); i++)
+			{
+				if (i != 0)
+					std::cout << " - ";
+				std::cout << path[i];
+			}
+		}
+		
+		std::cout << std::endl;
+		entity->set_road(path);
+		entity->PM().actual -= node->distance;
+	}
+	
+}
+
 bool Battle_mode::handle_mouse_fight()
 {
 	if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 	{
 		jgl::Vector2 pos = screen_to_tile(g_mouse->pos, _pointer->pos());
-		jgl::Array<jgl::Vector2> path = _arena->pathfinding(_allies[0]->pos(), pos);
+		launch_movement(pos);
 	}
 	return (false);
 }

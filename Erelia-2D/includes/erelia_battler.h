@@ -51,6 +51,7 @@ struct Battle_node
 	class Creature_entity* occupant;
 
 	bool calculated;
+	int distance;
 	size_t s_cost;
 	size_t e_cost;
 	size_t t_cost;
@@ -62,6 +63,7 @@ struct Battle_node
 		type = Battle_node_type::clear;
 		type_background = Battle_node_type::clear;
 		calculated = false;
+		distance = 0;
 		s_cost = 0;
 		e_cost = 0;
 		t_cost = 0;

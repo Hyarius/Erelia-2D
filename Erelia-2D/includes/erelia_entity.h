@@ -117,6 +117,8 @@ public:
 	void calc_road_to(jgl::Vector2 destination);
 	void return_starting_position();
 
+	void set_road(jgl::Array<jgl::Vector2> road) { _road = road; _road_index = 1; }
+
 	void set_movement_type(Entity_movement p_mvt)
 	{
 		_movement_type = p_mvt;

@@ -72,7 +72,7 @@ void Player_controller::update()
 	}
 	if (engine->player()->is_active() == false && _moved == true)
 	{
-		//engine->check_encounter();
+		engine->check_encounter();
 		_moved = false;
 	}
 

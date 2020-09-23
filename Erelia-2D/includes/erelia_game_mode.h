@@ -110,7 +110,10 @@ public:
 	jgl::Widget* contener() { return (_contener); }
 	Battle_arena* arena() { return (_arena); }
 
+	void launch_movement(jgl::Vector2 pos);
+
 	void end_turn();
+	void check_movement();
 	void change_phase();
 
 	void update();
