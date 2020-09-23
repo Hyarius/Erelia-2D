@@ -49,8 +49,8 @@ bool Player_controller::handle_keyboard()
 			{
 				if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
 					engine->editor_mode()->interact_between(tmp->occupant(), engine->player());
-				//else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
-				//	engine->adventure_mode()->interact_between(tmp->occupant(), engine->player());
+				else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
+					engine->adventure_mode()->interact_between(tmp->occupant(), engine->player());
 				return (true);
 			}
 		}

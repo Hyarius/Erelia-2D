@@ -56,8 +56,8 @@ void Interacter::increment()
 	{
 		if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
 			engine->editor_mode()->desactive_interacter();
-		//else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
-		// (engine->adventure_mode()->interacter()->source() == this || engine->adventure_mode()->interacter()->target() == this);
+		else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
+			engine->adventure_mode()->desactive_interacter();
 	}
 	else
 		run_action();

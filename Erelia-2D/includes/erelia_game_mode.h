@@ -67,6 +67,10 @@ public:
 
 	bool handle_keyboard();
 
+	void interact_between(Entity* source, Entity* target);
+	void active_interacter();
+	void desactive_interacter();
+
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
 	void render();
 };
