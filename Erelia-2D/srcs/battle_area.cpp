@@ -13,18 +13,18 @@ Battle_arena::Battle_arena(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 			_content[tmp] = new Battle_node(tmp);
 			if (node == nullptr)
 			{
-				_content[tmp]->type_background = Battle_node_type::inexistant;
-				_content[tmp]->type = Battle_node_type::inexistant;
+				_content[tmp]->set_type_background(Battle_node_type::inexistant);
+				_content[tmp]->set_type(Battle_node_type::inexistant);
 			}
 			else if (is_middle(0, tmp, _size - 1) == true)
 			{
-				_content[tmp]->type_background = Battle_node_type::obstacle;
-				_content[tmp]->type = Battle_node_type::obstacle;
+				_content[tmp]->set_type_background(Battle_node_type::obstacle);
+				_content[tmp]->set_type(Battle_node_type::obstacle);
 			}
 			else
 			{
-				_content[tmp]->type_background = Battle_node_type::border;
-				_content[tmp]->type = Battle_node_type::border;
+				_content[tmp]->set_type_background(Battle_node_type::border);
+				_content[tmp]->set_type(Battle_node_type::border);
 			}
 		}
 	}
@@ -38,15 +38,15 @@ Battle_arena::Battle_arena(jgl::Vector2 p_pos, jgl::Vector2 p_size)
 void Battle_arena::define_node_type(jgl::Vector2 pos, Battle_node_type type, bool state)
 {
 	Battle_node* node = _content[pos];
-	node->calculated = state;
-	node->type = type;
+	node->set_calculated(state);
+	node->set_type(type);
 }
 
 void Battle_arena::define_background_node_type(jgl::Vector2 pos, Battle_node_type type, bool state)
 {
 	Battle_node* node = _content[pos];
-	node->calculated = state;
-	node->type_background = type;
+	node->set_calculated(state);
+	node->set_type_background(type);
 }
 
 Node* Battle_arena::board_node(jgl::Vector2 tmp)
@@ -72,15 +72,15 @@ void Battle_arena::reset()
 {
 	for (auto it : _content)
 	{
-		if (it.second->type != Battle_node_type::border && it.second->type != Battle_node_type::obstacle && it.second->type != Battle_node_type::inexistant)
+		if (it.second->type() != Battle_node_type::border && it.second->type() != Battle_node_type::obstacle && it.second->type() != Battle_node_type::inexistant)
 			define_node_type(it.first, Battle_node_type::clear, false);
-		it.second->calculated = false;
-		it.second->distance = 0;
-		it.second->s_cost = 0;
-		it.second->e_cost = 0;
-		it.second->t_cost = 0;
+		it.second->set_calculated(false);
+		it.second->set_distance(0);
+		it.second->set_s_cost(0);
+		it.second->set_e_cost(0);
+		it.second->set_t_cost(0);
 	}
-	bake();
+	bake(nullptr);
 }
 
 void Battle_arena::generate_random_start()
@@ -101,7 +101,6 @@ void Battle_arena::generate_random_start()
 		define_node_type(tmp_accessible_node[index], Battle_node_type::enemy_pos, false);
 		tmp_accessible_node.erase(index);
 	}
-	std::cout << tmp_accessible_node.size() << " vs " << accessible_node().size() << std::endl;
 }
 
 jgl::Array<jgl::Vector2> Battle_arena::parse_area(jgl::Vector2 start)
@@ -129,7 +128,7 @@ jgl::Array<jgl::Vector2> Battle_arena::parse_area(jgl::Vector2 start)
 			if (_content.count(tmp) != 0)
 			{
 				Battle_node* tmp_bnode = _content[tmp];
-				if (tmp_bnode->calculated == false && is_middle(0, tmp, _size - 1) == true)
+				if (tmp_bnode->calculated() == false && is_middle(0, tmp, _size - 1) == true)
 				{
 					if (tmp_node == nullptr || tmp_node->tile() == nullptr)
 					{
@@ -147,7 +146,7 @@ jgl::Array<jgl::Vector2> Battle_arena::parse_area(jgl::Vector2 start)
 						define_node_type(tmp, Battle_node_type::obstacle, true);
 						define_background_node_type(tmp, Battle_node_type::obstacle, true);
 					}
-					else if (tmp_node->link() == nullptr && tmp_bnode->calculated == false)
+					else if (tmp_node->link() == nullptr)
 					{
 						result.push_back(tmp);
 						define_node_type(tmp, Battle_node_type::clear, true);
@@ -162,27 +161,27 @@ jgl::Array<jgl::Vector2> Battle_arena::parse_area(jgl::Vector2 start)
 	return (result);
 }
 
-void Battle_arena::rebake()
+void Battle_arena::rebake(jgl::Viewport* p_viewport)
 {
 	_points.clear();
-	bake_background();
-	bake();
+	bake_background(p_viewport);
+	bake(p_viewport);
 }
 
 void Battle_arena::place(Creature_entity* entity, jgl::Vector2 pos)
 {
-	_content[pos]->occupant = entity;
+	_content[pos]->set_occupant(entity);
 	entity->place(_pos + pos);
 }
 
 void Battle_arena::move(Creature_entity* entity, jgl::Vector2 delta)
 {
-	_content[entity->pos()]->occupant = nullptr;
-	_content[entity->pos() + delta]->occupant = entity;
+	_content[entity->pos()]->set_occupant(nullptr);
+	_content[entity->pos() + delta]->set_occupant(entity);
 	entity->move(delta, false);
 }
 
-void Battle_arena::bake_background()
+void Battle_arena::bake_background(jgl::Viewport* p_viewport)
 {
 	static jgl::Vector2 neightbour[6] = {
 		   jgl::Vector2(0, 0),
@@ -192,9 +191,11 @@ void Battle_arena::bake_background()
 		   jgl::Vector2(1, 1),
 		   jgl::Vector2(1, 0),
 	};
+	if (_points.size() == 0 && p_viewport == nullptr)
+		jgl::error_exit(1, "No viewport in battle arena baking");
 	if (_points.size() == 0)
 	{
-		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
+		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (p_viewport->area() / 2)) * jgl::Vector2(1, -1);
 		for (auto it : _content)
 		{
 			jgl::Vector2 tmp_pos = it.first - 0.5f;
@@ -214,9 +215,9 @@ void Battle_arena::bake_background()
 	{
 		if (it.second != nullptr)
 		{
-			if (it.second->type_background != Battle_node_type::inexistant)
+			if (it.second->type_background() != Battle_node_type::inexistant)
 			{
-				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(it.second->type_background), 0));
+				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(it.second->type_background()), 0));
 				for (size_t h = 0; h < 6; h++)
 				{
 					jgl::Vector2 tmp_value = tmp_sprite + unit * neightbour[h];
@@ -237,7 +238,7 @@ void Battle_arena::bake_background()
 
 }
 
-void Battle_arena::bake()
+void Battle_arena::bake(jgl::Viewport* p_viewport)
 {
 	static jgl::Vector2 neightbour[6] = {
 		   jgl::Vector2(0, 0),
@@ -247,9 +248,11 @@ void Battle_arena::bake()
 		   jgl::Vector2(1, 1),
 		   jgl::Vector2(1, 0),
 	};
+	if (_points.size() == 0 && p_viewport == nullptr)
+		jgl::error_exit(1, "No viewport in battle arena baking");
 	if (_points.size() == 0)
 	{
-		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
+		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (p_viewport->area() / 2)) * jgl::Vector2(1, -1);
 		for (auto it : _content)
 		{
 			jgl::Vector2 tmp_pos = it.first - 0.5f;
@@ -269,11 +272,11 @@ void Battle_arena::bake()
 	{
 		if (it.second != nullptr)
 		{
-			if (it.second->type != Battle_node_type::inexistant && it.second->type != Battle_node_type::border &&
-				it.second->type != Battle_node_type::clear && it.second->type != Battle_node_type::obstacle &&
-				it.second->type != Battle_node_type::swimable)
+			if (it.second->type() != Battle_node_type::inexistant && it.second->type() != Battle_node_type::border &&
+				it.second->type() != Battle_node_type::clear && it.second->type() != Battle_node_type::obstacle &&
+				it.second->type() != Battle_node_type::swimable)
 			{
-				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(it.second->type), 0));
+				jgl::Vector2 tmp_sprite = engine->battle_tileset()->sprite(jgl::Vector2(static_cast<int>(it.second->type()), 0));
 				for (size_t h = 0; h < 6; h++)
 				{
 					jgl::Vector2 tmp_value = tmp_sprite + unit * neightbour[h];
@@ -305,8 +308,7 @@ void Battle_arena::render_background(jgl::Viewport* p_viewport, jgl::Vector2 bas
 	if (p_viewport != nullptr)
 		p_viewport->use();
 
-	//jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(tile_to_screen(_pos, base_pos));// *vtmp;
+	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(engine->board()->tile_to_screen(_pos, base_pos));
 
 	glBindVertexArray(g_application->vertex_array());
 
@@ -334,7 +336,7 @@ void Battle_arena::render_front(jgl::Viewport* p_viewport, jgl::Vector2 base_pos
 	if (p_viewport != nullptr)
 		p_viewport->use();
 
-	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(tile_to_screen(_pos, base_pos));
+	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(engine->board()->tile_to_screen(_pos, base_pos));
 
 	glBindVertexArray(g_application->vertex_array());
 
@@ -371,8 +373,9 @@ bool Battle_arena::can_acces(jgl::Vector2 pos, jgl::Vector2 delta)
 	Battle_node* tmp = battle_node((pos + delta).round());
 	Battle_node* actual = battle_node(pos.round());
 	if (tmp != nullptr && actual != nullptr &&
-		tmp->type  == Battle_node_type::clear &&
-		actual->type == Battle_node_type::clear)
+		tmp->type() == Battle_node_type::clear &&
+		actual->type() == Battle_node_type::clear &&
+		tmp->occupant() == nullptr)
 	{
 		return (true);
 	}
@@ -386,7 +389,7 @@ Battle_node* Battle_arena::find_closest(jgl::Array<jgl::Vector2>& to_calc)
 	for (size_t i = 0; i < to_calc.size(); i++)
 	{
 		Battle_node* other = battle_node(to_calc[i]);
-		if (other != nullptr && other->calculated == false && (result == nullptr || (result->t_cost > other->t_cost)))
+		if (other != nullptr && other->calculated() == false && (result == nullptr || (result->t_cost() > other->t_cost())))
 			result = other;
 	}
 	return (result);
@@ -397,21 +400,16 @@ jgl::Array<jgl::Vector2> Battle_arena::pathfinding(jgl::Vector2 start, jgl::Vect
 	start = start - _pos;
 	end = end - _pos;
 
-	std::cout << "Accessing from " << start << " to " << end << std::endl;
-
 	Battle_node* start_node = battle_node(start);
 	Battle_node* end_node = battle_node(end);
 
-	std::cout << static_cast<int>(start_node->type) << " - " << static_cast<int>(end_node->type) << std::endl;
 	if (start == end ||
-		start_node == nullptr || start_node->type != Battle_node_type::clear ||
-		end_node == nullptr || end_node->type != Battle_node_type::clear)
+		start_node == nullptr || start_node->type() != Battle_node_type::clear ||
+		end_node == nullptr || end_node->type() != Battle_node_type::clear)
 		return (jgl::Array<jgl::Vector2>());
 
-	std::cout << "Accessible" << std::endl;
-
 	for (auto it : _content)
-		it.second->calculated = false;
+		it.second->set_calculated(false);
 
 	static jgl::Vector2 neightbour[4] = { jgl::Vector2(0.0f, 1.0f), jgl::Vector2(0.0f, -1.0f), jgl::Vector2(-1.0f, 0.0f), jgl::Vector2(1.0f, 0.0f) };
 
@@ -419,46 +417,46 @@ jgl::Array<jgl::Vector2> Battle_arena::pathfinding(jgl::Vector2 start, jgl::Vect
 	jgl::Array<jgl::Vector2> to_calc;
 
 	battle_node(start)->calc_cost(0, end);
-	if (battle_node(start)->t_cost >= 30)
+	if (battle_node(start)->t_cost() >= 30)
 		return (jgl::Array<jgl::Vector2>());
-
-	std::cout << "Distance to reach shorter than 30" << std::endl;
 	
 	to_calc.push_back(start);
 	Battle_node* target_node = battle_node(start);
-	target_node->parent = nullptr;
+	target_node->set_parent(nullptr);
 	while (target_node != nullptr)
 	{
 		for (size_t j = 0; j < 4; j++)
 		{
-			if (can_acces(target_node->pos, neightbour[j]) == true)
+			if (can_acces(target_node->pos(), neightbour[j]) == true)
 			{
-				jgl::Vector2 actual = target_node->pos + neightbour[j];
+				jgl::Vector2 actual = target_node->pos() + neightbour[j];
 				Battle_node* actual_node = battle_node(actual);
-				if (actual_node != nullptr && actual_node->calculated == false)
+				if (actual_node != nullptr && actual_node->calculated() == false)
 				{
-					actual_node->calc_cost(target_node->s_cost + 1, end);
-					if (actual_node->t_cost > 30)
+					actual_node->calc_cost(target_node->s_cost() + 1, end);
+					if (actual_node->t_cost() > 30)
 						return (jgl::Array<jgl::Vector2>());
-					battle_node(actual)->parent = target_node;
+					battle_node(actual)->set_parent(target_node);
 					to_calc.push_back(actual);
 				}
 			}
 		}
-		target_node->calculated = true;
+		target_node->set_calculated(true);
 		target_node = find_closest(to_calc);
 
-		if (target_node != nullptr && target_node->pos == end)
+		if (target_node != nullptr && target_node->pos() == end)
 			target_node = nullptr;
 	}
 	for (size_t i = 0; i < to_calc.size(); i++)
-		battle_node(to_calc[i])->calculated = false;
+		battle_node(to_calc[i])->set_calculated(false);
 	target_node = battle_node(end);
 	while (target_node != nullptr)
 	{
-		result.push_back(target_node->pos + _pos);
-		target_node = target_node->parent;
+		result.push_back(target_node->pos() + _pos);
+		target_node = static_cast<Battle_node*>(target_node->parent());
 	}
+	if (result[0] != end + _pos)
+		return (jgl::Array<jgl::Vector2>());
 	result.reverse();
 
 	return (result);

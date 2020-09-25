@@ -47,9 +47,9 @@ bool Player_controller::handle_keyboard()
 			Node* tmp = engine->board()->node(engine->player()->pos() + move_delta[i]);
 			if (tmp != nullptr && tmp->occupant() != nullptr && tmp->occupant() != engine->player() && tmp->occupant()->is_active() == false)
 			{
-				if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
+				if (engine->index_mode() == game_mode::editor)
 					engine->editor_mode()->interact_between(tmp->occupant(), engine->player());
-				else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
+				else if (engine->index_mode() == game_mode::adventure)
 					engine->adventure_mode()->interact_between(tmp->occupant(), engine->player());
 				return (true);
 			}

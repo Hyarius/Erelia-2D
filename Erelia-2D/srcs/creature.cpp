@@ -41,6 +41,16 @@ std::ostream& operator<<(std::ostream& os, const Creature value)
 	return (os);
 }
 
+Creature_entity::Creature_entity(Creature* base, Team p_team) : Entity(Entity_type::Creature, base->name(), -1, base->sprite())
+{
+	set_move_speed(0.5f);
+	set_wait_time(10);
+	_species = base;
+	_team = p_team;
+	_PA = base->PA();
+	_PM = base->PM();
+}
+
 void Creature_entity::reset_stat()
 {
 	_PA.reset();
@@ -50,7 +60,7 @@ void Creature_entity::reset_stat()
 void Creature_entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos, bool selected)
 {
 	Entity::render(p_viewport, base_pos);
-	jgl::Vector2 tmp_pos = tile_to_screen(_pos, base_pos);
+	jgl::Vector2 tmp_pos = engine->board()->tile_to_screen(_pos, base_pos);
 	if (selected == true)
 		engine->battle_tileset()->draw(jgl::Vector2(static_cast<int>(Battle_node_type::select), 0), tmp_pos, node_size, 1.0f, p_viewport);
 	else if (_team == Team::ally)

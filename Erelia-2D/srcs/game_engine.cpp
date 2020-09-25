@@ -14,7 +14,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	if (jgl::check_file_exist("ressources/save/Player.sav") == true)
 		load("ressources/save/Player.sav");
 
-	_index_mode = static_cast<size_t>(game_mode::editor);
+	_index_mode = game_mode::editor;
 	_modes.push_back(new Editor_mode(this));
 	_modes.push_back(new Adventure_mode(this));
 	_modes.push_back(new Battle_mode(this));
@@ -71,7 +71,7 @@ void Game_engine::load(jgl::String path)
 
 void Game_engine::check_encounter()
 {
-	if (_index_mode == static_cast<size_t>(game_mode::adventure) &&
+	if (_index_mode == game_mode::adventure &&
 		_board->node(_player->pos()) != nullptr &&
 		_board->node(_player->pos())->encounter_area() != nullptr)
 	{
@@ -80,9 +80,7 @@ void Game_engine::check_encounter()
 		if (result != Encounter_data::null())
 		{
 			std::cout << "BOUM ! COMBAT WITH ENTITY " << result.id << " !" << std::endl;
-			Battle_arena* new_area = new Battle_arena(_player->pos(), jgl::Vector2(17, 9));
-			new_area->bake_background();
-			new_area->bake();
+			Battle_arena* new_area = new Battle_arena(_player->pos(), jgl::Vector2(13, 9));
 			change_mode(game_mode::battle);
 			Team_comp ally = Team_comp({});
 			for (size_t i = 0; i < 3; i++)
@@ -105,13 +103,13 @@ void Game_engine::move_player(jgl::Vector2 delta)
 void Game_engine::active_console()
 {
 	_console->enable();
-	_modes[_index_mode]->set_frozen(true);
+	_modes[static_cast<size_t>(_index_mode)]->set_frozen(true);
 }
 
 void Game_engine::desactive_console()
 {
 	_console->disable();
-	_modes[_index_mode]->set_frozen(false);
+	_modes[static_cast<size_t>(_index_mode)]->set_frozen(false);
 }
 
 void Game_engine::change_mode(game_mode new_mode)
@@ -119,13 +117,13 @@ void Game_engine::change_mode(game_mode new_mode)
 	size_t tmp = static_cast<size_t>(new_mode);
 	if (_modes.size() > tmp && _modes[tmp] != nullptr)
 	{
-		_index_mode = tmp;
+		_index_mode = new_mode;
 		for (size_t i = 0; i < _modes.size(); i++)
 		{
 			if (_modes[i] != nullptr)
 				_modes[i]->desactivate();
 		}
-		_modes[_index_mode]->activate();
+		_modes[static_cast<size_t>(_index_mode)]->activate();
 	}
 	
 }
@@ -150,7 +148,7 @@ bool Game_engine::handle_keyboard()
 		node_size /= 2;
 		_board->bake();
 		if (battle_mode()->arena() != nullptr)
-			battle_mode()->arena()->rebake();
+			battle_mode()->arena()->rebake(battle_mode()->renderer()->viewport());
 
 	}
 	else if (jgl::get_key(jgl::key::F3) == jgl::key_state::release)
@@ -158,7 +156,7 @@ bool Game_engine::handle_keyboard()
 		node_size *= 2;
 		_board->bake();
 		if (battle_mode()->arena() != nullptr)
-			battle_mode()->arena()->rebake();
+			battle_mode()->arena()->rebake(battle_mode()->renderer()->viewport());
 	}
 	else if (jgl::get_key(jgl::key::F10) == jgl::key_state::release)
 	{

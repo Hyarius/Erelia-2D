@@ -119,9 +119,19 @@ void Entity::move(jgl::Vector2 delta, bool edit)
 	_actual_tick = _last_tick;
 	if (edit == true)
 	{
-		Node* tmp1 = engine->board()->node(_pos + delta);
-		if (tmp1 != nullptr)
-			tmp1->set_occupant(this);
+		if (engine->index_mode() == game_mode::battle)
+		{
+			Battle_node *tmp1 = engine->battle_mode()->arena()->absolute_battle_node(_pos + delta);
+			if (tmp1 != nullptr)
+				tmp1->set_occupant(this);
+		}
+		else if (engine->index_mode() == game_mode::editor || engine->index_mode() == game_mode::adventure)
+		{
+			Node* tmp1 = engine->board()->node(_pos + delta);
+			if (tmp1 != nullptr)
+				tmp1->set_occupant(this);
+		}
+		
 	}
 	_direction = delta / (_move_tick / _move_speed);
 }
@@ -160,8 +170,18 @@ void Entity::update_pos(bool edit)
 
 	if (rpos != _pos.round() && edit == true)
 	{
-		Node* tmp1 = engine->board()->node(rpos);
-		Node* tmp2 = engine->board()->node(_pos.round());
+		Base_node* tmp1 = nullptr;
+		Base_node* tmp2 = nullptr;
+		if (engine->index_mode() == game_mode::battle)
+		{
+			tmp1 = engine->battle_mode()->arena()->absolute_battle_node(rpos);
+			tmp2 = engine->battle_mode()->arena()->absolute_battle_node(_pos.round());
+		}
+		else if (engine->index_mode() == game_mode::editor || engine->index_mode() == game_mode::adventure)
+		{
+			tmp1 = engine->board()->node(rpos);
+			tmp2 = engine->board()->node(_pos.round());
+		}
 		if (tmp1 != nullptr)
 			tmp1->set_occupant(nullptr);
 		if (tmp2 != nullptr)
@@ -186,17 +206,17 @@ bool Entity::is_interacting()
 {
 	if (engine->active_mode() == nullptr)
 		return (false);
-	if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
+	if (engine->index_mode() == game_mode::editor)
 		return (engine->editor_mode()->interacter()->source() == this || engine->editor_mode()->interacter()->target() == this);
-	else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
-		return (false);// (engine->adventure_mode()->interacter()->source() == this || engine->adventure_mode()->interacter()->target() == this);
+	else if (engine->index_mode() == game_mode::adventure)
+		return (engine->adventure_mode()->interacter()->source() == this || engine->adventure_mode()->interacter()->target() == this);
 	else
 		return (false);
 }
 
 bool Entity::is_pointed(jgl::Vector2 base_pos)
 {
-	jgl::Vector2 pos = tile_to_screen(_pos, base_pos);
+	jgl::Vector2 pos = engine->board()->tile_to_screen(_pos, base_pos);
 
 	if (jgl::is_middle(pos.x, g_mouse->pos.x, pos.x + node_size) == true &&
 		jgl::is_middle(pos.y, g_mouse->pos.y, pos.y + node_size) == true)
@@ -209,9 +229,9 @@ void Entity::render_grass(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
 	if (_direction.x != 0)
 	{
 		if (engine->board()->node(_destination) != nullptr && engine->board()->node(_destination)->tile() != nullptr && (engine->board()->node(_destination)->tile()->type & GRASS_TILE) == GRASS_TILE)
-			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_destination.round(), base_pos), node_size, 1.0f, p_viewport);
+			engine->charset()->draw(jgl::Vector2(1, 41), engine->board()->tile_to_screen(_destination.round(), base_pos), node_size, 1.0f, p_viewport);
 		if (engine->board()->node(_old_pos) != nullptr && engine->board()->node(_old_pos)->tile() != nullptr && (engine->board()->node(_old_pos)->tile()->type & GRASS_TILE) == GRASS_TILE)
-			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_old_pos.round(), base_pos), node_size, 1.0f, p_viewport);
+			engine->charset()->draw(jgl::Vector2(1, 41), engine->board()->tile_to_screen(_old_pos.round(), base_pos), node_size, 1.0f, p_viewport);
 	}
 	else if (_direction.y != 0)
 	{
@@ -219,20 +239,20 @@ void Entity::render_grass(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
 		while (start.y > _pos.y)
 		{
 			if (engine->board()->node(start + jgl::Vector2(0.0f, 0.1f)) != nullptr && engine->board()->node(start + jgl::Vector2(0.0f, 0.1f))->tile() != nullptr && (engine->board()->node(start + jgl::Vector2(0.0f, 0.1f))->tile()->type & GRASS_TILE) == GRASS_TILE)
-				engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(start, base_pos), node_size, 1.0f, p_viewport);
+				engine->charset()->draw(jgl::Vector2(1, 41), engine->board()->tile_to_screen(start, base_pos), node_size, 1.0f, p_viewport);
 			start.y -= 0.5f;
 		}
 	}
 	else
 	{
 		if (engine->board()->node(_pos) != nullptr && engine->board()->node(_pos)->tile() != nullptr && (engine->board()->node(_pos)->tile()->type & GRASS_TILE) == GRASS_TILE)
-			engine->charset()->draw(jgl::Vector2(1, 41), tile_to_screen(_pos.round(), base_pos), node_size, 1.0f, p_viewport);
+			engine->charset()->draw(jgl::Vector2(1, 41), engine->board()->tile_to_screen(_pos.round(), base_pos), node_size, 1.0f, p_viewport);
 	}
 }
 
 void Entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos)
 {
-	jgl::Vector2 pos = tile_to_screen(_pos, base_pos);
+	jgl::Vector2 pos = engine->board()->tile_to_screen(_pos, base_pos);
 	jgl::Vector2 dir_delta = jgl::Vector2(static_cast<int>(_look_dir), 0);
 	jgl::Vector2 delta = 0;
 	size_t value = 0;

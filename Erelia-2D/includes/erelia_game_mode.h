@@ -4,6 +4,8 @@
 #include "jgl.h"
 
 #include "erelia_creature.h"
+#include "erelia_battle_renderer.h"
+#include "erelia_battle_controller.h"
 
 enum class game_mode
 {
@@ -64,6 +66,8 @@ public:
 	Adventure_mode(jgl::Widget* parent = nullptr);
 
 	jgl::Widget* contener() { return (_contener); }
+	Interacter* interacter() { return (_interacter); }
+	Player_controller* player_controler() { return (_player_controller); }
 
 	bool handle_keyboard();
 
@@ -101,9 +105,15 @@ private:
 	jgl::Array<Creature_entity*> _enemies;
 	jgl::Array<Creature_entity*> _neutrals;
 
+	bool _calculated;
+
+	Battle_renderer* _renderer;
+	jgl::Frame* _action_frame;
 
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
+
+	Battle_renderer* renderer() { return (_renderer); }
 
 	void add_creature(Creature_entity* to_add);
 	void start(Battle_arena* p_arena, Team_comp first, Team_comp second);
@@ -114,6 +124,7 @@ public:
 	jgl::Widget* contener() { return (_contener); }
 	Battle_arena* arena() { return (_arena); }
 
+	void cast_vision(int range);
 	void launch_movement(jgl::Vector2 pos);
 
 	void end_turn();

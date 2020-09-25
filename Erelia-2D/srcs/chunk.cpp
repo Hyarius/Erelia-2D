@@ -38,7 +38,13 @@ void Chunk::place(jgl::Vector2 coord, Tile* p_tile, bool need_bake)
 	_content[x][y]->set_tile(p_tile);
 }
 
-void Chunk::bake()
+void Chunk::rebake(const jgl::Viewport* viewport)
+{
+	points.clear();
+	bake(viewport);
+}
+
+void Chunk::bake(const jgl::Viewport* viewport)
 {
 	static jgl::Vector2 neightbour[6] = {
 		jgl::Vector2(0, 0),
@@ -50,9 +56,11 @@ void Chunk::bake()
 	};
 	_uvs.clear();
 	_uvs2.clear();
+	if (points.size() == 0 && viewport == nullptr)
+		jgl::error_exit(1, "No viewport in battle arena baking");
 	if (points.size() == 0)
 	{
-		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
+		jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (viewport->area() / 2)) * jgl::Vector2(1, -1);
  		if (vertex_buffer != 0)
 			glDeleteBuffers(1, &vertex_buffer);
 		glGenBuffers(1, &vertex_buffer);
@@ -126,8 +134,8 @@ void Chunk::render(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 {
 	if (base_pos == -1)
 		base_pos = engine->player()->pos();
-	jgl::Vector2 vtmp = (jgl::Vector2(node_size) / (g_application->size() / 2)) * jgl::Vector2(1, -1);
-	jgl::Vector2 delta = vtmp.invert() / 2 + vtmp * (_pos * CHUNK_SIZE - base_pos);
+
+	jgl::Vector2 delta = jgl::convert_screenV2_to_opengl(engine->board()->tile_to_screen((_pos * CHUNK_SIZE), base_pos));
 
 	glBindVertexArray(g_application->vertex_array());
 

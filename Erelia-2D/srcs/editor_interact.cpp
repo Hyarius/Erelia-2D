@@ -9,12 +9,12 @@ bool Editor_interact::handle_click()
 {
 	if (_state == false)
 	{
-		_first = screen_to_tile(g_mouse->pos);
+		_first = engine->board()->screen_to_tile(g_mouse->pos);
 		_state = true;
 	}
 	else
 	{
-		_second = screen_to_tile(g_mouse->pos);
+		_second = engine->board()->screen_to_tile(g_mouse->pos);
 		_state = false;
 		return (true);
 	}
@@ -70,7 +70,7 @@ bool Editor_interact::handle_mouse()
 
 	if (jgl::get_button(jgl::mouse_button::center) == jgl::mouse_state::release)
 	{
-		jgl::Vector2 target = screen_to_tile(g_mouse->pos);
+		jgl::Vector2 target = engine->board()->screen_to_tile(g_mouse->pos);
 		Tile* target_node = engine->board()->tile(target);
 		if (target_node == nullptr)
 			return false;
@@ -83,12 +83,12 @@ bool Editor_interact::handle_mouse()
 			if (tmp->item_type() == Item_type::tile && handle_click() == true)
 				handle_remove_multi_pos();
 			else if (tmp == interact_item_list[3] && _selected_entity != nullptr)
-				_selected_entity->remove_check_point(screen_to_tile(g_mouse->pos));
-			else if (tmp->item_type() == Item_type::npc && engine->board()->node(screen_to_tile(g_mouse->pos))->occupant() != nullptr)
+				_selected_entity->remove_check_point(engine->board()->screen_to_tile(g_mouse->pos));
+			else if (tmp->item_type() == Item_type::npc && engine->board()->node(engine->board()->screen_to_tile(g_mouse->pos))->occupant() != nullptr)
 			{
-				if (engine->board()->node(screen_to_tile(g_mouse->pos))->occupant()->type() == Entity_type::NPC)
+				if (engine->board()->node(engine->board()->screen_to_tile(g_mouse->pos))->occupant()->type() == Entity_type::NPC)
 				{
-					engine->board()->remove_npc(engine->board()->node(screen_to_tile(g_mouse->pos))->occupant());
+					engine->board()->remove_npc(engine->board()->node(engine->board()->screen_to_tile(g_mouse->pos))->occupant());
 				}
 			}
 			return (true);
@@ -113,7 +113,7 @@ bool Editor_interact::handle_mouse()
 	{
 		if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 		{
-			jgl::Vector2 target = screen_to_tile(g_mouse->pos);
+			jgl::Vector2 target = engine->board()->screen_to_tile(g_mouse->pos);
 			tmp->use(&target);
 		}
 	}
@@ -146,27 +146,27 @@ void Editor_interact::render()
 	{
 		if (_state == true)
 		{
-			jgl::Vector2 _third = screen_to_tile(g_mouse->pos);
-			jgl::Vector2 start = tile_to_screen(jgl::Vector2((_first.x < _third.x ? _first.x : _third.x), (_first.y < _third.y ? _first.y : _third.y)));
-			jgl::Vector2 end = tile_to_screen(jgl::Vector2((_first.x > _third.x ? _first.x : _third.x), (_first.y > _third.y ? _first.y : _third.y)) + 1);
+			jgl::Vector2 _third = engine->board()->screen_to_tile(g_mouse->pos);
+			jgl::Vector2 start = engine->board()->tile_to_screen(jgl::Vector2((_first.x < _third.x ? _first.x : _third.x), (_first.y < _third.y ? _first.y : _third.y)));
+			jgl::Vector2 end = engine->board()->tile_to_screen(jgl::Vector2((_first.x > _third.x ? _first.x : _third.x), (_first.y > _third.y ? _first.y : _third.y)) + 1);
 			
 			jgl::draw_rectangle(start, end - start, 1, jgl::Color(0, 0, 0), _viewport);
 		}
 	}
 	else if (tmp->item_type() == Item_type::interact)
 	{
-		jgl::draw_rectangle(tile_to_screen(_pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
-		jgl::draw_rectangle(tile_to_screen(_blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
+		jgl::draw_rectangle(engine->board()->tile_to_screen(_pink_flag), node_size, 1, jgl::Color(250, 7, 100), _viewport);
+		jgl::draw_rectangle(engine->board()->tile_to_screen(_blue_flag), node_size, 1, jgl::Color(66, 135, 245), _viewport);
 	}
 
 	if (_selected_entity != nullptr)
 	{
-		jgl::draw_centred_text(_selected_entity->name(), tile_to_screen(_selected_entity->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::green, jgl::text_style::normal);
+		jgl::draw_centred_text(_selected_entity->name(), engine->board()->tile_to_screen(_selected_entity->pos()) + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::green, jgl::text_style::normal);
 		if (_selected_entity->check_point().size() > 1)
 		{
 			for (size_t i = 0; i < _selected_entity->check_point().size(); i++)
 			{
-				jgl::Vector2 pos = tile_to_screen(_selected_entity->check_point(i));
+				jgl::Vector2 pos = engine->board()->tile_to_screen(_selected_entity->check_point(i));
 				jgl::draw_centred_text(jgl::itoa(i), pos + node_size / 2 - jgl::Vector2(0, node_size), 16, 1, 1.0f, jgl::text_color::green, jgl::text_style::normal);
 				jgl::draw_rectangle(pos, node_size, 1, jgl::Color(0, 255, 0));
 			}

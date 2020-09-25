@@ -68,14 +68,7 @@ private:
 	Stat _PM;
 
 public:
-	Creature_entity(Creature* base, Team p_team) : Entity(Entity_type::Creature, base->name(), -1, base->sprite())
-	{
-		set_move_speed(0.5f);
-		_species = base;
-		_team = p_team;
-		_PA = base->PA();
-		_PM = base->PM();
-	}
+	Creature_entity(Creature* base, Team p_team);
 
 	Stat& PA() { return (_PA); }
 	Stat& PM() { return (_PM); }

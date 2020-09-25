@@ -30,6 +30,7 @@ Node* Board::node(jgl::Vector2 pos)
 }
 Board::Board(jgl::String path)
 {
+	_active_viewport = g_application->viewport();
 	load(path);
 }
 Board::~Board()
@@ -259,7 +260,7 @@ void Board::load(jgl::String path)
 	}
 	for (auto tmp : _chunks)
 	{
-		tmp.second->bake();
+		tmp.second->bake(g_application->viewport());
 	}
 }
 
@@ -361,7 +362,7 @@ void Board::place(jgl::Vector2 node_pos, size_t index, bool need_bake)
 	jgl::Vector2 tmp_chunk = chunk_pos(node_pos);
 
 	if (need_bake == true)
-		_chunks[tmp_chunk]->bake();
+		_chunks[tmp_chunk]->bake(_active_viewport);
 
 }
 void Board::place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake)
@@ -375,15 +376,24 @@ void Board::place(jgl::Vector2 node_pos, Tile* p_node, bool need_bake)
 	tmp->place(rel_node_pos(node_pos), p_node);
 
 	if (need_bake == true)
-		tmp->bake();
+		tmp->bake(_active_viewport);
 }
 extern jgl::Array<jgl::Vector3> points;
+
 void Board::bake()
 {
 	points.clear();
 	for (auto tmp : _chunks)
-		tmp.second->bake();
+		tmp.second->bake(_active_viewport);
 }
+void Board::rebake(const jgl::Viewport* viewport)
+{
+	_active_viewport = viewport;
+	points.clear();
+	for (auto tmp : _chunks)
+		tmp.second->bake(_active_viewport);
+}
+
 void Board::parse_encounter_area(Battle_data* area, jgl::Vector2 start)
 {
 	static jgl::Vector2 neightbour[4] = {
@@ -447,8 +457,14 @@ void Board::bake_chunk(jgl::Vector2 pos)
 {
 	if (_chunks.contains(pos) == 0)
 		return;
-	g_application->viewport()->use();
-	_chunks[pos]->bake();
+	_chunks[pos]->bake(nullptr);
+}
+void Board::rebake_chunk(jgl::Vector2 pos, const jgl::Viewport* viewport)
+{
+	_active_viewport = viewport;
+	if (_chunks.contains(pos) == 0)
+		return;
+	_chunks[pos]->rebake(viewport);
 }
 
 void Board::update()
@@ -468,11 +484,14 @@ void Board::update()
 
 void Board::render(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 {
+	if (viewport != nullptr)
+		viewport->use();
+
 	jgl::Vector2 start_node = screen_to_tile(0, base_pos);
 	jgl::Vector2 end_node = screen_to_tile(g_application->size(), base_pos);
 	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
 	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
-	g_application->clear();
+
 	for (float i = start.x; i <= end.x; i++)
 		for (float j = start.y; j <= end.y; j++)
 		{
@@ -584,8 +603,27 @@ jgl::Array<jgl::Vector2> Board::pathfinding(jgl::Vector2 start, jgl::Vector2 end
 	while (target_node != nullptr)
 	{
 		result.push_back(target_node->pos());
-		target_node = target_node->parent();
+		target_node = static_cast<Node*>(target_node->parent());
 	}
 	result.reverse();
 	return (result);
+}
+
+jgl::Vector2 Board::tile_to_screen(jgl::Vector2 tile_pos, jgl::Vector2 base_pos)
+{
+	if (base_pos == -1)
+		base_pos = engine->player()->pos();
+	jgl::Vector2 result = ((tile_pos - base_pos - 0.5f) * node_size + _active_viewport->area() / 2);
+	return (result);
+}
+
+jgl::Vector2 Board::screen_to_tile(jgl::Vector2 coord, jgl::Vector2 base_pos)
+{
+	if (base_pos == -1)
+		base_pos = engine->player()->pos();
+	coord -= _active_viewport->anchor();
+	jgl::Vector2 pos = (coord - _active_viewport->area() / 2);
+	jgl::Vector2 rel = pos / node_size;
+
+	return ((base_pos + rel + 0.5f).floor());
 }

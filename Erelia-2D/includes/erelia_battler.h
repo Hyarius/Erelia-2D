@@ -1,6 +1,8 @@
 #ifndef ERELIA_BATTLER_H
 #define ERELIA_BATTLER_H
 
+#include "erelia_creature.h"
+
 struct Encounter_data
 {
 	static Encounter_data null() { return (Encounter_data(-1, -1)); }
@@ -43,41 +45,29 @@ enum class Battle_node_type
 	enemy_pos = 11
 };
 
-struct Battle_node
+class Battle_node : public Base_node
 {
-	jgl::Vector2 pos;
-	Battle_node_type type_background;
-	Battle_node_type type;
-	class Creature_entity* occupant;
+private:
+	Battle_node_type _type_background;
+	Battle_node_type _type;
 
-	bool calculated;
-	int distance;
-	size_t s_cost;
-	size_t e_cost;
-	size_t t_cost;
-	Battle_node* parent;
+	int _distance;
 
-	Battle_node(jgl::Vector2 p_pos)
+public:
+	Battle_node(jgl::Vector2 p_pos) : Base_node(p_pos)
 	{
-		pos = p_pos;
-		type = Battle_node_type::clear;
-		type_background = Battle_node_type::clear;
-		calculated = false;
-		distance = 0;
-		s_cost = 0;
-		e_cost = 0;
-		t_cost = 0;
-		parent = nullptr;
-		occupant = nullptr;
+		_type = Battle_node_type::clear;
+		_type_background = Battle_node_type::clear;
+		_distance = 0;
 	}
-	void calc_cost(size_t start_cost, jgl::Vector2 end)
-	{
-		size_t e = static_cast<int>(std::abs(pos.x - end.x)) + static_cast<int>(std::abs(pos.y - end.y));
+	
+	void set_distance(int p_distance) { _distance = p_distance; }
+	void set_type(Battle_node_type p_type) { _type = p_type; }
+	void set_type_background(Battle_node_type p_type_background) { _type_background = p_type_background; }
 
-		s_cost = start_cost;
-		e_cost = e;
-		t_cost = start_cost + e;
-	}
+	int distance() { return (_distance); }
+	Battle_node_type type() { return (_type); }
+	Battle_node_type type_background() { return (_type_background); }
 };
 
 class Battle_arena
@@ -121,9 +111,9 @@ public:
 	void reset();
 	void generate_random_start();
 	jgl::Array<jgl::Vector2> parse_area(jgl::Vector2 start);
-	void rebake();
-	void bake_background();
-	void bake();
+	void rebake(jgl::Viewport* p_viewport);
+	void bake_background(jgl::Viewport* p_viewport);
+	void bake(jgl::Viewport* p_viewport);
 	void render_background(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
 	void render_front(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);
 	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos);

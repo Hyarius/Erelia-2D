@@ -34,7 +34,7 @@ private:
 
 	Console* _console;
 
-	size_t _index_mode;
+	game_mode _index_mode;
 	jgl::Array<Game_mode*> _modes;
 
 public:
@@ -46,10 +46,10 @@ public:
 	Editor_mode* editor_mode() { return (static_cast<Editor_mode*>(_modes[0])); }
 	Adventure_mode* adventure_mode() { return (static_cast<Adventure_mode*>(_modes[1])); }
 	Battle_mode* battle_mode() { return (static_cast<Battle_mode*>(_modes[2])); }
-	size_t index_mode() { return (_index_mode); }
+	game_mode index_mode() { return (_index_mode); }
 	jgl::Array<Game_mode*>& modes() { return (_modes); }
 	Game_mode* modes(size_t index) { if (index >= _modes.size()) return (nullptr); return (_modes[index]); }
-	Game_mode* active_mode() { return (_modes[_index_mode]); }
+	Game_mode* active_mode() { return (_modes[static_cast<size_t>(_index_mode)]); }
 	Console* console() { return (_console); }
 
 	Game_engine(jgl::Widget* p_parent = nullptr);

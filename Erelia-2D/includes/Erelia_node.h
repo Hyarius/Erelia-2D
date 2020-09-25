@@ -4,56 +4,38 @@
 #include "erelia_tile.h"
 #include "erelia_player.h"
 
-class Link
+class Base_node
 {
-private:
-	jgl::Vector2 _A;
-	jgl::Vector2 _B;
-public:
-	Link(jgl::Vector2 p_A, jgl::Vector2 p_B);
-	jgl::Vector2 a() { return (_A); }
-	jgl::Vector2 b() { return (_B); }
-	void use(class Board* board, Player* player);
-};
-
-class Node
-{
-private:
+protected:
 	jgl::Vector2 _pos;
-	Tile* _tile;
-	Link* _link;
 	class Entity* _occupant;
-	class Battle_data* _encounter_area;
 
 	bool _calculated;
+	int _distance;
 	size_t _s_cost;
 	size_t _e_cost;
 	size_t _t_cost;
-	Node* _parent;
+	Base_node* _parent;
 
 public:
-	Node(Tile* p_tile, jgl::Vector2 p_pos)
+	Base_node(jgl::Vector2 p_pos)
 	{
 		_pos = p_pos;
-		_tile = p_tile;
-		_link = nullptr;
-		_occupant = nullptr;
 		_calculated = false;
-		_encounter_area = nullptr;
-		_parent = nullptr;
+		_distance = 0;
 		_s_cost = 0;
 		_e_cost = 0;
 		_t_cost = 0;
+		_parent = nullptr;
+		_occupant = nullptr;
 	}
-	Tile* tile() { return (_tile); }
-	Link* link() { return (_link); }
+
 	class Entity* occupant() { return (_occupant); }
-	class Battle_data* encounter_area() { return (_encounter_area); }
 	bool occuped() { return (_occupant != nullptr); }
 	void set_calculated(bool p_state) { _calculated = p_state; }
 	bool calculated() { return (_calculated); }
-	Node* parent() { return (_parent); }
-	void set_parent(Node* p_parent) { _parent = p_parent; }
+	Base_node* parent() { return (_parent); }
+	void set_parent(Base_node* p_parent) { _parent = p_parent; }
 	jgl::Vector2 pos() { return (_pos); }
 	void reset_cost() { _s_cost = 0; _e_cost = 0; _t_cost = 0; _calculated = false; }
 	void calc_cost(size_t start_cost, jgl::Vector2 end)
@@ -73,9 +55,41 @@ public:
 	size_t e_cost() { return (_e_cost); }
 	size_t t_cost() { return (_t_cost); }
 
+	void set_occupant(class Entity* p_occupant) { _occupant = p_occupant; }
+};
+
+class Link
+{
+private:
+	jgl::Vector2 _A;
+	jgl::Vector2 _B;
+public:
+	Link(jgl::Vector2 p_A, jgl::Vector2 p_B);
+	jgl::Vector2 a() { return (_A); }
+	jgl::Vector2 b() { return (_B); }
+	void use(class Board* board, Player* player);
+};
+
+class Node : public Base_node
+{
+private:
+	Tile* _tile;
+	Link* _link;
+	class Battle_data* _encounter_area;
+
+public:
+	Node(Tile* p_tile, jgl::Vector2 p_pos) : Base_node(p_pos)
+	{
+		_tile = p_tile;
+		_link = nullptr;
+		_encounter_area = nullptr;
+	}
+	Tile* tile() { return (_tile); }
+	Link* link() { return (_link); }
+	class Battle_data* encounter_area() { return (_encounter_area); }
+
 	void set_tile(Tile* p_tile) { _tile = p_tile; }
 	void set_link(Link* p_link) { _link = p_link; }
-	void set_occupant(class Entity* p_occupant) { _occupant = p_occupant; }
 	void set_encounter_area(class Battle_data* p_encounter_area) { _encounter_area = p_encounter_area; }
 };
 

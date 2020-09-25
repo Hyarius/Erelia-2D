@@ -27,7 +27,8 @@ public:
 				delete _content[i][j];
 	}
 	void place(jgl::Vector2 coord, Tile* p_tile, bool need_bake = false);
-	void bake();
+	void rebake(const jgl::Viewport* viewport);
+	void bake(const jgl::Viewport* viewport);
 	void update();
 	void render(jgl::Viewport* viewport, jgl::Vector2 base_pos);
 	void render_entity(jgl::Viewport* viewport, jgl::Vector2 base_pos);

@@ -16,6 +16,14 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 	_allies.clear();
 	_enemies.clear();
 	_neutrals.clear();
+
+	_calculated = false;
+
+	_renderer = new Battle_renderer(_contener);
+	_renderer->activate();
+
+	_action_frame = new jgl::Frame(_contener);
+	_action_frame->activate();
 }
 
 void Battle_mode::add_creature(Creature_entity* creature)
@@ -35,11 +43,15 @@ uint32_t tmp_time;
 
 void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second)
 {
-
+	engine->board()->rebake(_renderer->viewport());
 	_phase = Battle_phase::placement;
 	_arena = p_arena;
 
-	_pointer->place(engine->player()->pos());
+	_renderer->set_arena(p_arena);
+	_renderer->set_pointer(_pointer);
+	_renderer->set_turn_order(&_turn_order);
+	_renderer->set_turn_index(&_turn_index);
+	_pointer->place( engine->player()->pos());
 	
 	_turn_order.clear();
 	_allies.clear();
@@ -67,7 +79,7 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 	place(_enemies[0], _arena->enemy_start_pos()[index] + _arena->pos());
 	//place(_allies[0], _arena->ally_start_pos()[0] + _arena->pos());
 
-	_arena->rebake();
+	_arena->rebake(_renderer->viewport());
 }
 
 void Battle_mode::exit()
@@ -88,7 +100,7 @@ void Battle_mode::place(Creature_entity* entity, jgl::Vector2 pos)
 		else
 			_active_enemy = entity;
 		entity->place(pos);
-		node->occupant = entity;
+		node->set_occupant(entity);
 	}
 }
 
@@ -97,9 +109,10 @@ void Battle_mode::update()
 	_pointer->update_pos(false);
 	for (size_t i = 0; i < _turn_order.size(); i++)
 	{
-		//std::cout << "Entity " << i << std::boolalpha << " Road size : " << _turn_order[i]->road().size() << " Moving : " << _turn_order[i]->is_moving() << "/" << " active : " << _turn_order[i]->is_active() << "/" << " static : " << _turn_order[i]->is_static() << "/" << std::endl;
 		_turn_order[i]->update();
 	}
+	if (_phase == Battle_phase::fight && _turn_order[_turn_index]->is_moving() == false && _calculated == false)
+		check_movement();
 }
 
 void Battle_mode::end_turn()
@@ -126,30 +139,34 @@ void Battle_mode::check_movement()
 
 	Creature_entity* entity = _turn_order[_turn_index];
 	to_calc.push_back(entity->pos() - _arena->pos());
-	_arena->battle_node(entity->pos() - _arena->pos())->distance = 0;
-	_arena->battle_node(entity->pos() - _arena->pos())->calculated = true;
+	Battle_node* tmp_node = _arena->battle_node(entity->pos() - _arena->pos());
+	if (tmp_node == nullptr)
+		return ;
+	tmp_node->set_distance(0);
+	tmp_node->set_calculated(true);
 	for (size_t i = 0; i < to_calc.size(); i++)
 	{
 		Battle_node* actual = _arena->battle_node(to_calc[i]);
-		if (actual->distance < entity->PM().actual)
+		if (actual->distance() < entity->PM().actual)
 		{
 			for (size_t j = 0; j < 4; j++)
 			{
 				jgl::Vector2 tmp = to_calc[i] + neightbour[j];
 				Battle_node* node = _arena->battle_node(tmp);
-				if (node != nullptr)
+				if (node != nullptr && node->occupant() == nullptr)
 				{
-					if (node->type == Battle_node_type::clear && node->calculated == false)
+					if (node->type() == Battle_node_type::clear && node->calculated() == false)
 					{
 						_arena->define_node_type(tmp, Battle_node_type::mouvement, true);
-						node->distance = actual->distance + 1;
+						node->set_distance(actual->distance() + 1);
 						to_calc.push_back(tmp);
 					}
 				}
 			}
 		}
 	}
-	_arena->bake();
+	_arena->bake(_renderer->viewport());
+	_calculated = true;
 }
 
 void Battle_mode::change_phase()
@@ -158,7 +175,6 @@ void Battle_mode::change_phase()
 	{	
 		_phase = Battle_phase::fight;
 		_arena->reset();
-		_arena->bake();
 		end_turn();
 	}
 	else if (_phase == Battle_phase::fight)
@@ -176,7 +192,7 @@ bool Battle_mode::handle_keyboard_placement()
 		{
 			jgl::Vector2 actual_pos = _pointer->pos() - _arena->pos() + move_delta[i];
 			if (_pointer->is_static() == true && _arena->content().count(actual_pos) != 0 &&
-				_arena->content()[actual_pos]->type != Battle_node_type::border)
+				_arena->content()[actual_pos]->type() != Battle_node_type::border)
 			{
 				_pointer->move(move_delta[i], false);
 				return (true);
@@ -206,7 +222,7 @@ bool Battle_mode::handle_keyboard_fight()
 		{
 			jgl::Vector2 actual_pos = _pointer->pos() - _arena->pos() + move_delta[i];
 			if (_pointer->is_static() == true && _arena->content().count(actual_pos) != 0 &&
-				_arena->content()[actual_pos]->type != Battle_node_type::border)
+				_arena->content()[actual_pos]->type() != Battle_node_type::border)
 			{
 				_pointer->move(move_delta[i], false);
 				return (true);
@@ -239,9 +255,9 @@ bool Battle_mode::handle_mouse_placement()
 {
 	if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 	{
-		jgl::Vector2 pos = screen_to_tile(g_mouse->pos, _pointer->pos());
+		jgl::Vector2 pos = engine->board()->screen_to_tile(g_mouse->pos, _pointer->pos());
 		Battle_node* node = _arena->absolute_battle_node(pos);
-		if (node != nullptr && node->type == Battle_node_type::ally_pos)
+		if (node != nullptr && node->type() == Battle_node_type::ally_pos)
 		{
 			place(_allies[0], pos);
 		}
@@ -249,39 +265,36 @@ bool Battle_mode::handle_mouse_placement()
 	return (false);
 }
 
+
+void Battle_mode::cast_vision(int range)
+{
+
+}
+
 void Battle_mode::launch_movement(jgl::Vector2 pos)
 {
 	Battle_node* node = _arena->absolute_battle_node(pos);
-	if (node != nullptr && node->type == Battle_node_type::mouvement)
+	if (node != nullptr && node->type() == Battle_node_type::mouvement)
 	{
+		int distance = node->distance();
 		_arena->reset();
 		Creature_entity* entity = _turn_order[_turn_index];
 		jgl::Array<jgl::Vector2> path = _arena->pathfinding(entity->pos(), pos);
-		std::cout << "Path : ";
-		if (path.size() == 0)
-			std::cout << "No path";
-		else
+
+		if (path.size() != 0)
 		{
-			for (size_t i = 0; i < path.size(); i++)
-			{
-				if (i != 0)
-					std::cout << " - ";
-				std::cout << path[i];
-			}
+			entity->set_road(path);
+			entity->PM().actual -= distance;
+			_calculated = false;
 		}
-		
-		std::cout << std::endl;
-		entity->set_road(path);
-		entity->PM().actual -= node->distance;
 	}
-	
 }
 
 bool Battle_mode::handle_mouse_fight()
 {
 	if (jgl::get_button(jgl::mouse_button::left) == jgl::mouse_state::release)
 	{
-		jgl::Vector2 pos = screen_to_tile(g_mouse->pos, _pointer->pos());
+		jgl::Vector2 pos = engine->board()->screen_to_tile(g_mouse->pos, _pointer->pos());
 		launch_movement(pos);
 	}
 	return (false);
@@ -299,26 +312,16 @@ bool Battle_mode::handle_mouse()
 
 void Battle_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
-
+	float delta = g_application->size().x / 4;
+	_action_frame->set_geometry(0, jgl::Vector2(delta, g_application->size().y));
+	_renderer->set_geometry(jgl::Vector2(delta, 0.0f), jgl::Vector2(g_application->size().x - delta, g_application->size().y));
 }
 void Battle_mode::render()
 {
-	engine->board()->render(_viewport, _pointer->pos());
-	if (_arena != nullptr)
-	{
-		_arena->render(_viewport, _pointer->pos() - 0.5f);
-		jgl::Vector2 start_pos = tile_to_screen(_arena->pos() - 1, _pointer->pos());
-		jgl::Vector2 end_pos = tile_to_screen(_arena->pos() + _arena->size() + 1, _pointer->pos());
-		jgl::fill_rectangle(0, jgl::Vector2(g_application->size().x, start_pos.y), jgl::Color(0, 0, 0, 200));
-		jgl::fill_rectangle(jgl::Vector2(0.0f, end_pos.y) , jgl::Vector2(g_application->size().x, g_application->size().y - end_pos.y), jgl::Color(0, 0, 0, 200));
-		jgl::fill_rectangle(jgl::Vector2(0.0f, start_pos.y), jgl::Vector2(start_pos.x, end_pos.y - start_pos.y), jgl::Color(0, 0, 0, 200));
-		jgl::fill_rectangle(jgl::Vector2(end_pos.x, start_pos.y), jgl::Vector2(g_application->size().x - end_pos.x, end_pos.y - start_pos.y), jgl::Color(0, 0, 0, 200));
-	}
 	for (int i = 0; i < _turn_order.size(); i++)
 	{
 		_turn_order[i]->render(_viewport, _pointer->pos(), i == _turn_index);
 	}
-	//_pointer->render(_viewport, _pointer->pos());
 	jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

@@ -8,6 +8,7 @@
 class Board
 {
 private:
+	const jgl::Viewport* _active_viewport;
 	std::map<jgl::Vector2, Chunk*> _chunks;
 
 	std::map<jgl::String, NPC*> _npc_map;
@@ -53,13 +54,18 @@ public:
 	void calc_Battle_data();
 	void parse_encounter_area(Battle_data* area, jgl::Vector2 start);
 	void bake();
+	void rebake(const jgl::Viewport* viewport);
 	void bake_chunk(jgl::Vector2 pos);
+	void rebake_chunk(jgl::Vector2 pos, const jgl::Viewport* viewport);
 	void update();
 	void render(jgl::Viewport* viewport, jgl::Vector2 base_pos = -1);
 
 	bool can_acces(jgl::Vector2 pos, jgl::Vector2 delta);
 	Node* find_closest(jgl::Array<jgl::Vector2>& to_calc);
 	jgl::Array<jgl::Vector2> pathfinding(jgl::Vector2 start, jgl::Vector2 end);
+
+	jgl::Vector2 tile_to_screen(jgl::Vector2 tile_pos, jgl::Vector2 base_pos = -1);
+	jgl::Vector2 screen_to_tile(jgl::Vector2 coord, jgl::Vector2 base_pos = -1);
 };
 
 #endif

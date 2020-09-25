@@ -54,9 +54,9 @@ void Interacter::increment()
 	_dialogue_frame->desactivate();
 	if (_source->interaction(_index).type() == Interaction_type::none)
 	{
-		if (engine->index_mode() == static_cast<size_t>(game_mode::editor))
+		if (engine->index_mode() == game_mode::editor)
 			engine->editor_mode()->desactive_interacter();
-		else if (engine->index_mode() == static_cast<size_t>(game_mode::adventure))
+		else if (engine->index_mode() == game_mode::adventure)
 			engine->adventure_mode()->desactive_interacter();
 	}
 	else
