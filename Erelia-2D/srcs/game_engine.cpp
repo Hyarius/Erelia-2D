@@ -148,7 +148,7 @@ bool Game_engine::handle_keyboard()
 		node_size /= 2;
 		_board->bake();
 		if (battle_mode()->arena() != nullptr)
-			battle_mode()->arena()->rebake(battle_mode()->renderer()->viewport());
+			battle_mode()->arena()->rebake(battle_mode()->arena_renderer()->viewport());
 
 	}
 	else if (jgl::get_key(jgl::key::F3) == jgl::key_state::release)
@@ -156,7 +156,7 @@ bool Game_engine::handle_keyboard()
 		node_size *= 2;
 		_board->bake();
 		if (battle_mode()->arena() != nullptr)
-			battle_mode()->arena()->rebake(battle_mode()->renderer()->viewport());
+			battle_mode()->arena()->rebake(battle_mode()->arena_renderer()->viewport());
 	}
 	else if (jgl::get_key(jgl::key::F10) == jgl::key_state::release)
 	{

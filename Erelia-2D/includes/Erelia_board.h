@@ -24,6 +24,7 @@ private:
 	GLuint _vertex_buffer;
 
 public:
+	const jgl::Viewport* active_viewport() { return (_active_viewport); }
 	Chunk* chunk(jgl::Vector2 pos);
 	Tile* tile(jgl::Vector2 pos);
 	Node* node(jgl::Vector2 pos);

@@ -19,11 +19,11 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 
 	_calculated = false;
 
-	_renderer = new Battle_renderer(_contener);
-	_renderer->activate();
+	_arena_renderer = new Battle_arena_renderer(_contener);
+	_arena_renderer->activate();
 
-	_action_frame = new jgl::Frame(_contener);
-	_action_frame->activate();
+	_controller = new Battle_controller(_contener);
+	_controller->activate();
 }
 
 void Battle_mode::add_creature(Creature_entity* creature)
@@ -43,14 +43,14 @@ uint32_t tmp_time;
 
 void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second)
 {
-	engine->board()->rebake(_renderer->viewport());
+	engine->board()->rebake(_arena_renderer->viewport());
 	_phase = Battle_phase::placement;
 	_arena = p_arena;
 
-	_renderer->set_arena(p_arena);
-	_renderer->set_pointer(_pointer);
-	_renderer->set_turn_order(&_turn_order);
-	_renderer->set_turn_index(&_turn_index);
+	_arena_renderer->set_arena(p_arena);
+	_arena_renderer->set_pointer(_pointer);
+	_arena_renderer->set_turn_order(&_turn_order);
+	_arena_renderer->set_turn_index(&_turn_index);
 	_pointer->place( engine->player()->pos());
 	
 	_turn_order.clear();
@@ -79,13 +79,14 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 	place(_enemies[0], _arena->enemy_start_pos()[index] + _arena->pos());
 	//place(_allies[0], _arena->ally_start_pos()[0] + _arena->pos());
 
-	_arena->rebake(_renderer->viewport());
+	_arena->rebake(_arena_renderer->viewport());
 }
 
 void Battle_mode::exit()
 {
-	engine->player()->place(_pointer->pos());
+	//engine->player()->place(_pointer->pos());
 	engine->change_mode(game_mode::adventure);
+	engine->board()->rebake(g_application->viewport());
 	delete _arena;
 	_arena = nullptr;
 }
@@ -121,7 +122,16 @@ void Battle_mode::end_turn()
 		_turn_order[_turn_index]->reset_stat();
 	_turn_index += 1;
 	_turn_index = _turn_index % _turn_order.size();
-	check_movement();
+
+	if (_turn_order[_turn_index]->team() == Team::enemy)
+	{
+		_controller->change_phase(Battle_action_phase::enemy_turn);
+	}
+	else
+	{
+		_controller->change_phase(Battle_action_phase::base);
+		check_movement();
+	}
 }
 
 void Battle_mode::check_movement()
@@ -165,7 +175,7 @@ void Battle_mode::check_movement()
 			}
 		}
 	}
-	_arena->bake(_renderer->viewport());
+	_arena->bake(_arena_renderer->viewport());
 	_calculated = true;
 }
 
@@ -313,15 +323,12 @@ bool Battle_mode::handle_mouse()
 void Battle_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
 	float delta = g_application->size().x / 4;
-	_action_frame->set_geometry(0, jgl::Vector2(delta, g_application->size().y));
-	_renderer->set_geometry(jgl::Vector2(delta, 0.0f), jgl::Vector2(g_application->size().x - delta, g_application->size().y));
+	float delta2 = g_application->size().y / 4;
+	_controller->set_geometry(jgl::Vector2(0.0f, g_application->size().y - delta2), jgl::Vector2(delta, delta2));
+	_arena_renderer->set_geometry(jgl::Vector2(delta, 0.0f), jgl::Vector2(g_application->size().x - delta, g_application->size().y));
 }
 void Battle_mode::render()
 {
-	for (int i = 0; i < _turn_order.size(); i++)
-	{
-		_turn_order[i]->render(_viewport, _pointer->pos(), i == _turn_index);
-	}
 	jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

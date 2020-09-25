@@ -1,6 +1,6 @@
 #include "erelia.h"
 
-Battle_renderer::Battle_renderer(jgl::Widget* parent) : jgl::Widget(parent)
+Battle_arena_renderer::Battle_arena_renderer(jgl::Widget* parent) : jgl::Widget(parent)
 {
 	_pointer = nullptr;
 	_arena = nullptr;
@@ -8,31 +8,31 @@ Battle_renderer::Battle_renderer(jgl::Widget* parent) : jgl::Widget(parent)
 	_turn_index = nullptr;
 }
 
-void Battle_renderer::set_arena(Battle_arena* p_arena)
+void Battle_arena_renderer::set_arena(Battle_arena* p_arena)
 {
 	_arena = p_arena;
 }
 
-void Battle_renderer::set_turn_order(jgl::Array<Creature_entity*>* p_array)
+void Battle_arena_renderer::set_turn_order(jgl::Array<Creature_entity*>* p_array)
 {
 	_turn_order = p_array;
 }
 
-void Battle_renderer::set_pointer(Entity* p_pointer)
+void Battle_arena_renderer::set_pointer(Entity* p_pointer)
 {
 	_pointer = p_pointer;
 }
 
-void Battle_renderer::set_turn_index(int* p_turn_index)
+void Battle_arena_renderer::set_turn_index(int* p_turn_index)
 {
 	_turn_index = p_turn_index;
 }
 
-void Battle_renderer::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
+void Battle_arena_renderer::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 {
 
 }
-void Battle_renderer::render()
+void Battle_arena_renderer::render()
 {
 	if (_arena == nullptr || _pointer == nullptr || _turn_order == nullptr || _turn_index == nullptr)
 		return;

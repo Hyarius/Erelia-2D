@@ -105,6 +105,7 @@
     <ClCompile Include="srcs\adventure_mode.cpp" />
     <ClCompile Include="srcs\basic_function.cpp" />
     <ClCompile Include="srcs\battle_area.cpp" />
+    <ClCompile Include="srcs\battle_controller.cpp" />
     <ClCompile Include="srcs\battle_data.cpp" />
     <ClCompile Include="srcs\battle_mode.cpp" />
     <ClCompile Include="srcs\battle_renderer.cpp" />

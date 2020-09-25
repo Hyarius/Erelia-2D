@@ -3,7 +3,7 @@
 
 #include "erelia_battler.h"
 
-class Battle_renderer : public jgl::Widget
+class Battle_arena_renderer : public jgl::Widget
 {
 private:
 	Battle_arena* _arena;
@@ -12,7 +12,7 @@ private:
 	int* _turn_index;
 
 public:
-	Battle_renderer(jgl::Widget* parent = nullptr);
+	Battle_arena_renderer(jgl::Widget* parent = nullptr);
 	void set_arena(Battle_arena* p_arena);
 	void set_turn_order(jgl::Array<Creature_entity*>* p_array);
 	void set_pointer(Entity* p_pointer);

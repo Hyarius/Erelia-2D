@@ -107,13 +107,14 @@ private:
 
 	bool _calculated;
 
-	Battle_renderer* _renderer;
-	jgl::Frame* _action_frame;
+	Battle_arena_renderer* _arena_renderer;
+	Battle_controller* _controller;
 
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
 
-	Battle_renderer* renderer() { return (_renderer); }
+	Battle_arena_renderer* arena_renderer() { return (_arena_renderer); }
+	Battle_controller* controller() { return (_controller); }
 
 	void add_creature(Creature_entity* to_add);
 	void start(Battle_arena* p_arena, Team_comp first, Team_comp second);

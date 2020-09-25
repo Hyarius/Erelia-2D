@@ -218,8 +218,7 @@ bool Entity::is_pointed(jgl::Vector2 base_pos)
 {
 	jgl::Vector2 pos = engine->board()->tile_to_screen(_pos, base_pos);
 
-	if (jgl::is_middle(pos.x, g_mouse->pos.x, pos.x + node_size) == true &&
-		jgl::is_middle(pos.y, g_mouse->pos.y, pos.y + node_size) == true)
+	if (jgl::is_middle(pos, g_mouse->pos - engine->board()->active_viewport()->anchor(), pos + node_size) == true)
 		return (true);
 	return (false);
 }
