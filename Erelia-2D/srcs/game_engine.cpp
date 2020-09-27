@@ -7,6 +7,7 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	_battle_tileset = new jgl::Sprite_sheet("ressources/texture/battle_tile.png", jgl::Vector2(16, 1));
 	_charset = new jgl::Sprite_sheet("ressources/texture/charset.png", jgl::Vector2(10, 42));
 	_faceset = new jgl::Sprite_sheet("ressources/texture/face.png", jgl::Vector2(16, 10));
+	_back_faceset = new jgl::Sprite_sheet("ressources/texture/back_face.png", jgl::Vector2(16, 10));
 	create_item_list(_tileset);
 	create_creature_list(_faceset);
 	_board = new Board("ressources/maps/world.map");
@@ -138,6 +139,7 @@ bool Game_engine::handle_keyboard()
 	if (jgl::get_key(jgl::key::F2) == jgl::key_state::release ||
 		(jgl::get_key(jgl::key::escape) == jgl::key_state::release && _console->is_active() == true))
 	{
+		std::cout << "Here ?" << std::endl;
 		if (_console->entry()->is_active() == false)
 			active_console();
 		else

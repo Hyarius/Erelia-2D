@@ -21,4 +21,25 @@ public:
 	void render();
 };
 
+class Battle_face_renderer : public jgl::Widget
+{
+private:
+	jgl::Frame* _frame;
+	Creature_entity** _ally_entity;
+	Creature_entity** _enemy_entity;
+	Creature_entity* _old_ally_entity;
+	Creature_entity* _old_enemy_entity;
+
+	jgl::Text_label* _ally_name;
+	jgl::Image_label* _ally_face;
+	jgl::Text_label* _enemy_name;
+	jgl::Image_label* _enemy_face;
+
+public:
+	Battle_face_renderer(Creature_entity** p_ally_entity, Creature_entity** p_enemy_entity, jgl::Widget* parent = nullptr);
+	void update();
+	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
+	void render();
+};
+
 #endif

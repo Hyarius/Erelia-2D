@@ -1,11 +1,15 @@
 #include "erelia.h"
 
-Creature::Creature(Creature* other)
+Creature::Creature(Creature* other) : Creature(other->id(), other->name(), other->face(), other->sprite())
 {
-	_id = other->id();
-	_name = other->name();
-	_face = other->face();
-	_sprite = other->sprite();
+	_PA = other->PA();
+	_PM = other->PM();
+	_HP = other->HP();
+	_attack = other->attack();
+	_defense = other->defense();
+	_attack_spe = other->attack_spe();
+	_defense_spe = other->defense_spe();
+	_initiative = other->initiative();
 }
 
 Creature::Creature(int p_id, jgl::String p_name, jgl::Vector2 p_face, jgl::Vector2 p_sprite)
@@ -14,6 +18,15 @@ Creature::Creature(int p_id, jgl::String p_name, jgl::Vector2 p_face, jgl::Vecto
 	_name = p_name;
 	_face = p_face;
 	_sprite = p_sprite;
+
+	_PA = Stat(6);
+	_PM = Stat(3);
+	_HP = Stat(20);
+	_attack = Trait(10, 2);
+	_defense = Trait(8, 2);
+	_attack_spe = Trait(10, 2);
+	_defense_spe = Trait(8, 2);
+	_initiative = Trait(10, 2);
 }
 
 Creature::Creature(jgl::String path)
@@ -31,8 +44,29 @@ Creature::Creature(jgl::String path)
 	tab = jgl::get_strsplit(file, ";", 2);
 	_sprite = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
 
-	_PA = Stat(jgl::stoi(jgl::get_str(file)));
-	_PM = Stat(jgl::stoi(jgl::get_str(file)));
+	tab = jgl::get_strsplit(file, ";", 2);
+	_PA = Stat(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_PM = Stat(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_HP = Stat(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_attack = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_defense = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_attack_spe = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_defense_spe = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+
+	tab = jgl::get_strsplit(file, ";", 2);
+	_initiative = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
 }
 
 std::ostream& operator<<(std::ostream& os, const Creature value)
@@ -47,8 +81,17 @@ Creature_entity::Creature_entity(Creature* base, Team p_team) : Entity(Entity_ty
 	set_wait_time(10);
 	_species = base;
 	_team = p_team;
+
+	_level = 1;
+
 	_PA = base->PA();
 	_PM = base->PM();
+	_HP = base->HP();
+	_attack = base->attack();
+	_defense = base->defense();
+	_attack_spe = base->attack_spe();
+	_defense_spe = base->defense_spe();
+	_initiative = base->initiative();
 }
 
 void Creature_entity::reset_stat()

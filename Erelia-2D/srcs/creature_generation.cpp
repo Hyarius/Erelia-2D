@@ -1,5 +1,17 @@
 #include "Erelia.h"
 
+struct Stat_data
+{
+    int PA;
+    int PM;
+    int HP;
+    int attack;
+    int defense;
+    int attack_spe;
+    int defense_spe;
+    int initiative;
+};
+
 void generate_creature_data()
 {
     jgl::Array<jgl::String> name = {
@@ -313,6 +325,10 @@ void generate_creature_data()
         jgl::Vector2(0, 37),//melofee
         jgl::Vector2(0, 38),//kangourex
         jgl::Vector2(0, 39),//poison
+    };
+
+    jgl::Array< Stat_data> stat_array = {
+        {6, 3, 20}
     };
 
 

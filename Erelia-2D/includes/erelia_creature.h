@@ -3,20 +3,37 @@
 
 #include "jgl.h"
 
-struct Stat
+struct Trait
 {
 	int actual;
+	int upgrade_value;
+
+	Trait(int p_value = 0, int p_upgrade_value = 0)
+	{
+		actual = p_value;
+		upgrade_value = p_upgrade_value;
+	}
+	void upgrade(int nb_level = 1)
+	{
+		actual += upgrade_value * nb_level;
+	}
+};
+
+struct Stat : public Trait
+{
 	int max;
 
-	Stat(int value = -1)
+	Stat(int value = -1, int upgrade_vale = 0)
 	{
 		actual = value;
 		max = value;
+		upgrade_value = 0;
 	}
-	Stat(int p_actual, int p_max)
+	Stat(int p_actual, int p_max, int p_upgrade_value)
 	{
 		actual = p_actual;
 		max = p_max;
+		upgrade_value = p_upgrade_value;
 	}
 	void reset()
 	{
@@ -34,6 +51,12 @@ private:
 
 	Stat _PA;
 	Stat _PM;
+	Stat _HP;
+	Trait _attack;
+	Trait _defense;
+	Trait _attack_spe;
+	Trait _defense_spe;
+	Trait _initiative;
 
 public:
 	Creature(Creature* other);
@@ -46,7 +69,13 @@ public:
 	const jgl::Vector2 sprite() const { return (_sprite); }
 
 	const Stat PA() const { return (_PA); }
+	const Stat HP() const { return (_HP); }
 	const Stat PM() const { return (_PM); }
+	const Trait attack() const { return (_attack); }
+	const Trait defense() const { return (_defense); }
+	const Trait attack_spe() const { return (_attack_spe); }
+	const Trait defense_spe() const { return (_defense_spe); }
+	const Trait initiative() const { return (_initiative); }
 };
 
 extern jgl::Array<Creature*> creature_list;
@@ -64,14 +93,28 @@ private:
 	Creature* _species;
 	Team _team;
 
+	int _level;
+
 	Stat _PA;
 	Stat _PM;
+	Stat _HP;
+	Trait _attack;
+	Trait _defense;
+	Trait _attack_spe;
+	Trait _defense_spe;
+	Trait _initiative;
 
 public:
 	Creature_entity(Creature* base, Team p_team);
 
 	Stat& PA() { return (_PA); }
 	Stat& PM() { return (_PM); }
+	Stat& HP() { return (_HP); }
+	Trait& attack() { return (_attack); }
+	Trait& defense() { return (_defense); }
+	Trait& attack_spe() { return (_attack_spe); }
+	Trait& defense_spe() { return (_defense_spe); }
+	Trait& initiative() { return (_initiative); }
 
 	void reset_stat();
 

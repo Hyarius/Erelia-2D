@@ -24,6 +24,9 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 
 	_controller = new Battle_controller(_contener);
 	_controller->activate();
+
+	_face_renderer = new Battle_face_renderer(&_active_ally, &_active_enemy, _contener);
+	_face_renderer->activate();
 }
 
 void Battle_mode::add_creature(Creature_entity* creature)
@@ -326,6 +329,7 @@ void Battle_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 	float delta2 = g_application->size().y / 4;
 	_controller->set_geometry(jgl::Vector2(0.0f, g_application->size().y - delta2), jgl::Vector2(delta, delta2));
 	_arena_renderer->set_geometry(jgl::Vector2(delta, 0.0f), jgl::Vector2(g_application->size().x - delta, g_application->size().y));
+	_face_renderer->set_geometry(0, jgl::Vector2(delta, g_application->size().y - delta2));
 }
 void Battle_mode::render()
 {

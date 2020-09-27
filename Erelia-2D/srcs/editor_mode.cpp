@@ -79,6 +79,7 @@ bool Editor_mode::handle_keyboard()
 				active_inventory();
 			else
 				desactive_inventory();
+			return (true);
 		}
 	}
 

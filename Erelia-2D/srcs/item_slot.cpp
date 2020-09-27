@@ -65,6 +65,7 @@ void Item_slot::render()
 	if (_item != nullptr)
 	{
 		_item->draw(_box.anchor() + _box.border(), _box.area() - _box.border() * 2, _viewport);
+		jgl::draw_rectangle(_box.anchor(), _box.area(), 1, jgl::Color(0, 0, 0), nullptr);
 		if (_item->item_type() == Item_type::tile && jgl::get_button(jgl::mouse_button::right) == jgl::mouse_state::down)
 			jgl::draw_text(jgl::itoa((static_cast<Node_item*>(_item))->node_index()), _box.anchor() + _box.border() * 2, 12, 1, 1.0f, jgl::text_color::light_green);
 	}

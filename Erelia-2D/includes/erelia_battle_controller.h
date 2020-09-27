@@ -6,6 +6,7 @@ enum class Battle_action_phase
 	placement = 0,
 	enemy_turn = 1,
 	base = 2,
+	attack = 3,
 	count
 };
 
@@ -45,6 +46,7 @@ private:
 	Battle_action_phase _phase;
 
 	jgl::Frame* _frame;
+	jgl::Button* _close_attack_button;
 	jgl::Array<Battle_controller_panel*> _panels;
 
 public:

@@ -107,6 +107,7 @@ private:
 
 	bool _calculated;
 
+	Battle_face_renderer* _face_renderer;
 	Battle_arena_renderer* _arena_renderer;
 	Battle_controller* _controller;
 

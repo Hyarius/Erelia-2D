@@ -29,6 +29,7 @@ private:
 	jgl::Sprite_sheet* _battle_tileset;
 	jgl::Sprite_sheet* _charset;
 	jgl::Sprite_sheet* _faceset;
+	jgl::Sprite_sheet* _back_faceset;
 	Board* _board;
 	Player* _player;
 
@@ -41,6 +42,8 @@ public:
 	jgl::Sprite_sheet* battle_tileset() { return (_battle_tileset); }
 	jgl::Sprite_sheet* tileset() { return (_tileset);}
 	jgl::Sprite_sheet* charset() { return (_charset); }
+	jgl::Sprite_sheet* faceset() { return (_faceset); }
+	jgl::Sprite_sheet* back_faceset() { return (_back_faceset); }
 	Board* board() { return (_board); }
 	Player* player() { return (_player); }
 	Editor_mode* editor_mode() { return (static_cast<Editor_mode*>(_modes[0])); }
