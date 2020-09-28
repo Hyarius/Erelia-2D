@@ -5,10 +5,10 @@
 
 struct Trait
 {
-	int actual;
-	int upgrade_value;
+	float actual;
+	float upgrade_value;
 
-	Trait(int p_value = 0, int p_upgrade_value = 0)
+	Trait(float p_value = 0, float p_upgrade_value = 0)
 	{
 		actual = p_value;
 		upgrade_value = p_upgrade_value;
@@ -21,25 +21,22 @@ struct Trait
 
 struct Stat : public Trait
 {
-	int max;
+	float max;
 
-	Stat(int value = -1, int upgrade_vale = 0)
+	Stat(float p_value = 1.0f, float p_upgrade_value = 0.0f) : Trait(p_value, p_upgrade_value)
 	{
-		actual = value;
-		max = value;
-		upgrade_value = 0;
+		max = p_value;
 	}
-	Stat(int p_actual, int p_max, int p_upgrade_value)
+	Stat(float p_value, float p_max, float p_upgrade_value) : Trait(p_value, p_upgrade_value)
 	{
-		actual = p_actual;
 		max = p_max;
-		upgrade_value = p_upgrade_value;
 	}
 	void reset()
 	{
 		actual = max;
 	}
 };
+
 
 class Creature
 {
@@ -117,6 +114,7 @@ public:
 	Trait& initiative() { return (_initiative); }
 
 	void reset_stat();
+	void upgrade(int nb_level = 1);
 
 	void render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos, bool selected);
 	Creature* species() { return (_species); }

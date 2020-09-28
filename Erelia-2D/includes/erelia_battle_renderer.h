@@ -32,8 +32,11 @@ private:
 
 	jgl::Text_label* _ally_name;
 	jgl::Image_label* _ally_face;
+	jgl::Progressive_bar* _ally_hp_bar;
+
 	jgl::Text_label* _enemy_name;
 	jgl::Image_label* _enemy_face;
+	jgl::Progressive_bar* _enemy_hp_bar;
 
 public:
 	Battle_face_renderer(Creature_entity** p_ally_entity, Creature_entity** p_enemy_entity, jgl::Widget* parent = nullptr);

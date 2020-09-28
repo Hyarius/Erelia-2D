@@ -19,9 +19,9 @@ Creature::Creature(int p_id, jgl::String p_name, jgl::Vector2 p_face, jgl::Vecto
 	_face = p_face;
 	_sprite = p_sprite;
 
-	_PA = Stat(6);
-	_PM = Stat(3);
-	_HP = Stat(20);
+	_PA = Stat(6, 0);
+	_PM = Stat(3, 0);
+	_HP = Stat(20, 0);
 	_attack = Trait(10, 2);
 	_defense = Trait(8, 2);
 	_attack_spe = Trait(10, 2);
@@ -45,28 +45,28 @@ Creature::Creature(jgl::String path)
 	_sprite = jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_PA = Stat(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_PA = Stat(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_PM = Stat(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_PM = Stat(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_HP = Stat(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_HP = Stat(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_attack = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_attack = Trait(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_defense = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_defense = Trait(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_attack_spe = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_attack_spe = Trait(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_defense_spe = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_defense_spe = Trait(jgl::stof(tab[0]), jgl::stof(tab[1]));
 
 	tab = jgl::get_strsplit(file, ";", 2);
-	_initiative = Trait(jgl::stoi(tab[0]), jgl::stoi(tab[1]));
+	_initiative = Trait(jgl::stof(tab[0]), jgl::stof(tab[1]));
 }
 
 std::ostream& operator<<(std::ostream& os, const Creature value)
@@ -98,6 +98,18 @@ void Creature_entity::reset_stat()
 {
 	_PA.reset();
 	_PM.reset();
+}
+
+void Creature_entity::upgrade(int nb_level)
+{
+	_PA.upgrade(nb_level);
+	_PM.upgrade(nb_level);
+	_HP.upgrade(nb_level);
+	_attack.upgrade(nb_level);
+	_defense.upgrade(nb_level);
+	_attack_spe.upgrade(nb_level);
+	_defense_spe.upgrade(nb_level);
+	_initiative.upgrade(nb_level);
 }
 
 void Creature_entity::render(jgl::Viewport* p_viewport, jgl::Vector2 base_pos, bool selected)

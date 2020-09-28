@@ -80,7 +80,6 @@ void Game_engine::check_encounter()
 		Encounter_data result = tmp->ask();
 		if (result != Encounter_data::null())
 		{
-			std::cout << "BOUM ! COMBAT WITH ENTITY " << result.id << " !" << std::endl;
 			Battle_arena* new_area = new Battle_arena(_player->pos(), jgl::Vector2(13, 9));
 			change_mode(game_mode::battle);
 			Team_comp ally = Team_comp({});
@@ -139,7 +138,6 @@ bool Game_engine::handle_keyboard()
 	if (jgl::get_key(jgl::key::F2) == jgl::key_state::release ||
 		(jgl::get_key(jgl::key::escape) == jgl::key_state::release && _console->is_active() == true))
 	{
-		std::cout << "Here ?" << std::endl;
 		if (_console->entry()->is_active() == false)
 			active_console();
 		else

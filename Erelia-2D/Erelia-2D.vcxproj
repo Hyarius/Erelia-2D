@@ -83,6 +83,7 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_frame.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_hour_entry.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_image_label.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_progressive_bar.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_render_widget.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_tab.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_text_entry.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_frame.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_hour_entry.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_image_label.h" />
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_progressive_bar.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_render_widget.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_tab.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_text_entry.h" />

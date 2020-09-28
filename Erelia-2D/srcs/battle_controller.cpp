@@ -131,7 +131,6 @@ void Battle_controller::change_phase(Battle_action_phase phase)
 			_panels[i]->desactivate();
 	if (nb_phase < _panels.size() && _panels[nb_phase] != nullptr)
 	{
-		std::cout << "Here ?" << std::endl;
 		_panels[nb_phase]->activate();
 	}
 }

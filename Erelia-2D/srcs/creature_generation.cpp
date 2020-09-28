@@ -2,19 +2,32 @@
 
 struct Stat_data
 {
-    int PA;
-    int PM;
-    int HP;
-    int attack;
-    int defense;
-    int attack_spe;
-    int defense_spe;
-    int initiative;
+    Stat PA;
+    Stat PM;
+    Stat HP;
+    Trait attack;
+    Trait defense;
+    Trait attack_spe;
+    Trait defense_spe;
+    Trait initiative;
 };
+
+std::ostream& operator<<(std::ostream& os, const Stat_data value)
+{
+    os << value.PA.max << ";" << value.PA.upgrade_value << std::endl;
+    os << value.PM.max << ";" << value.PM.upgrade_value << std::endl;
+    os << value.HP.max << ";" << value.HP.upgrade_value << std::endl;
+    os << value.attack.actual << ";" << value.attack.upgrade_value << std::endl;
+    os << value.defense.actual << ";" << value.defense.upgrade_value << std::endl;
+    os << value.attack_spe.actual << ";" << value.attack_spe.upgrade_value << std::endl;
+    os << value.defense_spe.actual << ";" << value.defense_spe.upgrade_value << std::endl;
+    os << value.initiative.actual << ";" << value.initiative.upgrade_value << std::endl;
+    return (os);
+}
 
 void generate_creature_data()
 {
-    jgl::Array<jgl::String> name = {
+    static jgl::Array<jgl::String> name = {
     "Bulbizarre",
     "Herbizarre",
     "Florizarre",
@@ -167,7 +180,7 @@ void generate_creature_data()
     "Mewtwo",
     "Mew",
     };
-    jgl::Array<int> index = {
+    static jgl::Array<int> index = {
         3,
         3,
         3,
@@ -320,15 +333,165 @@ void generate_creature_data()
         3,//150
         2
     };
-    jgl::Array<jgl::Vector2> sprite = {
+    static jgl::Array<jgl::Vector2> sprite = {
         jgl::Vector2(0, 36),//oiseau
         jgl::Vector2(0, 37),//melofee
         jgl::Vector2(0, 38),//kangourex
         jgl::Vector2(0, 39),//poison
     };
 
-    jgl::Array< Stat_data> stat_array = {
-        {6, 3, 20}
+    static jgl::Array< Stat_data> stat_array = {
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 10
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 20
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 30
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 40
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 50
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 60
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 70
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 80
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 90
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 100
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},
+        {Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f)},// 110
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },// 120
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },// 130
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },// 140
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },// 150
+        { Stat(6.0f, 0.05f), Stat(3, 0.07f), Stat(20, 2.0f), Trait(10, 1.35f), Trait(8, 1.35f), Trait(10, 1.25f), Trait(8, 1.25f), Trait(10, 1.2f) },
     };
 
 
@@ -340,7 +503,7 @@ void generate_creature_data()
         file << name[i] << std::endl;
         file << i % 16 << ";" << i / 16 << std::endl;
         file << jgl::itoa(sprite[index[i] - 1].x) << ";" << jgl::itoa(sprite[index[i] - 1].y) << std::endl;
-        file << 6 << std::endl;
-        file << 3 << std::endl;
+        Stat_data tmp = stat_array[i];
+        file << tmp << std::endl;
     }
 }

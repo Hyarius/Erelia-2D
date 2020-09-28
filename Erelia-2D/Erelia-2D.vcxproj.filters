@@ -304,6 +304,9 @@
     <ClCompile Include="srcs\battle_face_renderer.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_progressive_bar.cpp">
+      <Filter>JGL\srcs\widget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
@@ -533,6 +536,9 @@
     </ClInclude>
     <ClInclude Include="includes\erelia_battle_controller.h">
       <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_progressive_bar.h">
+      <Filter>JGL\includes\widget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
