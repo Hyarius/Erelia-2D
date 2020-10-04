@@ -307,6 +307,15 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget\jgl_progressive_bar.cpp">
       <Filter>JGL\srcs\widget</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\adventure_menu.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\board_renderer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="srcs\creature_slot.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">
@@ -539,6 +548,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_progressive_bar.h">
       <Filter>JGL\includes\widget</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_adventure_menu.h">
+      <Filter>Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\erelia_board_renderer.h">
+      <Filter>Includes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

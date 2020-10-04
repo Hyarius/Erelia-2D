@@ -488,7 +488,7 @@ void Board::render(jgl::Viewport* viewport, jgl::Vector2 base_pos)
 		viewport->use();
 
 	jgl::Vector2 start_node = screen_to_tile(0, base_pos);
-	jgl::Vector2 end_node = screen_to_tile(g_application->size(), base_pos);
+	jgl::Vector2 end_node = screen_to_tile(viewport->anchor() + viewport->area(), base_pos);
 	jgl::Vector2 start = (start_node / CHUNK_SIZE).floor();
 	jgl::Vector2 end = (end_node / CHUNK_SIZE).floor();
 

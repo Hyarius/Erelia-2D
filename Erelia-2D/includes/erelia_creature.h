@@ -123,24 +123,6 @@ public:
 
 void create_creature_list(jgl::Sprite_sheet* faceset);
 
-struct Team_comp
-{
-	jgl::Array<Creature_entity*> unit;
-
-	Team_comp(jgl::Array<Creature_entity*> element)
-	{
-		unit.resize(6);
-		for (size_t i = 0; i < 6 && i < element.size(); i++)
-			unit[i] = element[i];
-	}
-	void define(size_t index, Creature_entity* creature)
-	{
-		if (index >= 6)
-			return;
-		unit[index] = creature;
-	}
-};
-
 std::ostream& operator<<(std::ostream& os, const Creature value);
 
 #endif

@@ -12,10 +12,19 @@ Editor_mode::Editor_mode(jgl::Widget* parent) : Game_mode(parent)
 	_editor_interacter->activate();
 	_inventory->send_front();
 
-	_player_controller = new Player_controller(this);
+	_player_controller = new Player_controller(_contener);
 	_player_controller->activate();
 
-	_interacter = new Interacter(this);
+	_interacter = new Interacter(_contener);
+
+	_board_renderer = new Board_renderer(_contener);
+	_board_renderer->activate();
+}
+
+void Editor_mode::on_activation()
+{
+	std::cout << "Here ?" << std::endl;
+	_board_renderer->rebake();
 }
 
 void Editor_mode::interact_between(Entity* source, Entity* target)
@@ -92,12 +101,11 @@ void Editor_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 	_inventory->set_geometry(tmp, p_area - tmp * 2);
 	_editor_interacter->set_geometry(0, p_area);
 	_interacter->set_geometry(0, p_area);
+	_board_renderer->set_geometry(0, p_area);
 }
 
 void Editor_mode::render()
 {
-	engine->board()->render(_viewport);
-	engine->player()->render(_viewport);
 	jgl::draw_text("Gamemode : Editor", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

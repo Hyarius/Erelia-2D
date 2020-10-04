@@ -4,8 +4,13 @@
 #include "jgl.h"
 
 #include "erelia_creature.h"
+
+#include "erelia_board_renderer.h"
+
 #include "erelia_battle_renderer.h"
 #include "erelia_battle_controller.h"
+
+#include "erelia_adventure_menu.h"
 
 enum class game_mode
 {
@@ -22,7 +27,8 @@ public:
 	Game_mode(jgl::Widget* parent = nullptr) : jgl::Widget(parent)
 	{
 
-	};
+	}
+	virtual void on_activation() = 0;
 };
 
 class Editor_mode : public Game_mode
@@ -34,8 +40,11 @@ private:
 	Editor_inventory* _inventory;
 	Editor_interact* _editor_interacter;
 
+	Board_renderer* _board_renderer;
+
 public:
 	Editor_mode(jgl::Widget* parent = nullptr);
+	void on_activation();
 
 	jgl::Widget* contener() { return (_contener); }
 	Editor_inventory* inventory() { return (_inventory); }
@@ -62,8 +71,12 @@ private:
 	jgl::Contener* _contener;
 	Player_controller* _player_controller;
 	Interacter* _interacter;
+	Adventure_menu* _adventure_menu;
+	Board_renderer* _board_renderer;
+
 public:
 	Adventure_mode(jgl::Widget* parent = nullptr);
+	void on_activation();
 
 	jgl::Widget* contener() { return (_contener); }
 	Interacter* interacter() { return (_interacter); }
@@ -113,12 +126,13 @@ private:
 
 public:
 	Battle_mode(jgl::Widget* parent = nullptr);
+	void on_activation();
 
 	Battle_arena_renderer* arena_renderer() { return (_arena_renderer); }
 	Battle_controller* controller() { return (_controller); }
 
 	void add_creature(Creature_entity* to_add);
-	void start(Battle_arena* p_arena, Team_comp first, Team_comp second);
+	void start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp* p_enemy_team);
 	void exit();
 
 	void place(Creature_entity* entity, jgl::Vector2 pos);

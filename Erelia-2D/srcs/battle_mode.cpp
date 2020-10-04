@@ -29,6 +29,11 @@ Battle_mode::Battle_mode(jgl::Widget* parent)
 	_face_renderer->activate();
 }
 
+void Battle_mode::on_activation()
+{
+	engine->board()->rebake(_viewport);
+}
+
 void Battle_mode::add_creature(Creature_entity* creature)
 {
 	if (creature == nullptr)
@@ -44,8 +49,11 @@ void Battle_mode::add_creature(Creature_entity* creature)
 
 uint32_t tmp_time;
 
-void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second)
+void Battle_mode::start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp* p_enemy_team)
 {
+	_active_ally = nullptr;
+	_active_enemy = nullptr;
+
 	engine->board()->rebake(_arena_renderer->viewport());
 	_phase = Battle_phase::placement;
 	_arena = p_arena;
@@ -61,15 +69,15 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 	_enemies.clear();
 	_neutrals.clear();
 
-	for (size_t i = 0; i < first.unit.size(); i++)
-		if (first.unit[i] != nullptr)
+	for (size_t i = 0; i < 6; i++)
+		if (p_ally_team->unit[i] != nullptr)
 		{
-			add_creature(first.unit[i]);
+			add_creature(p_ally_team->unit[i]);
 		}
-	for (size_t i = 0; i < second.unit.size(); i++)
-		if (second.unit[i] != nullptr)
+	for (size_t i = 0; i < 6; i++)
+		if (p_enemy_team->unit[i] != nullptr)
 		{
-			add_creature(second.unit[i]);
+			add_creature(p_enemy_team->unit[i]);
 		}
 
 	_turn_index = -1;
@@ -80,16 +88,13 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp first, Team_comp second
 
 	size_t index = jgl::generate_nbr(0, _arena->enemy_start_pos().size());
 	place(_enemies[0], _arena->enemy_start_pos()[index] + _arena->pos());
-	//place(_allies[0], _arena->ally_start_pos()[0] + _arena->pos());
 
 	_arena->rebake(_arena_renderer->viewport());
 }
 
 void Battle_mode::exit()
 {
-	//engine->player()->place(_pointer->pos());
 	engine->change_mode(game_mode::adventure);
-	engine->board()->rebake(g_application->viewport());
 	delete _arena;
 	_arena = nullptr;
 }
@@ -125,6 +130,8 @@ void Battle_mode::end_turn()
 		_turn_order[_turn_index]->reset_stat();
 	_turn_index += 1;
 	_turn_index = _turn_index % _turn_order.size();
+
+	_arena->reset();
 
 	if (_turn_order[_turn_index]->team() == Team::enemy)
 	{
@@ -333,6 +340,6 @@ void Battle_mode::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area)
 }
 void Battle_mode::render()
 {
-	jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
-	jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
+	//jgl::draw_text("Gamemode : Battle", 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
+	//jgl::draw_text("Fps : " + jgl::itoa(print_fps), jgl::Vector2(0, 20) + 50, 16, 1, 1.0f, jgl::text_color::white, jgl::text_style::normal, _viewport);
 }

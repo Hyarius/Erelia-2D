@@ -17,5 +17,7 @@ int main(int argc, char **argv)
 	engine->set_geometry(0, app.size());
 	engine->activate();
 
+	engine->change_mode(game_mode::adventure);
+
 	return (app.run());
 }

@@ -2,6 +2,7 @@
 
 Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 {
+	_save_name = "save_data";
 	engine = this;
 	_tileset = new jgl::Sprite_sheet("ressources/texture/base_tileset.png", jgl::Vector2(19, 143));
 	_battle_tileset = new jgl::Sprite_sheet("ressources/texture/battle_tile.png", jgl::Vector2(16, 1));
@@ -12,15 +13,13 @@ Game_engine::Game_engine(jgl::Widget* p_parent) : jgl::Widget(p_parent)
 	create_creature_list(_faceset);
 	_board = new Board("ressources/maps/world.map");
 	_player = new Player();
-	if (jgl::check_file_exist("ressources/save/Player.sav") == true)
-		load("ressources/save/Player.sav");
+	if (jgl::check_file_exist("ressources/save/" + _save_name + ".sav") == true)
+		load("ressources/save/" + _save_name + ".sav");
 
 	_index_mode = game_mode::editor;
 	_modes.push_back(new Editor_mode(this));
 	_modes.push_back(new Adventure_mode(this));
 	_modes.push_back(new Battle_mode(this));
-
-	change_mode(game_mode::adventure);
 
 	_console = new Console(this);
 
@@ -31,6 +30,8 @@ extern jgl::Array<Item*> node_item_list;
 
 Game_engine::~Game_engine()
 {
+	save("ressources/save/" + _save_name + ".sav");
+
 	if (_tileset != nullptr)
 		delete _tileset;
 	if (_charset != nullptr)
@@ -58,6 +59,15 @@ void Game_engine::save(jgl::String path)
 
 	file << _player->name() << std::endl;
 	file << _player->pos().round().x << ";" << _player->pos().round().y << std::endl;
+	for (size_t i = 0; i < 6; i++)
+	{
+		if ((_player->team()->unit)[i] != nullptr)
+		{
+			file << (_player->team()->unit)[i]->species()->id() - 1 << std::endl;
+		}
+		else
+			file << "-1" << std::endl;
+	}
 }
 
 void Game_engine::load(jgl::String path)
@@ -68,6 +78,17 @@ void Game_engine::load(jgl::String path)
 	_player->set_name(line);
 	jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
 	_player->place(jgl::Vector2(jgl::stoi(tab[0]), jgl::stoi(tab[1])).floor());
+	for (size_t i = 0; i < 6; i++)
+	{
+		Creature_entity* tmp = nullptr;
+		jgl::Array<jgl::String> tab = jgl::get_strsplit(file, ";");
+		if (tab[0] != "-1")
+		{
+			size_t index = jgl::stoi(tab[0]);
+			tmp = new Creature_entity(creature_list[index], Team::ally);
+		}
+		_player->team()->define(i, tmp);
+	}
 }
 
 void Game_engine::check_encounter()
@@ -82,13 +103,9 @@ void Game_engine::check_encounter()
 		{
 			Battle_arena* new_area = new Battle_arena(_player->pos(), jgl::Vector2(13, 9));
 			change_mode(game_mode::battle);
-			Team_comp ally = Team_comp({});
-			for (size_t i = 0; i < 3; i++)
-				ally.define(i, new Creature_entity(creature_list[0], Team::ally));
-			Team_comp enemy = Team_comp({});
-			for (size_t i = 0; i < 6; i++)
-				enemy.define(i, new Creature_entity(creature_list[result.id], Team::enemy));
-			battle_mode()->start(new_area, ally, enemy);
+			Team_comp* tmp = new Team_comp();
+			tmp->define(0, new Creature_entity(creature_list[result.id], Team::enemy));
+			battle_mode()->start(new_area, _player->team(), tmp);
 			_board->node(_player->pos())->set_occupant(nullptr);
 			_player->place(_player->pos());
 		}
@@ -123,6 +140,7 @@ void Game_engine::change_mode(game_mode new_mode)
 			if (_modes[i] != nullptr)
 				_modes[i]->desactivate();
 		}
+		_modes[static_cast<size_t>(_index_mode)]->on_activation();
 		_modes[static_cast<size_t>(_index_mode)]->activate();
 	}
 	

@@ -25,6 +25,8 @@ extern std::string custom_texture_shader_frag;
 class Game_engine : public jgl::Widget
 {
 private:
+	jgl::String _save_name;
+
 	jgl::Sprite_sheet* _tileset;
 	jgl::Sprite_sheet* _battle_tileset;
 	jgl::Sprite_sheet* _charset;

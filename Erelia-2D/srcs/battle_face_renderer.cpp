@@ -49,20 +49,42 @@ void Battle_face_renderer::update()
 	if (_ally_entity != nullptr && _old_ally_entity != *_ally_entity)
 	{
 		_old_ally_entity = *_ally_entity;
-		_ally_name->set_text(_old_ally_entity->name());
-		_ally_name->label().calc_text_size(_ally_name->area() - _ally_name->box().border() * 2);
-		_ally_face->set_sprite(_old_ally_entity->species()->face());
-		_ally_face->set_image(engine->back_faceset());
-		_ally_hp_bar->set_ratio(_old_ally_entity->HP().actual / _old_ally_entity->HP().max);
+		if (_old_ally_entity != nullptr)
+		{
+			_ally_name->set_text(_old_ally_entity->name());
+			_ally_name->label().calc_text_size(_ally_name->area() - _ally_name->box().border() * 2);
+			_ally_face->set_sprite(_old_ally_entity->species()->face());
+			_ally_face->set_image(engine->back_faceset());
+			_ally_hp_bar->set_ratio(_old_ally_entity->HP().actual / _old_ally_entity->HP().max);
+		}
+		else
+		{
+			_ally_name->set_text("");
+			_ally_face->set_sprite(-1);
+			_ally_face->set_image(static_cast<jgl::Sprite_sheet*>(nullptr));
+			_ally_hp_bar->set_ratio(0);
+		}
 	}
 	if (_enemy_entity != nullptr && _old_enemy_entity != *_enemy_entity)
 	{
 		_old_enemy_entity = *_enemy_entity;
-		_enemy_name->set_text(_old_enemy_entity->name());
-		_enemy_name->label().calc_text_size(_enemy_name->area() - _enemy_name->box().border() * 2);
-		_enemy_face->set_sprite(_old_enemy_entity->species()->face());
-		_enemy_face->set_image(engine->faceset());
-		_enemy_hp_bar->set_ratio(_old_enemy_entity->HP().actual / _old_enemy_entity->HP().max);
+		if (_enemy_entity != nullptr)
+		{
+			_old_enemy_entity = *_enemy_entity;
+			_enemy_name->set_text(_old_enemy_entity->name());
+			_enemy_name->label().calc_text_size(_enemy_name->area() - _enemy_name->box().border() * 2);
+			_enemy_face->set_sprite(_old_enemy_entity->species()->face());
+			_enemy_face->set_image(engine->faceset());
+			_enemy_hp_bar->set_ratio(_old_enemy_entity->HP().actual / _old_enemy_entity->HP().max);
+		}
+		else
+		{
+			_old_enemy_entity = nullptr;
+			_enemy_name->set_text("");
+			_enemy_face->set_sprite(-1);
+			_enemy_face->set_image(static_cast<jgl::Sprite_sheet*>(nullptr));
+			_enemy_hp_bar->set_ratio(0);
+		}
 	}
 }
 

@@ -103,6 +103,7 @@
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_text_entry_component.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_component.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Developement\JGL\srcs\widget_component\w_value_entry_component.cpp" />
+    <ClCompile Include="srcs\adventure_menu.cpp" />
     <ClCompile Include="srcs\adventure_mode.cpp" />
     <ClCompile Include="srcs\basic_function.cpp" />
     <ClCompile Include="srcs\battle_area.cpp" />
@@ -111,10 +112,12 @@
     <ClCompile Include="srcs\battle_face_renderer.cpp" />
     <ClCompile Include="srcs\battle_mode.cpp" />
     <ClCompile Include="srcs\battle_renderer.cpp" />
+    <ClCompile Include="srcs\board_renderer.cpp" />
     <ClCompile Include="srcs\chunk.cpp" />
     <ClCompile Include="srcs\creature.cpp" />
     <ClCompile Include="srcs\creature_generation.cpp" />
     <ClCompile Include="srcs\creature_list.cpp" />
+    <ClCompile Include="srcs\creature_slot.cpp" />
     <ClCompile Include="srcs\dialogue_frame.cpp" />
     <ClCompile Include="srcs\editor.cpp" />
     <ClCompile Include="srcs\console.cpp" />
@@ -198,10 +201,12 @@
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget\jgl_window.h" />
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\widget_component\jgl_widget_component.h" />
     <ClInclude Include="includes\Erelia.h" />
+    <ClInclude Include="includes\erelia_adventure_menu.h" />
     <ClInclude Include="includes\erelia_battler.h" />
     <ClInclude Include="includes\erelia_battle_controller.h" />
     <ClInclude Include="includes\erelia_battle_renderer.h" />
     <ClInclude Include="includes\Erelia_board.h" />
+    <ClInclude Include="includes\erelia_board_renderer.h" />
     <ClInclude Include="includes\Erelia_chunk.h" />
     <ClInclude Include="includes\erelia_console.h" />
     <ClInclude Include="includes\erelia_creature.h" />

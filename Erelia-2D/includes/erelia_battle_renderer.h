@@ -40,6 +40,8 @@ private:
 
 public:
 	Battle_face_renderer(Creature_entity** p_ally_entity, Creature_entity** p_enemy_entity, jgl::Widget* parent = nullptr);
+	void set_ally_entity(Creature_entity** p_ally_entity) { _ally_entity = p_ally_entity; }
+	void set_enemy_entity(Creature_entity** p_enemy_entity) { _enemy_entity = p_enemy_entity;}
 	void update();
 	void set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 p_area);
 	void render();
