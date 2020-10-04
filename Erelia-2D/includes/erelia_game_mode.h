@@ -134,6 +134,7 @@ public:
 	void add_creature(Creature_entity* to_add);
 	void start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp* p_enemy_team);
 	void exit();
+	void flee();
 
 	void place(Creature_entity* entity, jgl::Vector2 pos);
 

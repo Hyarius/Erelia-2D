@@ -316,6 +316,9 @@
     <ClCompile Include="srcs\creature_slot.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="srcs\battle_change_menu.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Developement\JGL\includes\structure\jgl_application.h">

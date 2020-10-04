@@ -38,7 +38,10 @@ private:
 	jgl::Image_label* _enemy_face;
 	jgl::Progressive_bar* _enemy_hp_bar;
 
+	class Battle_change_menu* _change_menu;
+
 public:
+	class Battle_change_menu* change_menu(){ return (_change_menu); }
 	Battle_face_renderer(Creature_entity** p_ally_entity, Creature_entity** p_enemy_entity, jgl::Widget* parent = nullptr);
 	void set_ally_entity(Creature_entity** p_ally_entity) { _ally_entity = p_ally_entity; }
 	void set_enemy_entity(Creature_entity** p_enemy_entity) { _enemy_entity = p_enemy_entity;}

@@ -42,6 +42,9 @@ Battle_face_renderer::Battle_face_renderer(Creature_entity** p_ally_entity, Crea
 	_ally_hp_bar->set_back(jgl::Color(130, 130, 130));
 	_ally_hp_bar->set_front(jgl::Color(220, 220, 220));
 	_ally_hp_bar->activate();
+
+	_change_menu = new Battle_change_menu(_frame);
+	_change_menu->activate();
 }
 
 void Battle_face_renderer::update()
@@ -55,7 +58,9 @@ void Battle_face_renderer::update()
 			_ally_name->label().calc_text_size(_ally_name->area() - _ally_name->box().border() * 2);
 			_ally_face->set_sprite(_old_ally_entity->species()->face());
 			_ally_face->set_image(engine->back_faceset());
-			_ally_hp_bar->set_ratio(_old_ally_entity->HP().actual / _old_ally_entity->HP().max);
+			_ally_hp_bar->set_ratio(_old_ally_entity->HP().ratio());
+			_ally_hp_bar->set_max_value(_old_ally_entity->HP().max);
+			_ally_hp_bar->set_print_value(true);
 		}
 		else
 		{
@@ -63,6 +68,7 @@ void Battle_face_renderer::update()
 			_ally_face->set_sprite(-1);
 			_ally_face->set_image(static_cast<jgl::Sprite_sheet*>(nullptr));
 			_ally_hp_bar->set_ratio(0);
+			_ally_hp_bar->set_print_value(false);
 		}
 	}
 	if (_enemy_entity != nullptr && _old_enemy_entity != *_enemy_entity)
@@ -75,7 +81,9 @@ void Battle_face_renderer::update()
 			_enemy_name->label().calc_text_size(_enemy_name->area() - _enemy_name->box().border() * 2);
 			_enemy_face->set_sprite(_old_enemy_entity->species()->face());
 			_enemy_face->set_image(engine->faceset());
-			_enemy_hp_bar->set_ratio(_old_enemy_entity->HP().actual / _old_enemy_entity->HP().max);
+			_enemy_hp_bar->set_ratio(_old_enemy_entity->HP().ratio());
+			_enemy_hp_bar->set_max_value(_old_enemy_entity->HP().max);
+			_enemy_hp_bar->set_print_value(true);
 		}
 		else
 		{
@@ -84,6 +92,7 @@ void Battle_face_renderer::update()
 			_enemy_face->set_sprite(-1);
 			_enemy_face->set_image(static_cast<jgl::Sprite_sheet*>(nullptr));
 			_enemy_hp_bar->set_ratio(0);
+			_enemy_hp_bar->set_print_value(false);
 		}
 	}
 }
@@ -104,6 +113,9 @@ void Battle_face_renderer::set_geometry_imp(jgl::Vector2 p_anchor, jgl::Vector2 
 	_ally_name->set_geometry(pos, size);
 	pos.y -= face_size / 3 + 5;
 	_ally_hp_bar->set_geometry(pos, size);
+
+	pos = jgl::Vector2(0.0f, face_size * 2 + 5) + 15;
+	_change_menu->set_geometry(pos, jgl::Vector2(p_area.x, p_area.y - pos.y));
 }
 
 void Battle_face_renderer::render()

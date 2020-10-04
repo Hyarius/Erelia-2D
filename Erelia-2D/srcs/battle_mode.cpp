@@ -55,8 +55,10 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp
 	_active_enemy = nullptr;
 
 	engine->board()->rebake(_arena_renderer->viewport());
-	_phase = Battle_phase::placement;
 	_arena = p_arena;
+
+	_phase = Battle_phase::placement;
+	_controller->change_phase(Battle_action_phase::placement);
 
 	_arena_renderer->set_arena(p_arena);
 	_arena_renderer->set_pointer(_pointer);
@@ -64,7 +66,6 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp
 	_arena_renderer->set_turn_index(&_turn_index);
 	_pointer->place( engine->player()->pos());
 	
-	_turn_order.clear();
 	_allies.clear();
 	_enemies.clear();
 	_neutrals.clear();
@@ -81,7 +82,7 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp
 		}
 
 	_turn_index = -1;
-	_turn_order.push_back(_allies[0]);
+	_turn_order.clear();
 	_turn_order.push_back(_enemies[0]);
 
 	_arena->generate_random_start();
@@ -92,11 +93,21 @@ void Battle_mode::start(Battle_arena* p_arena, Team_comp* p_ally_team, Team_comp
 	_arena->rebake(_arena_renderer->viewport());
 }
 
-void Battle_mode::exit()
+void Battle_mode::flee()
 {
+	for (size_t i = 0; i < _allies.size(); i++)
+	{
+		_allies[i]->place(-1);
+		_allies[i]->reset_stat();
+	}
 	engine->change_mode(game_mode::adventure);
 	delete _arena;
 	_arena = nullptr;
+}
+
+void Battle_mode::exit()
+{
+	flee();
 }
 
 void Battle_mode::place(Creature_entity* entity, jgl::Vector2 pos)
@@ -105,9 +116,27 @@ void Battle_mode::place(Creature_entity* entity, jgl::Vector2 pos)
 	if (node != nullptr)
 	{
 		if (entity->team() == Team::ally)
+		{
+			if (_active_ally != nullptr)
+			{
+				Battle_node* tmp_node = _arena->absolute_battle_node(_active_ally->pos());
+				node->set_occupant(nullptr);
+				_turn_order.erase(_turn_order.find(_active_ally));
+			}
+
 			_active_ally = entity;
-		else
+		}
+		else if(entity->team() == Team::enemy)
+		{
+			if (_active_enemy != nullptr)
+			{
+				Battle_node* tmp_node = _arena->absolute_battle_node(_active_enemy->pos());
+				node->set_occupant(nullptr);
+				_turn_order.erase(_turn_order.find(_active_enemy));
+			}
+
 			_active_enemy = entity;
+		}
 		entity->place(pos);
 		node->set_occupant(entity);
 	}
@@ -120,7 +149,7 @@ void Battle_mode::update()
 	{
 		_turn_order[i]->update();
 	}
-	if (_phase == Battle_phase::fight && _turn_order[_turn_index]->is_moving() == false && _calculated == false)
+	if (_phase == Battle_phase::fight && _turn_order[_turn_index]->team() == Team::ally && _turn_order[_turn_index]->is_moving() == false && _calculated == false)
 		check_movement();
 }
 
@@ -198,7 +227,9 @@ void Battle_mode::change_phase()
 		end_turn();
 	}
 	else if (_phase == Battle_phase::fight)
+	{
 		_phase = Battle_phase::exit;
+	}
 }
 
 bool Battle_mode::handle_keyboard_placement()
@@ -277,9 +308,12 @@ bool Battle_mode::handle_mouse_placement()
 	{
 		jgl::Vector2 pos = engine->board()->screen_to_tile(g_mouse->pos, _pointer->pos());
 		Battle_node* node = _arena->absolute_battle_node(pos);
-		if (node != nullptr && node->type() == Battle_node_type::ally_pos)
+		Creature_battle_slot* slot = _face_renderer->change_menu()->selected_slot();
+		if (node != nullptr && node->type() == Battle_node_type::ally_pos && slot != nullptr && slot->creature() != nullptr && *(slot->creature()) != nullptr)
 		{
-			place(_allies[0], pos);
+			Creature_entity* creature = *(slot->creature());
+			place(*(slot->creature()), pos);
+			_turn_order.push_back(*(slot->creature()));
 		}
 	}
 	return (false);

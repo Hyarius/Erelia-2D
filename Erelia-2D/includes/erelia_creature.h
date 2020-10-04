@@ -35,6 +35,10 @@ struct Stat : public Trait
 	{
 		actual = max;
 	}
+	float ratio()
+	{
+		return (actual / max);
+	}
 };
 
 

@@ -38,12 +38,13 @@ static void start_move_mode(jgl::Data data)
 static void start_change_mode(jgl::Data data)
 {
 	std::cout << "Change mode !" << std::endl;
+
 }
 
 static void start_flee_mode(jgl::Data data)
 {
 	std::cout << "Flee mode !" << std::endl;
-	engine->battle_mode()->change_phase();
+	engine->battle_mode()->flee();
 }
 
 static void cast_spell_action(jgl::Data data)
